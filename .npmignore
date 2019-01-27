@@ -1,0 +1,12 @@
+coverage/
+doc/
+node_modules/
+src/
+types/
+.eslintrc.js
+.gitignore
+.npmignore
+jest.config.js
+package-lock.json
+prettier.config.js
+rollup.config.js

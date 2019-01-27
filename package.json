@@ -1,0 +1,66 @@
+{
+  "name": "linqify",
+  "version": "1.0.1",
+  "description": "Javascript LINQ library based on C# LINQ",
+  "main": "dist/linqify.js",
+  "module": "dist/linqify.esm.js",
+  "unpkg": "dist/linqify.min.js",
+  "browser": "dist/linqify.min.js",
+  "types": "dist/linqify.d.ts",
+  "scripts": {
+    "doc": "typedoc --out doc/linqify/ types/linqify.ts --target ES6 --media media/ --module commonjs --name \"LINQify Documentation\" --theme default --mode file",
+    
+    "prettier": "prettier --write \"src/**/*.js\"",
+    "eslint": "eslint \"src/**/*.js\" --fix",
+    
+    "test": "set LINQIFY_PATH=/src/linqify&&jest --coverage --colors",
+    
+    "prebuild": "npm run doc&&cp types/linqify.ts dist/linqify.d.ts&&cp types/linqify.ts src/linqify.d.ts",
+    "build": "rollup -c rollup.config.js",
+    "build:test": "npm run build&&set LINQIFY_PATH=/dist/linqify&&jest&&set LINQIFY_PATH=/dist/linqify.min&&jest",
+    
+    "version:patch": "npm version patch",
+    "version:minor": "npm version minor",
+    "version:major": "npm version major",
+
+    "gitbuild": "npm run test&&npm run prettier&&npm run eslint&&npm run build:test",
+    "gitpublish": "git push -u https://github.com/goranhrovat/linqify.git master",
+    
+    "pregitpagespublish": "npm run doc",
+    "gitpagespublish": "cd doc&&git add --all&&git commit -m \"Doc commit\"&&git push -u https://github.com/goranhrovat/goranhrovat.github.io.git master",
+    
+    "predeploy": "npm run gitbuild",
+    "deploy": "npm login&&npm publish"
+  },
+  "keywords": [
+    "lazy",
+    "LINQ"
+  ],
+  "license": "MIT",
+  "author": "Goran Hrovat",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/goranhrovat/linqify.git"
+  },
+  "homepage": "https://goranhrovat.github.io/linqify",
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-external-helpers": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/preset-env": "^7.2.3",
+    "babel-loader": "^8.0.4",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^5.12.1",
+    "eslint-config-prettier": "^4.0.0",
+    "jest": "^23.6.0",
+    "prettier": "^1.16.1",
+    "rollup-plugin-babel": "^4.2.0",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "rollup-plugin-terser": "^4.0.1",
+    "typedoc": "^0.14.2"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.2.0"
+  }
+}

@@ -1,0 +1,713 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1548593028575" clover="3.2.0">
+  <project timestamp="1548593028575" name="All files">
+    <metrics statements="634" coveredstatements="625" conditionals="333" coveredconditionals="310" methods="182" coveredmethods="178" elements="1149" coveredelements="1113" complexity="0" loc="634" ncloc="634" packages="6" files="18" classes="18">
+      <package name="src">
+        <metrics statements="19" coveredstatements="19" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <file name="linqify.js" path="C:\Users\Goran\Documents\linqify\src\linqify.js">
+          <metrics statements="13" coveredstatements="13" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+          <line num="1" count="8" type="stmt"/>
+          <line num="2" count="8" type="stmt"/>
+          <line num="3" count="8" type="stmt"/>
+          <line num="11" count="48" type="stmt"/>
+          <line num="13" count="8" type="stmt"/>
+          <line num="21" count="8" type="stmt"/>
+          <line num="23" count="8" type="stmt"/>
+          <line num="25" count="8" type="stmt"/>
+          <line num="27" count="8" type="stmt"/>
+          <line num="29" count="8" type="stmt"/>
+          <line num="30" count="40" type="stmt"/>
+          <line num="31" count="8" type="stmt"/>
+          <line num="40" count="8" type="stmt"/>
+        </file>
+        <file name="linqifyObjects.js" path="C:\Users\Goran\Documents\linqify\src\linqifyObjects.js">
+          <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+          <line num="1" count="8" type="stmt"/>
+          <line num="2" count="8" type="stmt"/>
+          <line num="3" count="8" type="stmt"/>
+          <line num="4" count="8" type="stmt"/>
+          <line num="5" count="8" type="stmt"/>
+          <line num="7" count="8" type="stmt"/>
+        </file>
+      </package>
+      <package name="src.DataStructures">
+        <metrics statements="198" coveredstatements="193" conditionals="105" coveredconditionals="89" methods="58" coveredmethods="57"/>
+        <file name="Dictionary.js" path="C:\Users\Goran\Documents\linqify\src\DataStructures\Dictionary.js">
+          <metrics statements="83" coveredstatements="81" conditionals="41" coveredconditionals="34" methods="23" coveredmethods="23"/>
+          <line num="1" count="8" type="stmt"/>
+          <line num="2" count="8" type="stmt"/>
+          <line num="3" count="8" type="stmt"/>
+          <line num="13" count="54" type="stmt"/>
+          <line num="14" count="54" type="stmt"/>
+          <line num="15" count="54" type="stmt"/>
+          <line num="16" count="54" type="cond" truecount="2" falsecount="0"/>
+          <line num="17" count="54" type="cond" truecount="2" falsecount="0"/>
+          <line num="19" count="1" type="stmt"/>
+          <line num="20" count="53" type="cond" truecount="4" falsecount="0"/>
+          <line num="22" count="32" type="cond" truecount="2" falsecount="0"/>
+          <line num="25" count="21" type="stmt"/>
+          <line num="26" count="54" type="stmt"/>
+          <line num="31" count="58" type="stmt"/>
+          <line num="32" count="145" type="stmt"/>
+          <line num="36" count="2" type="stmt"/>
+          <line num="40" count="5" type="stmt"/>
+          <line num="44" count="1" type="stmt"/>
+          <line num="48" count="1" type="stmt"/>
+          <line num="52" count="141" type="cond" truecount="2" falsecount="0"/>
+          <line num="53" count="139" type="stmt"/>
+          <line num="55" count="2" type="stmt"/>
+          <line num="56" count="2" type="cond" truecount="1" falsecount="1"/>
+          <line num="57" count="2" type="stmt"/>
+          <line num="60" count="0" type="stmt"/>
+          <line num="62" count="139" type="stmt"/>
+          <line num="66" count="1" type="stmt"/>
+          <line num="67" count="1" type="stmt"/>
+          <line num="71" count="118" type="cond" truecount="2" falsecount="0"/>
+          <line num="72" count="34" type="stmt"/>
+          <line num="73" count="34" type="cond" truecount="1" falsecount="1"/>
+          <line num="76" count="84" type="stmt"/>
+          <line num="80" count="2" type="stmt"/>
+          <line num="81" count="4" type="cond" truecount="2" falsecount="0"/>
+          <line num="83" count="1" type="stmt"/>
+          <line num="87" count="2" type="cond" truecount="2" falsecount="0"/>
+          <line num="88" count="1" type="stmt"/>
+          <line num="89" count="1" type="stmt"/>
+          <line num="90" count="1" type="cond" truecount="1" falsecount="1"/>
+          <line num="91" count="1" type="stmt"/>
+          <line num="92" count="1" type="cond" truecount="1" falsecount="1"/>
+          <line num="93" count="1" type="stmt"/>
+          <line num="95" count="1" type="stmt"/>
+          <line num="96" count="1" type="stmt"/>
+          <line num="98" count="0" type="stmt"/>
+          <line num="101" count="1" type="stmt"/>
+          <line num="105" count="33" type="cond" truecount="2" falsecount="0"/>
+          <line num="106" count="32" type="stmt"/>
+          <line num="107" count="32" type="cond" truecount="1" falsecount="1"/>
+          <line num="110" count="1" type="stmt"/>
+          <line num="114" count="2" type="cond" truecount="2" falsecount="0"/>
+          <line num="115" count="1" type="stmt"/>
+          <line num="116" count="1" type="cond" truecount="1" falsecount="1"/>
+          <line num="117" count="1" type="stmt"/>
+          <line num="118" count="1" type="stmt"/>
+          <line num="122" count="1" type="stmt"/>
+          <line num="126" count="2" type="cond" truecount="2" falsecount="0"/>
+          <line num="127" count="1" type="stmt"/>
+          <line num="128" count="1" type="stmt"/>
+          <line num="132" count="18" type="cond" truecount="2" falsecount="0"/>
+          <line num="133" count="14" type="stmt"/>
+          <line num="134" count="14" type="cond" truecount="1" falsecount="1"/>
+          <line num="135" count="14" type="stmt"/>
+          <line num="138" count="4" type="stmt"/>
+          <line num="142" count="8" type="stmt"/>
+          <line num="144" count="1" type="stmt"/>
+          <line num="145" count="5" type="stmt"/>
+          <line num="147" count="1" type="stmt"/>
+          <line num="151" count="1" type="stmt"/>
+          <line num="155" count="1" type="stmt"/>
+          <line num="156" count="1" type="stmt"/>
+          <line num="157" count="2" type="stmt"/>
+          <line num="158" count="2" type="stmt"/>
+          <line num="163" count="8" type="stmt"/>
+          <line num="165" count="1" type="stmt"/>
+          <line num="166" count="7" type="stmt"/>
+          <line num="168" count="1" type="stmt"/>
+          <line num="172" count="1" type="stmt"/>
+          <line num="176" count="1" type="stmt"/>
+          <line num="177" count="1" type="stmt"/>
+          <line num="178" count="2" type="stmt"/>
+          <line num="179" count="2" type="stmt"/>
+          <line num="184" count="8" type="stmt"/>
+        </file>
+        <file name="HashSet.js" path="C:\Users\Goran\Documents\linqify\src\DataStructures\HashSet.js">
+          <metrics statements="93" coveredstatements="90" conditionals="59" coveredconditionals="51" methods="27" coveredmethods="26"/>
+          <line num="1" count="8" type="stmt"/>
+          <line num="3" count="8" type="stmt"/>
+          <line num="4" count="8" type="stmt"/>
+          <line num="5" count="8" type="stmt"/>
+          <line num="15" count="79" type="stmt"/>
+          <line num="16" count="79" type="stmt"/>
+          <line num="17" count="79" type="stmt"/>
+          <line num="18" count="79" type="cond" truecount="2" falsecount="0"/>
+          <line num="19" count="79" type="cond" truecount="2" falsecount="0"/>
+          <line num="21" count="1" type="stmt"/>
+          <line num="22" count="78" type="cond" truecount="4" falsecount="0"/>
+          <line num="24" count="42" type="cond" truecount="2" falsecount="0"/>
+          <line num="27" count="36" type="stmt"/>
+          <line num="28" count="136" type="stmt"/>
+          <line num="33" count="187" type="stmt"/>
+          <line num="37" count="1" type="stmt"/>
+          <line num="41" count="45" type="stmt"/>
+          <line num="45" count="319" type="cond" truecount="2" falsecount="0"/>
+          <line num="46" count="66" type="stmt"/>
+          <line num="47" count="66" type="cond" truecount="1" falsecount="1"/>
+          <line num="49" count="0" type="stmt"/>
+          <line num="51" count="253" type="stmt"/>
+          <line num="53" count="253" type="stmt"/>
+          <line num="54" count="253" type="stmt"/>
+          <line num="58" count="1" type="stmt"/>
+          <line num="59" count="1" type="stmt"/>
+          <line num="63" count="63" type="cond" truecount="2" falsecount="0"/>
+          <line num="64" count="53" type="stmt"/>
+          <line num="65" count="53" type="cond" truecount="1" falsecount="1"/>
+          <line num="68" count="10" type="stmt"/>
+          <line num="72" count="2" type="stmt"/>
+          <line num="73" count="2" type="stmt"/>
+          <line num="74" count="6" type="cond" truecount="2" falsecount="0"/>
+          <line num="75" count="5" type="stmt"/>
+          <line num="76" count="5" type="stmt"/>
+          <line num="81" count="1" type="stmt"/>
+          <line num="82" count="3" type="stmt"/>
+          <line num="83" count="0" type="stmt"/>
+          <line num="89" count="8" type="stmt"/>
+          <line num="94" count="1" type="stmt"/>
+          <line num="95" count="3" type="stmt"/>
+          <line num="99" count="2" type="stmt"/>
+          <line num="100" count="2" type="stmt"/>
+          <line num="101" count="2" type="stmt"/>
+          <line num="102" count="7" type="cond" truecount="2" falsecount="0"/>
+          <line num="103" count="7" type="cond" truecount="4" falsecount="0"/>
+          <line num="104" count="1" type="stmt"/>
+          <line num="106" count="1" type="cond" truecount="2" falsecount="0"/>
+          <line num="110" count="2" type="cond" truecount="1" falsecount="1"/>
+          <line num="111" count="2" type="stmt"/>
+          <line num="112" count="2" type="stmt"/>
+          <line num="113" count="5" type="cond" truecount="4" falsecount="0"/>
+          <line num="114" count="1" type="stmt"/>
+          <line num="116" count="1" type="stmt"/>
+          <line num="120" count="3" type="stmt"/>
+          <line num="121" count="3" type="stmt"/>
+          <line num="122" count="9" type="cond" truecount="2" falsecount="0"/>
+          <line num="123" count="9" type="cond" truecount="2" falsecount="0"/>
+          <line num="125" count="1" type="stmt"/>
+          <line num="129" count="3" type="stmt"/>
+          <line num="130" count="3" type="stmt"/>
+          <line num="131" count="9" type="cond" truecount="4" falsecount="0"/>
+          <line num="132" count="1" type="stmt"/>
+          <line num="134" count="2" type="stmt"/>
+          <line num="138" count="4" type="stmt"/>
+          <line num="142" count="19" type="cond" truecount="2" falsecount="0"/>
+          <line num="143" count="17" type="stmt"/>
+          <line num="144" count="17" type="stmt"/>
+          <line num="145" count="17" type="cond" truecount="1" falsecount="1"/>
+          <line num="146" count="17" type="stmt"/>
+          <line num="147" count="17" type="cond" truecount="1" falsecount="1"/>
+          <line num="148" count="17" type="stmt"/>
+          <line num="150" count="17" type="stmt"/>
+          <line num="151" count="17" type="stmt"/>
+          <line num="153" count="0" type="stmt"/>
+          <line num="156" count="2" type="stmt"/>
+          <line num="160" count="2" type="stmt"/>
+          <line num="161" count="2" type="stmt"/>
+          <line num="162" count="2" type="stmt"/>
+          <line num="166" count="5" type="stmt"/>
+          <line num="167" count="5" type="stmt"/>
+          <line num="168" count="20" type="cond" truecount="1" falsecount="1"/>
+          <line num="169" count="20" type="stmt"/>
+          <line num="171" count="5" type="stmt"/>
+          <line num="175" count="1" type="stmt"/>
+          <line num="177" count="3" type="cond" truecount="2" falsecount="0"/>
+          <line num="181" count="12" type="cond" truecount="2" falsecount="0"/>
+          <line num="182" count="6" type="stmt"/>
+          <line num="183" count="6" type="cond" truecount="1" falsecount="1"/>
+          <line num="184" count="6" type="stmt"/>
+          <line num="187" count="6" type="stmt"/>
+          <line num="191" count="3" type="stmt"/>
+          <line num="195" count="8" type="stmt"/>
+        </file>
+        <file name="Lookup.js" path="C:\Users\Goran\Documents\linqify\src\DataStructures\Lookup.js">
+          <metrics statements="22" coveredstatements="22" conditionals="5" coveredconditionals="4" methods="8" coveredmethods="8"/>
+          <line num="1" count="8" type="stmt"/>
+          <line num="2" count="8" type="stmt"/>
+          <line num="3" count="8" type="stmt"/>
+          <line num="4" count="8" type="stmt"/>
+          <line num="5" count="8" type="stmt"/>
+          <line num="9" count="30" type="stmt"/>
+          <line num="10" count="30" type="stmt"/>
+          <line num="11" count="30" type="stmt"/>
+          <line num="12" count="30" type="stmt"/>
+          <line num="14" count="30" type="stmt"/>
+          <line num="15" count="112" type="cond" truecount="2" falsecount="0"/>
+          <line num="16" count="81" type="stmt"/>
+          <line num="17" count="81" type="stmt"/>
+          <line num="19" count="31" type="stmt"/>
+          <line num="23" count="112" type="stmt"/>
+          <line num="27" count="72" type="stmt"/>
+          <line num="31" count="1" type="stmt"/>
+          <line num="35" count="16" type="stmt"/>
+          <line num="37" count="16" type="cond" truecount="2" falsecount="0"/>
+          <line num="43" count="3" type="stmt"/>
+          <line num="47" count="2" type="stmt"/>
+          <line num="51" count="8" type="stmt"/>
+        </file>
+      </package>
+      <package name="src.Methods">
+        <metrics statements="258" coveredstatements="258" conditionals="138" coveredconditionals="137" methods="77" coveredmethods="77"/>
+        <file name="Methods.js" path="C:\Users\Goran\Documents\linqify\src\Methods\Methods.js">
+          <metrics statements="252" coveredstatements="252" conditionals="138" coveredconditionals="137" methods="76" coveredmethods="76"/>
+          <line num="3" count="8" type="stmt"/>
+          <line num="4" count="8" type="stmt"/>
+          <line num="6" count="8" type="stmt"/>
+          <line num="7" count="8" type="stmt"/>
+          <line num="8" count="8" type="stmt"/>
+          <line num="9" count="8" type="stmt"/>
+          <line num="11" count="8" type="stmt"/>
+          <line num="17" count="8" type="cond" truecount="1" falsecount="0"/>
+          <line num="19" count="10" type="stmt"/>
+          <line num="20" count="10" type="stmt"/>
+          <line num="21" count="10" type="cond" truecount="2" falsecount="0"/>
+          <line num="22" count="9" type="cond" truecount="2" falsecount="0"/>
+          <line num="24" count="4" type="stmt"/>
+          <line num="25" count="4" type="stmt"/>
+          <line num="28" count="5" type="stmt"/>
+          <line num="29" count="5" type="stmt"/>
+          <line num="32" count="28" type="stmt"/>
+          <line num="34" count="9" type="stmt"/>
+          <line num="37" count="8" type="stmt"/>
+          <line num="38" count="5" type="stmt"/>
+          <line num="39" count="16" type="cond" truecount="2" falsecount="0"/>
+          <line num="41" count="3" type="stmt"/>
+          <line num="44" count="8" type="cond" truecount="1" falsecount="0"/>
+          <line num="45" count="21" type="cond" truecount="2" falsecount="0"/>
+          <line num="46" count="5" type="stmt"/>
+          <line num="49" count="8" type="stmt"/>
+          <line num="50" count="1" type="stmt"/>
+          <line num="51" count="1" type="stmt"/>
+          <line num="54" count="8" type="stmt"/>
+          <line num="55" count="40" type="stmt"/>
+          <line num="58" count="21" type="cond" truecount="1" falsecount="0"/>
+          <line num="59" count="9" type="stmt"/>
+          <line num="60" count="9" type="stmt"/>
+          <line num="61" count="9" type="stmt"/>
+          <line num="62" count="28" type="cond" truecount="2" falsecount="0"/>
+          <line num="63" count="26" type="stmt"/>
+          <line num="64" count="26" type="stmt"/>
+          <line num="67" count="9" type="stmt"/>
+          <line num="70" count="8" type="stmt"/>
+          <line num="71" count="1" type="stmt"/>
+          <line num="74" count="8" type="stmt"/>
+          <line num="75" count="2" type="cond" truecount="4" falsecount="0"/>
+          <line num="76" count="1" type="stmt"/>
+          <line num="77" count="1" type="stmt"/>
+          <line num="80" count="8" type="stmt"/>
+          <line num="84" count="6" type="cond" truecount="2" falsecount="0"/>
+          <line num="85" count="1" type="stmt"/>
+          <line num="88" count="45" type="cond" truecount="1" falsecount="0"/>
+          <line num="89" count="8" type="stmt"/>
+          <line num="91" count="50" type="cond" truecount="2" falsecount="0"/>
+          <line num="92" count="8" type="stmt"/>
+          <line num="95" count="8" type="cond" truecount="1" falsecount="0"/>
+          <line num="96" count="3" type="stmt"/>
+          <line num="97" count="3" type="cond" truecount="2" falsecount="0"/>
+          <line num="98" count="1" type="stmt"/>
+          <line num="101" count="8" type="cond" truecount="1" falsecount="0"/>
+          <line num="102" count="20" type="stmt"/>
+          <line num="103" count="69" type="cond" truecount="2" falsecount="0"/>
+          <line num="106" count="8" type="stmt"/>
+          <line num="107" count="3" type="cond" truecount="2" falsecount="0"/>
+          <line num="108" count="2" type="stmt"/>
+          <line num="109" count="2" type="stmt"/>
+          <line num="110" count="16" type="cond" truecount="2" falsecount="0"/>
+          <line num="113" count="2" type="stmt"/>
+          <line num="116" count="8" type="cond" truecount="1" falsecount="0"/>
+          <line num="117" count="4" type="stmt"/>
+          <line num="118" count="4" type="stmt"/>
+          <line num="119" count="17" type="cond" truecount="2" falsecount="0"/>
+          <line num="121" count="3" type="stmt"/>
+          <line num="124" count="8" type="stmt"/>
+          <line num="128" count="3" type="stmt"/>
+          <line num="129" count="21" type="cond" truecount="2" falsecount="0"/>
+          <line num="132" count="8" type="cond" truecount="1" falsecount="0"/>
+          <line num="133" count="7" type="cond" truecount="2" falsecount="0"/>
+          <line num="134" count="1" type="stmt"/>
+          <line num="137" count="8" type="cond" truecount="2" falsecount="0"/>
+          <line num="138" count="6" type="cond" truecount="2" falsecount="0"/>
+          <line num="139" count="2" type="stmt"/>
+          <line num="142" count="8" type="stmt"/>
+          <line num="143" count="2" type="stmt"/>
+          <line num="144" count="6" type="stmt"/>
+          <line num="157" count="8" type="stmt"/>
+          <line num="163" count="20" type="stmt"/>
+          <line num="164" count="10" type="stmt"/>
+          <line num="165" count="9" type="cond" truecount="2" falsecount="0"/>
+          <line num="167" count="7" type="cond" truecount="2" falsecount="0"/>
+          <line num="169" count="1" type="stmt"/>
+          <line num="170" count="6" type="cond" truecount="2" falsecount="0"/>
+          <line num="172" count="4" type="stmt"/>
+          <line num="173" count="4" type="cond" truecount="2" falsecount="0"/>
+          <line num="174" count="3" type="cond" truecount="2" falsecount="0"/>
+          <line num="176" count="2" type="stmt"/>
+          <line num="179" count="2" type="cond" truecount="1" falsecount="1"/>
+          <line num="181" count="2" type="stmt"/>
+          <line num="182" count="2" type="cond" truecount="2" falsecount="0"/>
+          <line num="185" count="9" type="stmt"/>
+          <line num="186" count="18" type="stmt"/>
+          <line num="191" count="8" type="stmt"/>
+          <line num="198" count="2" type="stmt"/>
+          <line num="199" count="2" type="stmt"/>
+          <line num="200" count="6" type="stmt"/>
+          <line num="205" count="8" type="stmt"/>
+          <line num="209" count="4" type="stmt"/>
+          <line num="210" count="4" type="stmt"/>
+          <line num="211" count="10" type="stmt"/>
+          <line num="212" count="10" type="cond" truecount="2" falsecount="0"/>
+          <line num="213" count="5" type="stmt"/>
+          <line num="214" count="5" type="stmt"/>
+          <line num="220" count="8" type="stmt"/>
+          <line num="227" count="2" type="stmt"/>
+          <line num="228" count="2" type="stmt"/>
+          <line num="229" count="8" type="stmt"/>
+          <line num="230" count="8" type="stmt"/>
+          <line num="236" count="17" type="cond" truecount="1" falsecount="0"/>
+          <line num="238" count="6" type="stmt"/>
+          <line num="239" count="6" type="stmt"/>
+          <line num="240" count="22" type="cond" truecount="2" falsecount="0"/>
+          <line num="241" count="19" type="stmt"/>
+          <line num="242" count="19" type="stmt"/>
+          <line num="244" count="6" type="cond" truecount="2" falsecount="0"/>
+          <line num="245" count="5" type="stmt"/>
+          <line num="248" count="8" type="cond" truecount="2" falsecount="0"/>
+          <line num="249" count="6" type="stmt"/>
+          <line num="250" count="17" type="cond" truecount="2" falsecount="0"/>
+          <line num="251" count="6" type="stmt"/>
+          <line num="254" count="12" type="cond" truecount="1" falsecount="0"/>
+          <line num="255" count="3" type="stmt"/>
+          <line num="256" count="3" type="stmt"/>
+          <line num="257" count="3" type="cond" truecount="2" falsecount="0"/>
+          <line num="258" count="2" type="stmt"/>
+          <line num="260" count="16" type="cond" truecount="2" falsecount="0"/>
+          <line num="262" count="2" type="stmt"/>
+          <line num="265" count="10" type="cond" truecount="1" falsecount="0"/>
+          <line num="266" count="3" type="stmt"/>
+          <line num="267" count="3" type="stmt"/>
+          <line num="268" count="3" type="cond" truecount="2" falsecount="0"/>
+          <line num="269" count="2" type="stmt"/>
+          <line num="271" count="15" type="cond" truecount="2" falsecount="0"/>
+          <line num="273" count="2" type="stmt"/>
+          <line num="276" count="8" type="stmt"/>
+          <line num="277" count="30" type="stmt"/>
+          <line num="280" count="8" type="stmt"/>
+          <line num="281" count="1" type="stmt"/>
+          <line num="282" count="1" type="stmt"/>
+          <line num="285" count="8" type="stmt"/>
+          <line num="286" count="1" type="stmt"/>
+          <line num="287" count="1" type="stmt"/>
+          <line num="288" count="9" type="stmt"/>
+          <line num="291" count="8" type="stmt"/>
+          <line num="292" count="116" type="stmt"/>
+          <line num="293" count="329" type="stmt"/>
+          <line num="302" count="8" type="stmt"/>
+          <line num="304" count="7" type="cond" truecount="1" falsecount="0"/>
+          <line num="306" count="2" type="stmt"/>
+          <line num="307" count="2" type="stmt"/>
+          <line num="308" count="8" type="stmt"/>
+          <line num="309" count="14" type="stmt"/>
+          <line num="314" count="8" type="stmt"/>
+          <line num="318" count="5" type="stmt"/>
+          <line num="319" count="5" type="stmt"/>
+          <line num="321" count="5" type="stmt"/>
+          <line num="322" count="23" type="stmt"/>
+          <line num="323" count="23" type="stmt"/>
+          <line num="324" count="23" type="cond" truecount="2" falsecount="0"/>
+          <line num="325" count="22" type="cond" truecount="2" falsecount="0"/>
+          <line num="326" count="19" type="cond" truecount="2" falsecount="0"/>
+          <line num="330" count="8" type="cond" truecount="1" falsecount="0"/>
+          <line num="331" count="4" type="stmt"/>
+          <line num="332" count="4" type="stmt"/>
+          <line num="333" count="4" type="cond" truecount="2" falsecount="0"/>
+          <line num="334" count="3" type="cond" truecount="2" falsecount="0"/>
+          <line num="335" count="2" type="stmt"/>
+          <line num="338" count="8" type="stmt"/>
+          <line num="339" count="1" type="cond" truecount="1" falsecount="0"/>
+          <line num="342" count="4" type="stmt"/>
+          <line num="343" count="4" type="stmt"/>
+          <line num="344" count="4" type="cond" truecount="2" falsecount="0"/>
+          <line num="345" count="3" type="cond" truecount="2" falsecount="0"/>
+          <line num="346" count="2" type="stmt"/>
+          <line num="349" count="8" type="stmt"/>
+          <line num="350" count="5" type="stmt"/>
+          <line num="351" count="5" type="stmt"/>
+          <line num="352" count="31" type="cond" truecount="2" falsecount="0"/>
+          <line num="353" count="18" type="stmt"/>
+          <line num="357" count="8" type="stmt"/>
+          <line num="358" count="3" type="stmt"/>
+          <line num="361" count="8" type="stmt"/>
+          <line num="362" count="3" type="stmt"/>
+          <line num="363" count="3" type="stmt"/>
+          <line num="364" count="3" type="stmt"/>
+          <line num="365" count="3" type="cond" truecount="2" falsecount="0"/>
+          <line num="366" count="21" type="stmt"/>
+          <line num="369" count="3" type="stmt"/>
+          <line num="370" count="7" type="stmt"/>
+          <line num="371" count="7" type="stmt"/>
+          <line num="375" count="107" type="cond" truecount="1" falsecount="0"/>
+          <line num="376" count="6" type="stmt"/>
+          <line num="377" count="110" type="stmt"/>
+          <line num="378" count="6" type="stmt"/>
+          <line num="381" count="8" type="stmt"/>
+          <line num="382" count="5" type="stmt"/>
+          <line num="383" count="5" type="stmt"/>
+          <line num="384" count="13" type="cond" truecount="2" falsecount="0"/>
+          <line num="385" count="4" type="stmt"/>
+          <line num="389" count="8" type="stmt"/>
+          <line num="390" count="3" type="stmt"/>
+          <line num="393" count="8" type="stmt"/>
+          <line num="394" count="2" type="stmt"/>
+          <line num="395" count="2" type="stmt"/>
+          <line num="396" count="14" type="cond" truecount="2" falsecount="0"/>
+          <line num="397" count="2" type="stmt"/>
+          <line num="401" count="8" type="stmt"/>
+          <line num="402" count="145" type="stmt"/>
+          <line num="412" count="8" type="stmt"/>
+          <line num="414" count="2" type="cond" truecount="1" falsecount="0"/>
+          <line num="418" count="18" type="cond" truecount="2" falsecount="0"/>
+          <line num="419" count="2" type="stmt"/>
+          <line num="420" count="1" type="stmt"/>
+          <line num="422" count="17" type="stmt"/>
+          <line num="424" count="18" type="stmt"/>
+          <line num="425" count="45" type="stmt"/>
+          <line num="430" count="8" type="cond" truecount="1" falsecount="0"/>
+          <line num="431" count="31" type="stmt"/>
+          <line num="440" count="8" type="stmt"/>
+          <line num="442" count="9" type="cond" truecount="1" falsecount="0"/>
+          <line num="446" count="30" type="cond" truecount="2" falsecount="0"/>
+          <line num="447" count="18" type="stmt"/>
+          <line num="448" count="4" type="stmt"/>
+          <line num="450" count="26" type="stmt"/>
+          <line num="452" count="30" type="stmt"/>
+          <line num="453" count="112" type="stmt"/>
+          <line num="458" count="8" type="cond" truecount="1" falsecount="0"/>
+          <line num="459" count="29" type="stmt"/>
+          <line num="462" count="8" type="stmt"/>
+          <line num="463" count="7" type="stmt"/>
+          <line num="466" count="8" type="stmt"/>
+          <line num="470" count="13" type="stmt"/>
+          <line num="471" count="34" type="cond" truecount="2" falsecount="0"/>
+          <line num="472" count="27" type="cond" truecount="2" falsecount="0"/>
+          <line num="475" count="8" type="stmt"/>
+          <line num="476" count="19" type="stmt"/>
+          <line num="477" count="80" type="cond" truecount="2" falsecount="0"/>
+          <line num="480" count="8" type="stmt"/>
+          <line num="481" count="3" type="cond" truecount="4" falsecount="0"/>
+          <line num="482" count="2" type="stmt"/>
+          <line num="483" count="2" type="stmt"/>
+          <line num="484" count="2" type="stmt"/>
+          <line num="485" count="6" type="stmt"/>
+          <line num="486" count="6" type="cond" truecount="2" falsecount="0"/>
+          <line num="487" count="5" type="stmt"/>
+          <line num="488" count="5" type="cond" truecount="2" falsecount="0"/>
+          <line num="489" count="4" type="stmt"/>
+        </file>
+        <file name="NativeExtensions.js" path="C:\Users\Goran\Documents\linqify\src\Methods\NativeExtensions.js">
+          <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+          <line num="1" count="8" type="stmt"/>
+          <line num="2" count="8" type="stmt"/>
+          <line num="5" count="8" type="stmt"/>
+          <line num="6" count="32" type="stmt"/>
+          <line num="8" count="96" type="stmt"/>
+          <line num="9" count="64" type="stmt"/>
+        </file>
+      </package>
+      <package name="src.NoConflict">
+        <metrics statements="36" coveredstatements="36" conditionals="16" coveredconditionals="14" methods="3" coveredmethods="3"/>
+        <file name="AddConflict.js" path="C:\Users\Goran\Documents\linqify\src\NoConflict\AddConflict.js">
+          <metrics statements="18" coveredstatements="18" conditionals="10" coveredconditionals="9" methods="2" coveredmethods="2"/>
+          <line num="1" count="8" type="stmt"/>
+          <line num="2" count="8" type="stmt"/>
+          <line num="3" count="8" type="stmt"/>
+          <line num="4" count="8" type="stmt"/>
+          <line num="6" count="8" type="stmt"/>
+          <line num="7" count="48" type="cond" truecount="1" falsecount="1"/>
+          <line num="8" count="48" type="stmt"/>
+          <line num="12" count="8" type="stmt"/>
+          <line num="13" count="1680" type="cond" truecount="2" falsecount="0"/>
+          <line num="15" count="1676" type="cond" truecount="2" falsecount="0"/>
+          <line num="16" count="6" type="cond" truecount="2" falsecount="0"/>
+          <line num="20" count="1" type="stmt"/>
+          <line num="23" count="1" type="stmt"/>
+          <line num="26" count="1675" type="cond" truecount="2" falsecount="0"/>
+          <line num="27" count="1671" type="stmt"/>
+          <line num="32" count="1671" type="stmt"/>
+          <line num="35" count="1675" type="stmt"/>
+          <line num="43" count="8" type="stmt"/>
+        </file>
+        <file name="NoConflict.js" path="C:\Users\Goran\Documents\linqify\src\NoConflict\NoConflict.js">
+          <metrics statements="18" coveredstatements="18" conditionals="6" coveredconditionals="5" methods="1" coveredmethods="1"/>
+          <line num="6" count="8" type="stmt"/>
+          <line num="8" count="8" type="stmt"/>
+          <line num="9" count="2" type="cond" truecount="2" falsecount="0"/>
+          <line num="11" count="1" type="cond" truecount="1" falsecount="1"/>
+          <line num="13" count="6" type="stmt"/>
+          <line num="14" count="1" type="stmt"/>
+          <line num="17" count="1" type="stmt"/>
+          <line num="18" count="211" type="cond" truecount="2" falsecount="0"/>
+          <line num="19" count="210" type="stmt"/>
+          <line num="21" count="1" type="stmt"/>
+          <line num="24" count="1" type="stmt"/>
+          <line num="25" count="1" type="stmt"/>
+          <line num="26" count="1" type="stmt"/>
+          <line num="27" count="1" type="stmt"/>
+          <line num="28" count="1" type="stmt"/>
+          <line num="29" count="5" type="stmt"/>
+          <line num="30" count="1" type="stmt"/>
+          <line num="33" count="8" type="stmt"/>
+        </file>
+      </package>
+      <package name="src.Sequence">
+        <metrics statements="48" coveredstatements="48" conditionals="14" coveredconditionals="14" methods="22" coveredmethods="20"/>
+        <file name="Enumerable.js" path="C:\Users\Goran\Documents\linqify\src\Sequence\Enumerable.js">
+          <metrics statements="24" coveredstatements="24" conditionals="14" coveredconditionals="14" methods="11" coveredmethods="9"/>
+          <line num="1" count="8" type="stmt"/>
+          <line num="2" count="8" type="stmt"/>
+          <line num="6" count="49" type="cond" truecount="2" falsecount="0"/>
+          <line num="8" count="29" type="cond" truecount="2" falsecount="0"/>
+          <line num="12" count="1" type="stmt"/>
+          <line num="14" count="28" type="stmt"/>
+          <line num="18" count="5" type="cond" truecount="2" falsecount="0"/>
+          <line num="19" count="4" type="stmt"/>
+          <line num="20" count="4" type="stmt"/>
+          <line num="21" count="124" type="stmt"/>
+          <line num="26" count="2" type="cond" truecount="2" falsecount="0"/>
+          <line num="27" count="1" type="stmt"/>
+          <line num="28" count="1" type="stmt"/>
+          <line num="29" count="4" type="stmt"/>
+          <line num="35" count="8" type="stmt"/>
+          <line num="39" count="404" type="stmt"/>
+          <line num="40" count="404" type="cond" truecount="2" falsecount="0"/>
+          <line num="45" count="169" type="stmt"/>
+          <line num="46" count="243" type="stmt"/>
+          <line num="54" count="404" type="stmt"/>
+          <line num="61" count="404" type="stmt"/>
+          <line num="62" count="1616" type="stmt"/>
+          <line num="66" count="8" type="stmt"/>
+          <line num="68" count="8" type="stmt"/>
+        </file>
+        <file name="IEnumerable.js" path="C:\Users\Goran\Documents\linqify\src\Sequence\IEnumerable.js">
+          <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+          <line num="3" count="508" type="stmt"/>
+          <line num="4" count="508" type="stmt"/>
+          <line num="8" count="336" type="stmt"/>
+          <line num="12" count="8" type="stmt"/>
+        </file>
+        <file name="IGrouping.js" path="C:\Users\Goran\Documents\linqify\src\Sequence\IGrouping.js">
+          <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
+          <line num="1" count="8" type="stmt"/>
+          <line num="5" count="72" type="stmt"/>
+          <line num="6" count="67" type="stmt"/>
+          <line num="8" count="72" type="stmt"/>
+          <line num="12" count="79" type="stmt"/>
+          <line num="16" count="8" type="stmt"/>
+        </file>
+        <file name="IOrderedEnumerable.js" path="C:\Users\Goran\Documents\linqify\src\Sequence\IOrderedEnumerable.js">
+          <metrics statements="14" coveredstatements="14" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="6"/>
+          <line num="5" count="8" type="stmt"/>
+          <line num="6" count="8" type="stmt"/>
+          <line num="10" count="14" type="stmt"/>
+          <line num="11" count="14" type="stmt"/>
+          <line num="12" count="14" type="stmt"/>
+          <line num="13" count="14" type="stmt"/>
+          <line num="17" count="9" type="stmt"/>
+          <line num="21" count="2" type="stmt"/>
+          <line num="28" count="3" type="stmt"/>
+          <line num="35" count="8" type="stmt"/>
+          <line num="40" count="6" type="stmt"/>
+          <line num="46" count="8" type="stmt"/>
+          <line num="51" count="3" type="stmt"/>
+          <line num="57" count="8" type="stmt"/>
+        </file>
+      </package>
+      <package name="src.Utils">
+        <metrics statements="75" coveredstatements="71" conditionals="60" coveredconditionals="56" methods="22" coveredmethods="21"/>
+        <file name="EqualityComparers.js" path="C:\Users\Goran\Documents\linqify\src\Utils\EqualityComparers.js">
+          <metrics statements="8" coveredstatements="8" conditionals="1" coveredconditionals="1" methods="6" coveredmethods="6"/>
+          <line num="5" count="8" type="stmt"/>
+          <line num="7" count="8" type="stmt"/>
+          <line num="8" count="3" type="cond" truecount="1" falsecount="0"/>
+          <line num="9" count="3" type="stmt"/>
+          <line num="10" count="6" type="stmt"/>
+          <line num="13" count="140" type="stmt"/>
+          <line num="14" count="816" type="stmt"/>
+          <line num="18" count="8" type="stmt"/>
+        </file>
+        <file name="EqualityComparersUtils.js" path="C:\Users\Goran\Documents\linqify\src\Utils\EqualityComparersUtils.js">
+          <metrics statements="25" coveredstatements="25" conditionals="21" coveredconditionals="20" methods="3" coveredmethods="3"/>
+          <line num="1" count="9" type="stmt"/>
+          <line num="8" count="9" type="stmt"/>
+          <line num="10" count="6" type="stmt"/>
+          <line num="11" count="1023" type="stmt"/>
+          <line num="12" count="6" type="stmt"/>
+          <line num="14" count="9" type="stmt"/>
+          <line num="15" count="117" type="stmt"/>
+          <line num="16" count="117" type="cond" truecount="4" falsecount="0"/>
+          <line num="17" count="42" type="cond" truecount="2" falsecount="0"/>
+          <line num="18" count="42" type="stmt"/>
+          <line num="19" count="106" type="stmt"/>
+          <line num="21" count="75" type="stmt"/>
+          <line num="23" count="117" type="stmt"/>
+          <line num="26" count="9" type="stmt"/>
+          <line num="27" count="10" type="cond" truecount="2" falsecount="0"/>
+          <line num="28" count="9" type="cond" truecount="5" falsecount="0"/>
+          <line num="29" count="4" type="cond" truecount="2" falsecount="0"/>
+          <line num="33" count="1" type="stmt"/>
+          <line num="34" count="1" type="stmt"/>
+          <line num="36" count="4" type="cond" truecount="1" falsecount="1"/>
+          <line num="37" count="4" type="stmt"/>
+          <line num="38" count="7" type="cond" truecount="2" falsecount="0"/>
+          <line num="39" count="3" type="stmt"/>
+          <line num="41" count="5" type="stmt"/>
+          <line num="45" count="9" type="stmt"/>
+        </file>
+        <file name="SortComparers.js" path="C:\Users\Goran\Documents\linqify\src\Utils\SortComparers.js">
+          <metrics statements="4" coveredstatements="4" conditionals="8" coveredconditionals="8" methods="2" coveredmethods="2"/>
+          <line num="1" count="8" type="stmt"/>
+          <line num="2" count="13" type="cond" truecount="4" falsecount="0"/>
+          <line num="3" count="17" type="cond" truecount="4" falsecount="0"/>
+          <line num="6" count="8" type="stmt"/>
+        </file>
+        <file name="SortUtils.js" path="C:\Users\Goran\Documents\linqify\src\Utils\SortUtils.js">
+          <metrics statements="17" coveredstatements="17" conditionals="8" coveredconditionals="8" methods="8" coveredmethods="8"/>
+          <line num="1" count="8" type="stmt"/>
+          <line num="4" count="8" type="cond" truecount="2" falsecount="0"/>
+          <line num="5" count="4" type="stmt"/>
+          <line num="6" count="13" type="stmt"/>
+          <line num="8" count="22" type="stmt"/>
+          <line num="12" count="6" type="cond" truecount="2" falsecount="0"/>
+          <line num="13" count="4" type="stmt"/>
+          <line num="14" count="17" type="stmt"/>
+          <line num="16" count="9" type="stmt"/>
+          <line num="20" count="9" type="cond" truecount="2" falsecount="0"/>
+          <line num="21" count="4" type="stmt"/>
+          <line num="23" count="5" type="stmt"/>
+          <line num="24" count="32" type="stmt"/>
+          <line num="25" count="42" type="stmt"/>
+          <line num="26" count="42" type="cond" truecount="2" falsecount="0"/>
+          <line num="28" count="1" type="stmt"/>
+          <line num="33" count="8" type="stmt"/>
+        </file>
+        <file name="TypeUtils.js" path="C:\Users\Goran\Documents\linqify\src\Utils\TypeUtils.js">
+          <metrics statements="21" coveredstatements="17" conditionals="22" coveredconditionals="19" methods="3" coveredmethods="2"/>
+          <line num="3" count="430" type="stmt"/>
+          <line num="5" count="430" type="cond" truecount="2" falsecount="0"/>
+          <line num="6" count="254" type="cond" truecount="2" falsecount="0"/>
+          <line num="9" count="249" type="stmt"/>
+          <line num="10" count="249" type="cond" truecount="2" falsecount="0"/>
+          <line num="12" count="249" type="cond" truecount="3" falsecount="1"/>
+          <line num="16" count="11" type="cond" truecount="2" falsecount="0"/>
+          <line num="19" count="10" type="cond" truecount="8" falsecount="0"/>
+          <line num="21" count="1" type="stmt"/>
+          <line num="23" count="1" type="stmt"/>
+          <line num="25" count="1" type="stmt"/>
+          <line num="27" count="1" type="stmt"/>
+          <line num="29" count="1" type="stmt"/>
+          <line num="31" count="3" type="stmt"/>
+          <line num="33" count="1" type="stmt"/>
+          <line num="35" count="1" type="stmt"/>
+          <line num="38" count="0" type="stmt"/>
+          <line num="40" count="0" type="cond" truecount="0" falsecount="2"/>
+          <line num="42" count="0" type="stmt"/>
+          <line num="46" count="0" type="stmt"/>
+          <line num="50" count="10" type="stmt"/>
+        </file>
+      </package>
+    </metrics>
+  </project>
+</coverage>
