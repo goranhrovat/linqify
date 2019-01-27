@@ -20,13 +20,13 @@ npm install linqify
 ### Node CommonJS module
 ```typescript
 var {Enumerable, Dictionary, HashSet, EqualityComparers,
-     SortComparers, linqify} = require('linqify')
+     SortComparers, linqify} = require('linqify');
 ```
 
 ### Node ES module
 ```typescript
 import {Enumerable, Dictionary, HashSet, EqualityComparers,
-        SortComparers, linqify} from 'linqify'
+        SortComparers, linqify} from 'linqify';
 ```
 
 ### Browser
