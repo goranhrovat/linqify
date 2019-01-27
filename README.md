@@ -1,5 +1,15 @@
 # LINQify
 
+![](https://img.shields.io/bundlephobia/minzip/linqify.svg)
+![](https://img.shields.io/npm/types/linqify.svg)
+![](https://img.shields.io/npm/l/linqify.svg)
+![](https://img.shields.io/npm/v/linqify.svg)
+
+![](https://img.shields.io/npm/dependency-version/linqify/dev/rollup.svg)
+![](https://img.shields.io/npm/dependency-version/linqify/dev/jest.svg)
+![](https://img.shields.io/npm/dependency-version/linqify/dev/eslint.svg)
+![](https://img.shields.io/npm/dependency-version/linqify/dev/prettier.svg)
+
 JavaScript library for lazy querying Arrays, Maps, Sets, and Strings based on [LINQ (C#)](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/).
 
 Provides Dictionary, HashSet, and Lookup with comparer for complex types.
