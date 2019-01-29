@@ -46,7 +46,7 @@ import {Enumerable, Dictionary, HashSet, EqualityComparers,
 ```
 #### Get the specific version
 ```html
-<script src="https://unpkg.com/linqify@1.0.4"></script>
+<script src="https://unpkg.com/linqify@1.0.5"></script>
 ```
 #### Get the latest minor and patch version
 ```html

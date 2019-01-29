@@ -14,8 +14,7 @@ export default [
             //format: 'iife',
             format: 'umd',
             extend: true,
-            sourcemap: true,
-            // noConflict: true,
+            sourcemap: false,
         },
         plugins: [
             resolve(),
