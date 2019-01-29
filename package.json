@@ -1,6 +1,6 @@
 {
   "name": "linqify",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Javascript LINQ library based on C# LINQ",
   "main": "dist/linqify.js",
   "module": "dist/linqify.esm.js",
@@ -49,9 +49,7 @@
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-terser": "^4.0.1",
-    "typedoc": "^0.14.2"
-  },
-  "dependencies": {
+    "typedoc": "^0.14.2",
     "@babel/runtime": "^7.2.0"
   }
 }
