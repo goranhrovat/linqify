@@ -8,7 +8,30 @@ let comparer = {
 	GetHashCode: a => a.a
 };
 
+let comparerCollision = {
+	Equals: (a, b) => a.a === b.a,
+	GetHashCode: a => 1
+};
+
 test("HashSet", () => {
+	let hashsetColl = new HashSet(comparerCollision);
+	expect(hashsetColl.Add({ a: "test" })).toBeTruthy();
+	expect(hashsetColl.Add({ a: "test2" })).toBeTruthy();
+	expect(hashsetColl.Remove({ a: "test" })).toBeTruthy();
+	expect(hashsetColl.Remove({ a: "test" })).toBeFalsy();
+
+	expect(hashsetColl.ContainsNative({ a: "test2" })).toBeTruthy();
+	expect(hashsetColl.ContainsNative({ a: "test" })).toBeFalsy();
+
+	expect(hashsetColl.TryGetValue({ a: "test" })).toEqual({
+		actualValue: undefined,
+		contains: false
+	});
+	expect(hashsetColl.TryGetValue({ a: "test2" })).toEqual({
+		actualValue: { a: "test2" },
+		contains: true
+	});
+
 	let hashset = new HashSet(comparer);
 	expect(hashset.Comparer).toBe(comparer);
 	let added1 = hashset.Add({ a: "test" });
@@ -55,6 +78,9 @@ test("HashSet", () => {
 	hs2.CopyTo(setArr, 5, 2);
 	expect(setArr).toEqual([1, 2, 3, 4, 1, 1, 2, 8, 9]);
 
+	hs2.CopyTo(setArr);
+	expect(setArr).toEqual([1, 2, 3, 4, 1, 1, 2, 8, 9]);
+
 	hs2.Remove(1);
 	expect(hs1.CountNative).toBe(1);
 	expect(hs2.CountNative).toBe(2);
@@ -72,6 +98,10 @@ test("HashSet", () => {
 	var hs7 = new HashSet([hs3, hs4, hs5]);
 	var hs8 = new HashSet([hs4, hs3.ToHashSet(), hs5]);
 	expect(hs7.SequenceEqual(hs8, hs7.CreateSetComparer())).toBeTruthy();
+
+	var hsOfSets = new HashSet(hs7.CreateSetComparer());
+	expect(hsOfSets.Add(new HashSet([1, 2, 2, 8, 3, 4, 8]))).toBeTruthy();
+	expect(hsOfSets.Add(new HashSet([1, 2, 2, 8, 3, 4, 8]))).toBeFalsy();
 });
 
 test("HashSet set operations", () => {
@@ -124,11 +154,15 @@ test("HashSet set operations", () => {
 	expect(hs21.IsSupersetOf(hs5)).toBeTruthy();
 	expect(hs21.IsSupersetOf(hs4)).toBeFalsy();
 
+	expect(new HashSet().IsProperSupersetOf(hs11)).toBeFalsy();
+
 	expect(hs21.Overlaps(hs1)).toBeTruthy();
 	expect(hs21.Overlaps(hs6)).toBeFalsy();
 
 	expect(hs2.SetEquals(hs3)).toBeTruthy();
 	expect(hs2.SetEquals(hs5)).toBeFalsy();
+
+	expect(hs5.SetEquals(hs2)).toBeFalsy();
 
 	hs11 = hs1.ToHashSet(comparer);
 	hs11.SymmetricExceptWith(hs2);

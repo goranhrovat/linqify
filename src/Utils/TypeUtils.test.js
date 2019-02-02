@@ -8,4 +8,7 @@ test("defaultVal", () => {
 	expect(defaultVal("object")).toEqual({});
 	expect(typeof defaultVal("symbol")).toBe("symbol");
 	expect(defaultVal("undefined")).toBe(void 0);
+	expect(defaultVal("")).toEqual({});
+	expect(defaultVal("Number")).toEqual(Number(0));
+	expect(defaultVal("number")).toBe(0);
 });

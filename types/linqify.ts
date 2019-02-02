@@ -600,8 +600,8 @@ declare class IEnumerable<T> {
 
      people.SelectMany((t,i) => t.Items.Select((z)=>z+i), (per, item) => ({ name:per.Name, item })).ToArray();
      // [{"name":"Jane","item":"a0"},{"name":"Jane","item":"b0"},{"name":"Jack","item":"c1"},
-         {"name":"Jack","item":"d1"},{"name":"Joe","item":"e2"},{"name":"Joe","item":"f2"},
-         {"name":"John","item":"g3"}]
+     //  {"name":"Jack","item":"d1"},{"name":"Joe","item":"e2"},{"name":"Joe","item":"f2"},
+     //  {"name":"John","item":"g3"}]
      ```
      */
     SelectMany<TCollection,TResult>(collectionSelector : (list:T, index?:number)=>IEnumerable<TCollection>, resultSelector : (list:T, item:TCollection)=>TResult) : IEnumerable<TResult>;

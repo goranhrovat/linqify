@@ -42,5 +42,6 @@ test("setMethod", () => {
 		let ind = 0;
 		for (let t of this) if (ind++ % 2 === 0) yield t;
 	});
+	// @ts-ignore
 	expect([1, 2, 3].EvenElements().ToArray()).toEqual([1, 3]);
 });

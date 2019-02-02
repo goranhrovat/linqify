@@ -1,6 +1,6 @@
 {
   "name": "linqify",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "description": "Javascript LINQ library based on C# LINQ",
   "main": "dist/linqify.js",
   "module": "dist/linqify.esm.js",
@@ -15,7 +15,7 @@
     "build": "rollup -c rollup.config.js&&npm run doc&&cp types/linqify.ts dist/linqify.d.ts&&cp types/linqify.ts src/linqify.d.ts",
     "build:test": "npm run build&&set LINQIFY_PATH=/dist/linqify&&jest&&set LINQIFY_PATH=/dist/linqify.min&&jest",
     "gitbuild": "npm run test&&npm run prettier&&npm run eslint&&npm run build:test",
-    "gitpublish": "git push -u https://github.com/goranhrovat/linqify.git master",
+    "gitpublish": "git push -f -u https://github.com/goranhrovat/linqify.git master",
     "pregitpagespublish": "npm run doc",
     "gitpagespublish": "cd doc&&git add --all&&git commit -m \"Doc commit\"&&git push -u https://github.com/goranhrovat/goranhrovat.github.io.git master",
     "predeploy": "npm run gitbuild",
@@ -36,6 +36,8 @@
     "@babel/core": "^7.2.2",
     "@babel/plugin-transform-runtime": "^7.2.0",
     "@babel/preset-env": "^7.2.3",
+    "@babel/runtime": "^7.2.0",
+    "coveralls": "^3.0.2",
     "eslint": "^5.12.1",
     "eslint-config-prettier": "^4.0.0",
     "jest": "^23.6.0",
@@ -45,7 +47,6 @@
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-terser": "^4.0.1",
-    "typedoc": "^0.14.2",
-    "@babel/runtime": "^7.2.0"
+    "typedoc": "^0.14.2"
   }
 }

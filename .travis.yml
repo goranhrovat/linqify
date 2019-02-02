@@ -5,3 +5,8 @@ before_script:
   - npm install
 script:
   - npm run build:test
+jobs:
+  include:
+    - stage: coverage
+      node_js: "stable"
+      script: jest --coverage --coverageReporters=text-lcov | coveralls

@@ -44,4 +44,7 @@ test("DeepComparer", () => {
 	expect(
 		EqualityComparers.DeepComparer().Equals({ 0: 1, 1: 2 }, [1, 2])
 	).toBeFalsy();
+	expect(
+		EqualityComparers.DeepComparer().Equals([1, 2, 3], [1, 2])
+	).toBeFalsy();
 });

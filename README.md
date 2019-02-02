@@ -1,9 +1,12 @@
 # LINQify
 
+[![Build Status](https://travis-ci.org/goranhrovat/linqify.svg?branch=master)](https://travis-ci.org/goranhrovat/linqify)
+[![Coverage Status](https://coveralls.io/repos/github/goranhrovat/linqify/badge.svg)](https://coveralls.io/github/goranhrovat/linqify)
 ![](https://img.shields.io/bundlephobia/minzip/linqify.svg)
 ![](https://img.shields.io/npm/types/linqify.svg)
 ![](https://img.shields.io/npm/l/linqify.svg)
 ![](https://img.shields.io/npm/v/linqify.svg)
+[![Chat on Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/linqify/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 
 ![](https://img.shields.io/npm/dependency-version/linqify/dev/rollup.svg)
 ![](https://img.shields.io/npm/dependency-version/linqify/dev/jest.svg)
@@ -17,7 +20,7 @@ Provides Dictionary, HashSet, and Lookup with comparer for complex types.
 Features:
   - lazy evaluation with generator functions,
   - extends native javascript Array, Set, Map, and String,
-  - C# LINQ naming convention,
+  - C# LINQ naming convention, which does not collide with native methods (e.g. concat and join),
   - includes typescript support in code editors.
 
 ## Usage
@@ -46,16 +49,17 @@ import {Enumerable, Dictionary, HashSet, EqualityComparers,
 ```
 #### Get the specific version
 ```html
-<script src="https://unpkg.com/linqify@1.0.5"></script>
+<script src="https://unpkg.com/linqify@1.0.7"></script>
 ```
 #### Get the latest minor and patch version
 ```html
 <script src="https://unpkg.com/linqify@1"></script>
 ```
 
-
-### Documentation & GitHub
+### Documentation, Blogger & GitHub
 [LINQify Documentation](https://goranhrovat.github.io/linqify "https://goranhrovat.github.io/linqify") is located on GitHub Pages.
+<br>
+[LINQify blog](https://goranhrovat.blogspot.com/search/label/linqify "https://goranhrovat.blogspot.com/search/label/linqifyy") is located on Blogger.
 <br>
 Source code is available on [GitHub](https://github.com/goranhrovat/linqify "https://github.com/goranhrovat/linqify").
 
@@ -171,7 +175,7 @@ upperNames.ToArray();
 // ["JANE", "JOE", "JACK"]
 ```
 
-### Extends native Array, Map, Set and String
+### Extends native Array, Map, Set, and String
 ```javascript
 "Jane Doe".Distinct().Reverse().ToArray();
 // ["o", "D", " ", "e", "n", "a", "J"]
@@ -184,12 +188,12 @@ new Set([1,4,6,4,7]).Average();
 ### Create IEnumerable from generator
 #### Infinite generator of Prime numbers
 ```javascript
+function isPrime(num) {
+    for(let i = 2, s = Math.sqrt(num); i <= s; i++)
+        if(num % i === 0) return false; 
+    return true;
+}
 let primeNumbers = Enumerable.From(function* () {
-    const isPrime = num => {
-        for(let i = 2, s = Math.sqrt(num); i <= s; i++)
-            if(num % i === 0) return false; 
-        return true;
-    }
     let i = 2;
     while (true) {
         if  (isPrime(i)) yield i;
@@ -199,7 +203,6 @@ let primeNumbers = Enumerable.From(function* () {
 primeNumbers.Take(10).ToArray();
 // [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
 ```
-<br>
 
 #### Infinite generator of Fibonacci sequence
 ```javascript

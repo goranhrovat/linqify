@@ -8,7 +8,31 @@ let comparer = {
 	GetHashCode: a => a.a
 };
 
+let comparerCollision = {
+	Equals: (a, b) => a.a === b.a,
+	GetHashCode: a => 1
+};
+
 test("Dictionary", () => {
+	let dictColl = new Dictionary(comparerCollision);
+	dictColl.Add({ a: "test" }, 1);
+	expect(() => dictColl.Add({ a: "test" }, 1)).toThrow("Key already exists");
+	dictColl.Add({ a: "test2" }, 2);
+	dictColl.Add({ a: "test4" }, 4);
+
+	expect(dictColl.ContainsKey({ a: "test2" })).toBeTruthy();
+
+	expect(dictColl.Remove({ a: "test" })).toBeTruthy();
+	expect(dictColl.Remove({ a: "test3" })).toBeFalsy();
+
+	dictColl.Set({ a: "test4" }, 44);
+	expect(dictColl.Get({ a: "test4" })).toBe(44);
+
+	expect(dictColl.TryGetValue({ a: "test4" })).toEqual({
+		contains: true,
+		value: 44
+	});
+
 	let dict0 = new Dictionary();
 	expect(dict0.Comparer).toBe(EqualityComparers.PrimitiveComparer);
 	let dict = new Dictionary(comparer);
