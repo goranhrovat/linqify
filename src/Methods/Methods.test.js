@@ -241,13 +241,14 @@ test("GroupBy", () => {
 		[15, [{ name: "John", age: 15 }, { name: "Doe", age: 15 }]],
 		[12, [{ name: "Jane", age: 12 }]]
 	]);
-	// 7
+	// 7 and else
 	expect(
 		[1, 2, 3, 4, 5]
 			.GroupBy(t => t % 2)
 			.Select(t => [t.Key, [...t]])
 			.ToArray()
 	).toEqual([[1, [1, 3, 5]], [0, [2, 4]]]);
+
 	// 8
 	expect(
 		[{ a: "test" }, { a: "test2" }, { a: "test" }]
@@ -258,6 +259,13 @@ test("GroupBy", () => {
 		[{ a: "test" }, [{ a: "test" }, { a: "test" }]],
 		[{ a: "test2" }, [{ a: "test2" }]]
 	]);
+	// else
+	expect(() =>
+		[1, 2, 3, 4, 5]
+			.GroupBy(t => t % 2, (_a, _b, _c) => ({}))
+			.Select(t => [t.Key, [...t]])
+			.ToArray()
+	).toThrow("Wrong arguments");
 });
 
 test("GroupJoin", () => {
@@ -682,9 +690,6 @@ test("ToArray", () => {
 	expect([1, 2, 3, 4, 5].ToArray()).toEqual([1, 2, 3, 4, 5]);
 });
 
-// test('ToList', () => {
-// });
-
 test("ToDictionary", () => {
 	// test for HashSet, Dictionary, Lookup, Enumerable, Map, Set, Array
 	expect(
@@ -831,6 +836,42 @@ test("ToHashSet", () => {
 	expect(
 		[{ a: "test" }, { a: "test" }, { a: "test2" }].ToHashSet(comparer).ToArray()
 	).toEqual([{ a: "test" }, { a: "test2" }]);
+});
+
+test("ToList", () => {
+	let comparer = (a, b) => {
+		if (a.Age > b.Age) return 1;
+		if (a.Age < b.Age) return -1;
+		return 0;
+	};
+
+	let people = [
+		{ Name: "John", Age: 15 },
+		{ Name: "Jane", Age: 30 },
+		{ Name: "John", Age: 20 }
+	];
+	expect(people.ToList().CountNative).toBe(3);
+	expect(
+		people.ToList(comparer).ContainsNative({ Name: null, Age: 15 })
+	).toBeTruthy();
+
+	let people2 = [
+		{ Name: "Jack", Age: 18 },
+		{ Name: "Joe", Age: 22 },
+		{ Name: "Jack", Age: 20 }
+	];
+	let mylist = people2.ToList();
+	mylist.Add({ Name: "Jane", Age: 19 });
+	expect(mylist.ToArray()).toEqual([
+		{ Name: "Jack", Age: 18 },
+		{ Name: "Joe", Age: 22 },
+		{ Name: "Jack", Age: 20 },
+		{ Name: "Jane", Age: 19 }
+	]);
+
+	let mylist3 = [1, 3, 4, 8, 12].ToList();
+	mylist3.Add(15);
+	expect([...mylist3]).toEqual([1, 3, 4, 8, 12, 15]);
 });
 
 test("ToLookup", () => {

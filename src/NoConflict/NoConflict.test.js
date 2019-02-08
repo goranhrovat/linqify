@@ -12,11 +12,15 @@ Object.defineProperty(Array.prototype, "Where", {
 	value: () => 1234
 });
 
-var { linqify } = process.env.LINQIFY_PATH
-	? require("../../" + process.env.LINQIFY_PATH)
-	: require("../linqify");
+afterEach(() => {
+	jest.resetModules();
+});
 
 test("NoConflict", () => {
+	var { linqify } = process.env.LINQIFY_PATH
+		? require("../../" + process.env.LINQIFY_PATH)
+		: require("../linqify");
+
 	linqify.Enumerable.setMethod("Test", () => 234);
 	linqify.Enumerable.setMethod("Test", () => 234);
 	expect([1, 2].Select(t => t * 2).ToArray()).toEqual([2, 4]);

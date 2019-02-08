@@ -12,7 +12,9 @@ class HashSet extends IEnumerable {
 	 * comparer
 	 */
 	constructor(arg1, comparer = EqualityComparers.PrimitiveComparer) {
-		super();
+		super(function*() {
+			for (let t of this.data) for (let k of t[1]) yield k;
+		});
 		this.count = 0;
 		this.data = new Map();
 		comparer = comparer || EqualityComparers.PrimitiveComparer;
@@ -27,10 +29,6 @@ class HashSet extends IEnumerable {
 			this.comparer = comparer;
 			for (let t of arg1) this.Add(t);
 		}
-	}
-
-	*[Symbol.iterator]() {
-		for (let t of this.data) for (let k of t[1]) yield k;
 	}
 
 	get Comparer() {

@@ -3,12 +3,20 @@ process.env.LINQIFY_PATH
 	: require("../linqify");
 //require('../../src/linqify');
 
+const { Lookup } = require("./Lookup");
+
 let comparer = {
 	Equals: (a, b) => a.a === b.a,
 	GetHashCode: a => a.a
 };
 
 test("Lookup", () => {
+	let myLookup = new Lookup([
+		{ Key: { a: "a" }, Value: "a" },
+		{ Key: { a: "a" }, Value: "a" }
+	]);
+	expect(myLookup.CountNative).toBe(2);
+
 	expect(
 		[1, 2, 3]
 			.ToLookup(t => t)

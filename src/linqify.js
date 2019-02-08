@@ -4,6 +4,7 @@ const globalVars = [
 	"Enumerable",
 	"Dictionary",
 	"HashSet",
+	"List",
 	"EqualityComparers",
 	"SortComparers",
 	"linqify"
@@ -17,6 +18,7 @@ const {
 	Enumerable,
 	EqualityComparers,
 	HashSet,
+	List,
 	SortComparers
 } = linqObjects;
 
@@ -42,6 +44,7 @@ module.exports = {
 	Enumerable,
 	EqualityComparers,
 	HashSet,
+	List,
 	SortComparers,
 	linqify
 };

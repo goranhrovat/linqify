@@ -10,7 +10,10 @@ class Dictionary extends IEnumerable {
 	 * comparer
 	 */
 	constructor(arg1, comparer = EqualityComparers.PrimitiveComparer) {
-		super();
+		super(function*() {
+			for (let t of this.data)
+				for (let k of t[1]) yield { Key: k.key, Value: k.value };
+		});
 		this.count = 0;
 		this.data = new Map();
 		comparer = comparer || EqualityComparers.PrimitiveComparer;
@@ -25,11 +28,6 @@ class Dictionary extends IEnumerable {
 			this.comparer = comparer;
 			for (let t of arg1) this.Add(t.Key, t.Value);
 		}
-	}
-
-	*[Symbol.iterator]() {
-		for (let t of this.data)
-			for (let k of t[1]) yield { Key: k.key, Value: k.value };
 	}
 
 	get Comparer() {
@@ -153,10 +151,7 @@ Dictionary.KeyCollection = class extends IEnumerable {
 
 	CopyTo(array, index) {
 		let i = 0;
-		for (let t of this) {
-			array[index + i] = t;
-			i++;
-		}
+		for (let t of this) array[index + i++] = t;
 	}
 };
 

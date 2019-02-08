@@ -2,10 +2,12 @@
 
 const { getType, defaultVal } = require("../Utils/TypeUtils");
 const { EqualityComparers } = require("../Utils/EqualityComparers");
+const { SortComparers } = require("../Utils/SortComparers");
 
 const { Enumerable } = require("../Sequence/Enumerable");
 const { HashSet } = require("../DataStructures/HashSet");
 const { Dictionary } = require("../DataStructures/Dictionary");
+const { List } = require("../DataStructures/List");
 const { Lookup } = require("../DataStructures/Lookup");
 
 let setMtd = Enumerable.setMethod;
@@ -72,7 +74,7 @@ setMtd("Cast", function*() {
 });
 
 setMtd("Concat", function*(second) {
-	if (second == undefined || second == null) throw "Second is null";
+	if (second == null) throw "Second is null";
 	yield* this;
 	yield* second;
 });
@@ -180,6 +182,8 @@ setMtd("GroupBy", function(
 		// 5,6
 		resultSelector = arg2; // 5
 		if (getType(arg3) === "Object") comparer = arg3; // 6
+	} else {
+		throw "Wrong arguments";
 	}
 
 	return this.ToLookup(keySelector, elementSelector, comparer).Select(g =>
@@ -301,7 +305,7 @@ setMtd("Select", function*(selector) {
  */
 setMtd("SelectMany", function*(
 	collectionSelector,
-	resultSelector = (list, item) => item
+	resultSelector = (_list, item) => item
 ) {
 	let ind = 0;
 	for (let list of this) {
@@ -431,6 +435,10 @@ setMtd("ToHashSet", function(comparer = EqualityComparers.PrimitiveComparer) {
 	return new HashSet(this, comparer);
 });
 
+setMtd("ToList", function(comparer = SortComparers.DefaultComparer) {
+	return new List(this, comparer);
+});
+
 /**
  * keySel, elemSel
  * keySel, elemSel, comparer
@@ -478,7 +486,7 @@ setMtd("Where", function*(predicate) {
 });
 
 setMtd("Zip", function*(second, resultSelector) {
-	if (second == undefined || second == null) throw "Second is null";
+	if (second == null) throw "Second is null";
 	let thisIterator = this[Symbol.iterator]();
 	let secondIterator = second[Symbol.iterator]();
 	while (true) {

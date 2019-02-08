@@ -2,10 +2,13 @@
 
 [![Build Status](https://travis-ci.org/goranhrovat/linqify.svg?branch=master)](https://travis-ci.org/goranhrovat/linqify)
 [![Coverage Status](https://coveralls.io/repos/github/goranhrovat/linqify/badge.svg)](https://coveralls.io/github/goranhrovat/linqify)
+[![Known Vulnerabilities](https://snyk.io/test/github/goranhrovat/linqify/badge.svg?targetFile=package.json)](https://snyk.io/test/github/goranhrovat/linqify?targetFile=package.json)
+[![dependencies Status](https://david-dm.org/goranhrovat/linqify/status.svg)](https://david-dm.org/goranhrovat/linqify)
+[![devDependencies Status](https://david-dm.org/goranhrovat/linqify/dev-status.svg)](https://david-dm.org/goranhrovat/linqify?type=dev)
 ![](https://img.shields.io/bundlephobia/minzip/linqify.svg)
 ![](https://img.shields.io/npm/types/linqify.svg)
 ![](https://img.shields.io/npm/l/linqify.svg)
-![](https://img.shields.io/npm/v/linqify.svg)
+[![NPM](https://img.shields.io/npm/v/linqify.svg)](https://www.npmjs.com/package/linqify)
 [![Chat on Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/linqify/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 
 ![](https://img.shields.io/npm/dependency-version/linqify/dev/rollup.svg)
@@ -15,7 +18,7 @@
 
 JavaScript library for lazy querying Arrays, Maps, Sets, and Strings based on [LINQ (C#)](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/).
 
-Provides Dictionary, HashSet, and Lookup with comparer for complex types.
+Provides List, Dictionary, HashSet, and Lookup with comparer for complex types.
 
 Features:
   - lazy evaluation with generator functions,
@@ -32,13 +35,13 @@ npm install linqify
 
 ### Node CommonJS module
 ```typescript
-var {Enumerable, Dictionary, HashSet, EqualityComparers,
+var {Enumerable, List, Dictionary, HashSet, EqualityComparers,
      SortComparers, linqify} = require('linqify');
 ```
 
 ### Node ES module
 ```typescript
-import {Enumerable, Dictionary, HashSet, EqualityComparers,
+import {Enumerable, List, Dictionary, HashSet, EqualityComparers,
         SortComparers, linqify} from 'linqify';
 ```
 
@@ -49,19 +52,19 @@ import {Enumerable, Dictionary, HashSet, EqualityComparers,
 ```
 #### Get the specific version
 ```html
-<script src="https://unpkg.com/linqify@1.0.7"></script>
+<script src="https://unpkg.com/linqify@1.1.1"></script>
 ```
-#### Get the latest minor and patch version
+#### Get the latest minor and patch version of specific major version
 ```html
 <script src="https://unpkg.com/linqify@1"></script>
 ```
 
 ### Documentation, Blogger & GitHub
-[LINQify Documentation](https://goranhrovat.github.io/linqify "https://goranhrovat.github.io/linqify") is located on GitHub Pages.
+[LINQify Documentation](https://linqify.github.io "https://linqify.github.io") is located on GitHub Pages.
 <br>
 [LINQify blog](https://goranhrovat.blogspot.com/search/label/linqify "https://goranhrovat.blogspot.com/search/label/linqifyy") is located on Blogger.
 <br>
-Source code is available on [GitHub](https://github.com/goranhrovat/linqify "https://github.com/goranhrovat/linqify").
+[Source code](https://github.com/goranhrovat/linqify "https://github.com/goranhrovat/linqify") is available on GitHub.
 
 ### Use LINQ methods as you are used to
 ```javascript
@@ -108,6 +111,11 @@ let people = [{Name:"Jack", Age:18}, {Name:"Joe",  Age:22},{Name:"Jack", Age:20}
 people.Distinct(nameEqualityComparer).ToArray();
 // [{"Name":"Jack","Age":18},{"Name":"Joe","Age":22}]
 
+// or use DeepComparer
+let nameEqComparer = EqualityComparers.DeepComparer(t=>({Name:t.Name}));
+people.Distinct(nameEqComparer).ToArray();
+// [{"Name":"Jack","Age":18},{"Name":"Joe","Age":22}]
+
 let myhashset = people.ToHashSet(nameEqualityComparer);
 [...myhashset]
 // [{"Name":"Jack","Age":18},{"Name":"Joe","Age":22}]
@@ -138,8 +146,13 @@ Enumerable.setMethod("Variance", function() {
 // 15.440000000000001
 ```
 
-### ToDictionary, ToHashSet, ToLookup
+### ToList, ToDictionary, ToHashSet, ToLookup
 ```javascript
+let mylist = [1,3,4,8,12].ToList();
+mylist.Add(15);
+[...mylist]
+// [1, 3, 4, 8, 12, 15]
+
 let mydict = [1,3,4,8,12].ToDictionary(t=>t, t=>t*2);
 [...mydict]
 // [{"Key":1,"Value":2},{"Key":3,"Value":6},
@@ -219,7 +232,7 @@ fibonacciNumbers.Take(10).ToArray();
 ```
 
 ### With typescript support
-![Typescript support](https://goranhrovat.github.io/linqify/media/OrderBy.png)
+![Typescript support](https://linqify.github.io/media/OrderBy.png)
 
 
 ### noConflict option
@@ -236,61 +249,62 @@ lq([1,2,3]).Select(t=>t*t).ToArray();
 ```
 
 ### Implemented methods in IEnumerable
-[Aggregate](https://goranhrovat.github.io/linqify/classes/ienumerable.html#aggregate),
-[All](https://goranhrovat.github.io/linqify/classes/ienumerable.html#all),
-[Any](https://goranhrovat.github.io/linqify/classes/ienumerable.html#any),
-[Append](https://goranhrovat.github.io/linqify/classes/ienumerable.html#append),
-[AsEnumerable](https://goranhrovat.github.io/linqify/classes/ienumerable.html#asenumerable),
-[Average](https://goranhrovat.github.io/linqify/classes/ienumerable.html#average),
-[Cast](https://goranhrovat.github.io/linqify/classes/ienumerable.html#cast),
-[Concat](https://goranhrovat.github.io/linqify/classes/ienumerable.html#concat),
-[Contains](https://goranhrovat.github.io/linqify/classes/ienumerable.html#contains),
-[Count](https://goranhrovat.github.io/linqify/classes/ienumerable.html#count),
-[DefaultIfEmpty](https://goranhrovat.github.io/linqify/classes/ienumerable.html#defaultifempty),
-[Distinct](https://goranhrovat.github.io/linqify/classes/ienumerable.html#distinct),
-[ElementAt](https://goranhrovat.github.io/linqify/classes/ienumerable.html#elementat),
-[ElementAtOrDefault](https://goranhrovat.github.io/linqify/classes/ienumerable.html#elementatordefault),
-[Except](https://goranhrovat.github.io/linqify/classes/ienumerable.html#except),
-[First](https://goranhrovat.github.io/linqify/classes/ienumerable.html#first),
-[FirstOrDefault](https://goranhrovat.github.io/linqify/classes/ienumerable.html#firstordefault),
-[ForEach](https://goranhrovat.github.io/linqify/classes/ienumerable.html#foreach),
-[GroupBy](https://goranhrovat.github.io/linqify/classes/ienumerable.html#groupby),
-[GroupJoin](https://goranhrovat.github.io/linqify/classes/ienumerable.html#groupjoin),
-[Intersect](https://goranhrovat.github.io/linqify/classes/ienumerable.html#intersect),
-[Join](https://goranhrovat.github.io/linqify/classes/ienumerable.html#join),
-[Last](https://goranhrovat.github.io/linqify/classes/ienumerable.html#last),
-[LastOrDefault](https://goranhrovat.github.io/linqify/classes/ienumerable.html#lastordefault),
-[Max](https://goranhrovat.github.io/linqify/classes/ienumerable.html#max),
-[Min](https://goranhrovat.github.io/linqify/classes/ienumerable.html#min),
-[OfType](https://goranhrovat.github.io/linqify/classes/ienumerable.html#oftype),
-[OrderBy](https://goranhrovat.github.io/linqify/classes/ienumerable.html#orderby),
-[OrderByDescending](https://goranhrovat.github.io/linqify/classes/ienumerable.html#orderbydescending),
-[Prepend](https://goranhrovat.github.io/linqify/classes/ienumerable.html#prepend),
-[Reverse](https://goranhrovat.github.io/linqify/classes/ienumerable.html#reverse),
-[Select](https://goranhrovat.github.io/linqify/classes/ienumerable.html#select),
-[SelectMany](https://goranhrovat.github.io/linqify/classes/ienumerable.html#selectmany),
-[SequenceEqual](https://goranhrovat.github.io/linqify/classes/ienumerable.html#sequenceequal),
-[Single](https://goranhrovat.github.io/linqify/classes/ienumerable.html#single),
-[SingleOrDefault](https://goranhrovat.github.io/linqify/classes/ienumerable.html#singleordefault),
-[Skip](https://goranhrovat.github.io/linqify/classes/ienumerable.html#skip),
-[SkipLast](https://goranhrovat.github.io/linqify/classes/ienumerable.html#skiplast),
-[SkipWhile](https://goranhrovat.github.io/linqify/classes/ienumerable.html#skipwhile),
-[Sum](https://goranhrovat.github.io/linqify/classes/ienumerable.html#sum),
-[Take](https://goranhrovat.github.io/linqify/classes/ienumerable.html#take),
-[TakeLast](https://goranhrovat.github.io/linqify/classes/ienumerable.html#takelast),
-[TakeWhile](https://goranhrovat.github.io/linqify/classes/ienumerable.html#takewhile),
-[ToArray](https://goranhrovat.github.io/linqify/classes/ienumerable.html#toarray),
-[ToDictionary](https://goranhrovat.github.io/linqify/classes/ienumerable.html#todictionary),
-[ToHashSet](https://goranhrovat.github.io/linqify/classes/ienumerable.html#tohashset),
-[ToLookup](https://goranhrovat.github.io/linqify/classes/ienumerable.html#tolookup),
-[ToMap](https://goranhrovat.github.io/linqify/classes/ienumerable.html#tomap),
-[ToSet](https://goranhrovat.github.io/linqify/classes/ienumerable.html#toset),
-[Union](https://goranhrovat.github.io/linqify/classes/ienumerable.html#union),
-[Where](https://goranhrovat.github.io/linqify/classes/ienumerable.html#where),
-[Zip](https://goranhrovat.github.io/linqify/classes/ienumerable.html#zip).
+[Aggregate](https://linqify.github.io/classes/ienumerable.html#aggregate),
+[All](https://linqify.github.io/classes/ienumerable.html#all),
+[Any](https://linqify.github.io/classes/ienumerable.html#any),
+[Append](https://linqify.github.io/classes/ienumerable.html#append),
+[AsEnumerable](https://linqify.github.io/classes/ienumerable.html#asenumerable),
+[Average](https://linqify.github.io/classes/ienumerable.html#average),
+[Cast](https://linqify.github.io/classes/ienumerable.html#cast),
+[Concat](https://linqify.github.io/classes/ienumerable.html#concat),
+[Contains](https://linqify.github.io/classes/ienumerable.html#contains),
+[Count](https://linqify.github.io/classes/ienumerable.html#count),
+[DefaultIfEmpty](https://linqify.github.io/classes/ienumerable.html#defaultifempty),
+[Distinct](https://linqify.github.io/classes/ienumerable.html#distinct),
+[ElementAt](https://linqify.github.io/classes/ienumerable.html#elementat),
+[ElementAtOrDefault](https://linqify.github.io/classes/ienumerable.html#elementatordefault),
+[Except](https://linqify.github.io/classes/ienumerable.html#except),
+[First](https://linqify.github.io/classes/ienumerable.html#first),
+[FirstOrDefault](https://linqify.github.io/classes/ienumerable.html#firstordefault),
+[ForEach](https://linqify.github.io/classes/ienumerable.html#foreach),
+[GroupBy](https://linqify.github.io/classes/ienumerable.html#groupby),
+[GroupJoin](https://linqify.github.io/classes/ienumerable.html#groupjoin),
+[Intersect](https://linqify.github.io/classes/ienumerable.html#intersect),
+[Join](https://linqify.github.io/classes/ienumerable.html#join),
+[Last](https://linqify.github.io/classes/ienumerable.html#last),
+[LastOrDefault](https://linqify.github.io/classes/ienumerable.html#lastordefault),
+[Max](https://linqify.github.io/classes/ienumerable.html#max),
+[Min](https://linqify.github.io/classes/ienumerable.html#min),
+[OfType](https://linqify.github.io/classes/ienumerable.html#oftype),
+[OrderBy](https://linqify.github.io/classes/ienumerable.html#orderby),
+[OrderByDescending](https://linqify.github.io/classes/ienumerable.html#orderbydescending),
+[Prepend](https://linqify.github.io/classes/ienumerable.html#prepend),
+[Reverse](https://linqify.github.io/classes/ienumerable.html#reverse),
+[Select](https://linqify.github.io/classes/ienumerable.html#select),
+[SelectMany](https://linqify.github.io/classes/ienumerable.html#selectmany),
+[SequenceEqual](https://linqify.github.io/classes/ienumerable.html#sequenceequal),
+[Single](https://linqify.github.io/classes/ienumerable.html#single),
+[SingleOrDefault](https://linqify.github.io/classes/ienumerable.html#singleordefault),
+[Skip](https://linqify.github.io/classes/ienumerable.html#skip),
+[SkipLast](https://linqify.github.io/classes/ienumerable.html#skiplast),
+[SkipWhile](https://linqify.github.io/classes/ienumerable.html#skipwhile),
+[Sum](https://linqify.github.io/classes/ienumerable.html#sum),
+[Take](https://linqify.github.io/classes/ienumerable.html#take),
+[TakeLast](https://linqify.github.io/classes/ienumerable.html#takelast),
+[TakeWhile](https://linqify.github.io/classes/ienumerable.html#takewhile),
+[ToArray](https://linqify.github.io/classes/ienumerable.html#toarray),
+[ToDictionary](https://linqify.github.io/classes/ienumerable.html#todictionary),
+[ToHashSet](https://linqify.github.io/classes/ienumerable.html#tohashset),
+[ToList](https://linqify.github.io/classes/ienumerable.html#tolist),
+[ToLookup](https://linqify.github.io/classes/ienumerable.html#tolookup),
+[ToMap](https://linqify.github.io/classes/ienumerable.html#tomap),
+[ToSet](https://linqify.github.io/classes/ienumerable.html#toset),
+[Union](https://linqify.github.io/classes/ienumerable.html#union),
+[Where](https://linqify.github.io/classes/ienumerable.html#where),
+[Zip](https://linqify.github.io/classes/ienumerable.html#zip).
 
 
 ### Implemented methods in IOrderedEnumerable
-[ThenBy](https://goranhrovat.github.io/linqify/classes/iorderedenumerable.html#thenby),
-[ThenByDescending](https://goranhrovat.github.io/linqify/classes/iorderedenumerable.html#thenbydescending).
+[ThenBy](https://linqify.github.io/classes/iorderedenumerable.html#thenby),
+[ThenByDescending](https://linqify.github.io/classes/iorderedenumerable.html#thenbydescending).
 

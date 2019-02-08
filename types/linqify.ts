@@ -12,7 +12,21 @@ declare type IEqualityComparer<T> = {
  * and Primitive equality comparer for value or reference comparison.
  */
 declare const EqualityComparers : {
-    DeepComparer : (selector? : (item:any)=>any) => IEqualityComparer<any>,
+    /**
+     * Recursively compare objects by attributes.
+     ```javascript
+     let people = [{Name:"John", Age:15},{Name:"John", Age:15},{Name:"John", Age:13}]
+     people.Distinct().ToArray()
+     // [{"Name":"John","Age":15},{"Name":"John","Age":15},{"Name":"John","Age":13}]
+     people.Distinct(EqualityComparers.DeepComparer()).ToArray()
+     // [{"Name":"John","Age":15},{"Name":"John","Age":13}]
+     people.Distinct(EqualityComparers.DeepComparer(t=>({Name:t.Name}))).ToArray()
+     // [{"Name":"John","Age":15}]
+     people.Distinct(EqualityComparers.DeepComparer(t=>t.Name)).ToArray()
+     // [{"Name":"John","Age":15}]
+     ```
+     */
+    DeepComparer : <T>(selector? : (item:T)=>any) => IEqualityComparer<T>,
     PrimitiveComparer : IEqualityComparer<any>,
 };
 
@@ -833,6 +847,20 @@ declare class IEnumerable<T> {
      ```
      */
     ToHashSet(comparer? : IEqualityComparer<T>) : HashSet<T>;
+
+    /**
+     * Creates a `List<T>` from an `IEnumerable<T>`.
+     * @param comparer - An `ISortComparer<TKey>` to compare keys.
+     * @returns A `List<T>` that contains elements from the input sequence.
+     ```javascript
+     let people = [{Name:"Jack", Age:18}, {Name:"Joe", Age:22}, {Name:"Jack", Age:20}]
+     let mylist = people.ToList()
+     mylist.Add({Name:"Jane", Age:19})
+     mylist.ToArray()
+     // [{Name:"Jack", Age:18}, {Name:"Joe", Age:22}, {Name:"Jack", Age:20}, {Name:"Jane", Age:19}]
+     ```
+     */
+    ToList(comparer? : ISortComparer<T>) : List<T>;
 
     /**
      * Creates a `Lookup<TKey,TElement>` from an `IEnumerable<T>` according to a specified key selector function, a comparer and an element selector function.
@@ -1700,6 +1728,696 @@ declare namespace Dictionary {
     }
 }
 
+// DataStructures/List
+/**
+ * Represents a list of objects that can be accessed by index. Provides methods to search, sort, and manipulate lists.
+ */
+declare class List<T> extends IEnumerable<T> {
+    
+    /**
+     * Initializes a new instance of the `List<T>` class that is empty and has the default initial capacity.
+     * @param comparer - An `ISortComparer<TKey>` to compare items.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:30})
+     mylist.ToArray()
+     // [{"Name":"Jack","Age":30}]
+     ```
+     */
+    constructor(comparer?: ISortComparer<T>);
+
+    /**
+     * Initializes a new instance of the `List<T>` class that contains elements copied from the specified collection.
+     * @param collection - The collection whose elements are copied to the new list.
+     * @param comparer - An `ISortComparer<TKey>` to compare items.
+     ```javascript
+     let mylist = new List([{"Name":"Jane","Age":20}])
+     mylist.Add({Name:"Jack", Age:30})
+     mylist.ToArray()
+     // [{"Name":"Jane","Age":20},{"Name":"Jack","Age":30}]
+     ```
+     */
+    constructor(collection : IEnumerable<T>, comparer?: ISortComparer<T>);
+
+    /**
+     * Gets the `ISortComparer<T>` that is used to compare items.
+     */
+    readonly Comparer : ISortComparer<T>;
+
+    /**
+     * Gets the number of elements contained in the `List<T>`.
+     ```javascript
+     let mylist = new List([{"Name":"Jane","Age":20}])
+     mylist.Add({Name:"Jack", Age:30})
+     mylist.CountNative
+     // 2
+     ```
+     */
+    readonly CountNative : number;
+
+    /**
+     * Gets the element at the specified index.
+     * @param index - The zero-based index of the element to get.
+     * @returns The element at the specified index.
+     ```javascript
+     let mylist = new List([{"Name":"Jane","Age":20}])
+     mylist.Add({Name:"Jack", Age:30})
+     mylist.Get(0)
+     // {"Name":"Jane","Age":20}
+     mylist.Get(1)
+     // {"Name":"Jack","Age":30}
+     ```
+     */
+    Get(index : number) : T;
+
+    /**
+     * Sets the element at the specified index.
+     * @param index - The zero-based index of the element to set.
+     * @param item - The element to set.
+     ```javascript
+     let mylist = new List([{"Name":"Jane","Age":20}])
+     mylist.Add({Name:"Jack", Age:30})
+     mylist.Set(0, {"Name":"Joe","Age":50})
+     mylist.Get(0)
+     // {"Name":"Joe","Age":50}
+     ```
+     */
+    Set(index : number, item : T) : void;
+
+    /**
+     * Adds an object to the end of the `List<T>`.
+     * @param item - The object to be added to the end of the `List<T>`.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:30})
+     mylist.ToArray()
+     // [{"Name":"Jack","Age":30}]
+     ```
+     */
+    Add(item : T) : void;
+
+    /**
+     * Adds the elements of the specified collection to the end of the `List<T>`.
+     * @param collection - The collection whose elements should be added to the end of the `List<T>`.
+     ```javascript
+     let mylist = new List()
+     mylist.AddRange([{"Name":"Jane","Age":20},{"Name":"Jack","Age":30}])
+     mylist.ToArray()
+     // [{"Name":"Jane","Age":20},{"Name":"Jack","Age":30}]
+     ```
+     */
+    AddRange(collection : IEnumerable<T>) : void;
+
+    /**
+     * Searches the entire sorted `List<T>` for an element using the specified comparer and returns the zero-based index of the element.
+     * @param item - The object to locate.
+     * @param comparer - The `ISortComparer<T>` implementation to use when comparing elements.
+     * @returns The zero-based index of item in the sorted `List<T>`, if item is found; otherwise, a negative number that is the bitwise complement of the index of the next element that is larger than item or, if there is no larger element, the bitwise complement of Count.
+     ```javascript
+     let ageComparer = (a, b) => (a.Age > b.Age ? 1 : a.Age < b.Age ? -1 : 0)
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:30})
+     mylist.Add({Name:"John", Age:40})
+     mylist.BinarySearch({Age:30}, ageComparer)
+     // 2
+     let person = {Name: "Doe", Age:25}
+     let index = mylist.BinarySearch(person, ageComparer)
+     index
+     // -3
+     mylist.Insert(~index, person)
+     mylist.ToArray()
+     // [{"Name":"Jack","Age":10},{"Name":"Jane","Age":20},
+     //  {"Name":"Doe","Age":25},{"Name":"Joe","Age":30},
+     //  {"Name":"John","Age":40}]
+     ```
+     */
+    BinarySearch(item : T, comparer?: ISortComparer<T>) : number;
+
+    /**
+     * Searches a range of elements in the sorted `List<T>` for an element using the specified comparer and returns the zero-based index of the element.
+     * @param index - The zero-based starting index of the range to search.
+     * @param count - The length of the range to search.
+     * @param item - The object to locate.
+     * @param comparer - The `ISortComparer<T>` implementation to use when comparing elements.
+     * @returns The zero-based index of item in the sorted `List<T>`, if item is found; otherwise, a negative number that is the bitwise complement of the index of the next element that is larger than item or, if there is no larger element, the bitwise complement of Count.
+     ```javascript
+     let ageComparer = (a, b) => (a.Age > b.Age ? 1 : a.Age < b.Age ? -1 : 0)
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:30})
+     mylist.Add({Name:"John", Age:40})
+     mylist.BinarySearch({Age:30}, ageComparer)
+     // 2
+     let person = {Name: "Doe", Age:25}
+     let index = mylist.BinarySearch(1, 2, person, ageComparer)
+     index
+     // -3
+     mylist.Insert(~index, person)
+     mylist.ToArray()
+     // [{"Name":"Jack","Age":10},{"Name":"Jane","Age":20},
+     //  {"Name":"Doe","Age":25},{"Name":"Joe","Age":30},
+     //  {"Name":"John","Age":40}]
+     ```
+     */
+    BinarySearch(index: number, count : number, item : T, comparer: ISortComparer<T>) : number;
+
+    /**
+     * Removes all elements from the `List<T>`.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:30})
+     mylist.Clear()
+     mylist.ToArray()
+     // []
+     ```
+     */
+    Clear() : void;
+
+    /**
+     * Determines whether an element is in the `List<T>`.
+     * @param item - The object to locate in the List<T>.
+     * @returns true if item is found in the `List<T>`; otherwise, false.
+     ```javascript
+     let ageComparer = (a, b) => (a.Age > b.Age ? 1 : a.Age < b.Age ? -1 : 0)
+     let mylist = new List(ageComparer)
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:30})
+     mylist.Add({Name:"John", Age:40})
+     mylist.ContainsNative({Age:20})
+     // true
+     mylist.ContainsNative({Age:25})
+     // false
+     ```
+     */
+    ContainsNative(item : T) : boolean;
+
+    /**
+     * Converts the elements in the current `List<T>` to another type, and returns a list containing the converted elements.
+     * @param converter - A function that converts each element from one type to another type.
+     * @returns A `List<T>` of the target type containing the converted elements from the current `List<T>`.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     let newlist = mylist.ConvertAll(t => ({Name:t.Name, Age:t.Age+1}))
+     mylist.ToArray()
+     // [{"Name":"Jack","Age":10},{"Name":"Jane","Age":20}]
+     newlist.ToArray()
+     // [{"Name":"Jack","Age":11},{"Name":"Jane","Age":21}]
+     ```
+     */
+    ConvertAll<TOutput>(converter : (item : T) => TOutput) : List<TOutput>;
+
+    /**
+     * Copies the entire `List<T>` to a compatible one-dimensional array, starting at the specified index of the target array.
+     * @param array - The one-dimensional `Array` that is the destination of the elements copied from `List<T>`. The `Array` must have zero-based indexing.
+     * @param arrayIndex - The zero-based index in array at which copying begins.
+     ```javascript
+     let mylist = new List([1,2,3])
+     let arr = [15,16,17,18,19,20]
+     mylist.CopyTo(arr, 2)
+     arr
+     // [15, 16, 1, 2, 3, 20]
+     ```
+     */
+    CopyTo(array : Array<T>, arrayIndex? : number) : void;
+
+    /**
+     * Copies a range of elements from the `List<T>` to a compatible one-dimensional array, starting at the specified index of the target array.
+     * @param index - The zero-based index in the source `List<T>` at which copying begins.
+     * @param array - The one-dimensional `Array` that is the destination of the elements copied from `List<T>`. The Array must have zero-based indexing.
+     * @param arrayIndex - The zero-based index in array at which copying begins.
+     * @param count - The number of elements to copy.
+     ```javascript
+     let mylist = new List([1,2,3,4,5,6,7,8])
+     let arr = [15,16,17,18,19,20]
+     mylist.CopyTo(1, arr, 2, 3)
+     arr
+     // [15, 16, 2, 3, 4, 20]
+     ```
+     */
+    CopyTo(index:number, array : Array<T>, arrayIndex : number, count : number) : void;
+
+    /**
+     * Determines whether the `List<T>` contains elements that match the conditions defined by the specified predicate.
+     * @param match - The function that defines the conditions of the elements to search for.
+     * @returns true if the `List<T>` contains one or more elements that match the conditions defined by the specified predicate; otherwise, false.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Exists(t=>t.Age===20)
+     // true
+     mylist.Exists(t=>t.Age===25)
+     // false
+     ```
+     */
+    Exists(match:(item : T) => boolean) : boolean;
+
+    /**
+     * Searches for an element that matches the conditions defined by the specified predicate, and returns the first occurrence within the entire `List<T>`.
+     * @param match - The function that defines the conditions of the element to search for.
+     * @param defaultValue - Default value if no elements are found.
+     * @returns The first element that matches the conditions defined by the specified predicate, if found; otherwise, the default value.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Find(t=>t.Age===20, {Name:"Andy", Age:45})
+     // {"Name":"Jane","Age":20}
+     mylist.Find(t=>t.Age===25, {Name:"Andy", Age:45})
+     // {"Name":"Andy","Age":45}
+     mylist.Find(t=>t.Age===25)
+     // null
+     ```
+     */
+    Find(match:(item : T) => boolean, defaultValue?:T) : T;
+
+    /**
+     * Retrieves all the elements that match the conditions defined by the specified predicate.
+     * @param match - The function that defines the conditions of the elements to search for.
+     * @returns A `List<T>` containing all the elements that match the conditions defined by the specified predicate, if found; otherwise, an empty `List<T>`.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:30})
+     mylist.FindAll(t=>t.Age>15).ToArray()
+     // [{"Name":"Jane","Age":20},{"Name":"Joe","Age":30}]
+     mylist.FindAll(t=>t.Age>30).ToArray()
+     // []
+     ```
+     */
+    FindAll(match:(item : T) => boolean) : List<T>;
+
+    /**
+     * Searches for an element that matches the conditions defined by the specified predicate, and returns the zero-based index of the first occurrence within the entire `List<T>`.
+     * @param match - The function that defines the conditions of the element to search for.
+     * @returns The zero-based index of the first occurrence of an element that matches the conditions defined by match, if found; otherwise, -1.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:30})
+     mylist.FindIndex(t=>t.Age>15)
+     // 1
+     mylist.FindIndex(t=>t.Age===30)
+     // 2
+     mylist.FindIndex(t=>t.Age>30)
+     // -1
+     ```
+     */
+    FindIndex(match : (item : T) => boolean) : number;
+
+    /**
+     * Searches for an element that matches the conditions defined by the specified predicate, and returns the zero-based index of the first occurrence within the range of elements in the `List<T>` that extends from the specified index to the last element.
+     * @param startIndex - The zero-based starting index of the search.
+     * @param match - The function that defines the conditions of the element to search for.
+     * @returns The zero-based index of the first occurrence of an element that matches the conditions defined by match, if found; otherwise, -1.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:30})
+     mylist.FindIndex(2, t=>t.Age>15)
+     // 2
+     mylist.FindIndex(1, t=>t.Age===30)
+     // 2
+     mylist.FindIndex(1, t=>t.Age>30)
+     // -1
+     ```
+     */
+    FindIndex(startIndex: number, match : (item : T) => boolean) : number;
+
+    /**
+     * Searches for an element that matches the conditions defined by the specified predicate, and returns the zero-based index of the first occurrence within the range of elements in the `List<T>` that starts at the specified index and contains the specified number of elements.
+     * @param startIndex - The zero-based starting index of the search.
+     * @param count - The number of elements in the section to search.
+     * @param match - The function that defines the conditions of the element to search for.
+     * @returns The zero-based index of the first occurrence of an element that matches the conditions defined by match, if found; otherwise, -1.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:30})
+     mylist.FindIndex(2, 1, t=>t.Age>15)
+     // 2
+     mylist.FindIndex(1, 1, t=>t.Age===30)
+     // -1
+     mylist.FindIndex(1, 2, t=>t.Age>30)
+     // -1
+     ```
+     */
+    FindIndex(startIndex: number, count:number, match : (item : T) => boolean) : number;
+
+    /**
+     * Searches for an element that matches the conditions defined by the specified predicate, and returns the last occurrence within the entire `List<T>`.
+     * @param match - The function that defines the conditions of the element to search for.
+     * @param defaultValue - Default value if no elements are found.
+     * @returns The last element that matches the conditions defined by the specified predicate, if found; otherwise, the default value.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:20})
+     mylist.FindLast(t=>t.Age===20, {Name:"Andy", Age:45})
+     // {"Name":"Joe", "Age":20}
+     mylist.FindLast(t=>t.Age===25, {Name:"Andy", Age:45})
+     // {"Name":"Andy","Age":45}
+     mylist.FindLast(t=>t.Age===25)
+     // null
+     ```
+     */
+    FindLast(match: (item : T) => boolean, defaultValue?:T) : number;
+
+    /**
+     * Searches for an element that matches the conditions defined by the specified predicate, and returns the zero-based index of the last occurrence within the entire `List<T>`.
+     * @param match - The function that defines the conditions of the element to search for.
+     * @returns The zero-based index of the last occurrence of an element that matches the conditions defined by match, if found; otherwise, -1.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:20})
+     mylist.FindLastIndex(t=>t.Age>5)
+     // 2
+     mylist.FindLastIndex(t=>t.Age>30)
+     // -1
+     ```
+     */
+    FindLastIndex(match : (item : T) => boolean) : number;
+
+    /**
+     * Searches for an element that matches the conditions defined by the specified predicate, and returns the zero-based index of the last occurrence within the range of elements in the `List<T>` that extends from the first element to the specified index.
+     * @param startIndex - The zero-based starting index of the backward search.
+     * @param match - The function that defines the conditions of the element to search for.
+     * @returns The zero-based index of the last occurrence of an element that matches the conditions defined by match, if found; otherwise, -1.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:20})
+     mylist.FindLastIndex(1, t=>t.Age>5)
+     // 2
+     mylist.FindIndex(1, t=>t.Age==10)
+     // -1
+     mylist.FindIndex(1, t=>t.Age>30)
+     // -1
+     ```
+     */
+    FindLastIndex(startIndex: number, match : (item : T) => boolean) : number;
+
+    /**
+     * Searches for an element that matches the conditions defined by the specified predicate, and returns the zero-based index of the last occurrence within the range of elements in the `List<T>` that contains the specified number of elements and ends at the specified index.
+     * @param startIndex - The zero-based starting index of the backward search.
+     * @param count - The number of elements in the section to search.
+     * @param match - The function that defines the conditions of the element to search for.
+     * @returns The zero-based index of the last occurrence of an element that matches the conditions defined by match, if found; otherwise, -1.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:20})
+     mylist.FindIndex(1, 1, t=>t.Age>15)
+     // 1
+     mylist.FindIndex(2, 1, t=>t.Age>15)
+     // 2
+     mylist.FindIndex(1, 2, t=>t.Age==10)
+     // -1
+     ```
+     */
+    FindLastIndex(startIndex: number, count:number, match : (item : T) => boolean) : number;
+
+    /**
+     * Creates a shallow copy of a range of elements in the source `List<T>`.
+     * @param index - The zero-based `List<T>` index at which the range starts.
+     * @param count - The number of elements in the range.
+     * @returns A shallow copy of a range of elements in the source `List<T>`.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:20})
+     mylist.Add({Name:"John", Age:50})
+     let newlist1 = mylist.GetRange(0,2)
+     newlist.ToArray()
+     // [{"Name":"Jack","Age":10},{"Name":"Jane","Age":20}]
+     let newlist2 = mylist.GetRange(1,2)
+     newlist.ToArray()
+     // [{"Name":"Jane","Age":20},{"Name":"Joe","Age":20}]
+     ```
+     */
+    GetRange(index:number, count:number) : List<T>;
+
+    /**
+     * Searches for the specified object and returns the zero-based index of the first occurrence within the range of elements in the `List<T>` that starts at the specified index and contains the specified number of elements.
+     * @param item - The object to locate in the `List<T>`.
+     * @param index - The zero-based starting index of the search. 0 (zero) is valid in an empty list.
+     * @param count - The number of elements in the section to search.
+     * @returns The zero-based index of the first occurrence of item within the range of elements in the `List<T>` that starts at index and contains count number of elements, if found; otherwise, -1.
+     ```javascript
+     let ageComparer = (a, b) => (a.Age > b.Age ? 1 : a.Age < b.Age ? -1 : 0)
+     let mylist = new List(ageComparer)
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:20})
+     mylist.Add({Name:"John", Age:50})
+     mylist.IndexOf({Age:20})
+     // 1
+     mylist.IndexOf({Age:20}, 2, 2)
+     // 2
+     mylist.IndexOf({Age:20}, 3, 1)
+     // -1
+     ```
+     */
+    IndexOf(item:T, index?:number, count?:number):number;
+
+    /**
+     * Inserts an element into the `List<T>` at the specified index.
+     * @param index - The zero-based index at which item should be inserted.
+     * @param item - The object to insert.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:20})
+     mylist.Insert(1, {Name:"John", Age:50})
+     mylist.ToArray()
+     // [{"Name":"Jack","Age":10},{"Name":"John","Age":50},
+     //  {"Name":"Jane","Age":20},{"Name":"Joe","Age":20}]
+     ```
+     */
+    Insert(index:number, item:T) : void;
+
+    /**
+     * nserts the elements of a collection into the `List<T>` at the specified index.
+     * @param index - The zero-based index at which the new elements should be inserted.
+     * @param collection - The collection whose elements should be inserted into the `List<T>`.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:20})
+     mylist.InsertRange(1, [{Name:"John", Age:50}, {Name:"Doe", Age:70}])
+     mylist.ToArray()
+     // [{"Name":"Jack","Age":10},{"Name":"John","Age":50},
+     //  {"Name":"Doe","Age":70},{"Name":"Jane","Age":20},
+     //  {"Name":"Joe","Age":20}]
+     ```
+     */
+    InsertRange(index:number, collection:IEnumerable<T>) : void;
+
+    /**
+     * Searches for the specified object and returns the zero-based index of the last occurrence within the range of elements in the `List<T>` that contains the specified number of elements and ends at the specified index.
+     * @param item - The object to locate in the `List<T>`.
+     * @param index - The zero-based starting index of the backward search.
+     * @param count - The number of elements in the section to search.
+     * @returns The zero-based index of the last occurrence of item within the range of elements in the `List<T>` that contains count number of elements and ends at index, if found; otherwise, -1.
+     ```javascript
+     let ageComparer = (a, b) => (a.Age > b.Age ? 1 : a.Age < b.Age ? -1 : 0)
+     let mylist = new List(ageComparer)
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:20})
+     mylist.Add({Name:"John", Age:50})
+     mylist.LastIndexOf({Age:20})
+     // 2
+     mylist.LastIndexOf({Age:20}, 0, 2)
+     // 1
+     mylist.LastIndexOf({Age:20}, 0, 1)
+     // -1
+     ```
+     */
+    LastIndexOf(item:T, index?:number, count?:number) : number;
+
+    /**
+     * Removes the first occurrence of a specific object from the `List<T>`.
+     * @param item - The object to remove from the `List<T>`. The value can be null for reference types.
+     * @returns true if item is successfully removed; otherwise, false. This method also returns false if item was not found in the `List<T>`.
+     ```javascript
+     let ageComparer = (a, b) => (a.Age > b.Age ? 1 : a.Age < b.Age ? -1 : 0)
+     let mylist = new List(ageComparer)
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:20})
+     mylist.Remove({Age:50})
+     // false
+     mylist.Remove({Age:20})
+     // true
+     mylist.ToArray()
+     // [{"Name":"Jack","Age":10},{"Name":"Joe","Age":20}]
+     ```
+     */
+    Remove(item:T) : boolean;
+
+    /**
+     * Removes all the elements that match the conditions defined by the specified predicate.
+     * @param match - The function that defines the conditions of the elements to remove.
+     * @returns The number of elements removed from the `List<T>`.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:20})
+     mylist.RemoveAll(t=>t.Age>30)
+     // 0
+     mylist.RemoveAll(t=>t.Age>10)
+     // 2
+     mylist.ToArray()
+     // [{"Name":"Jack","Age":10}]
+     ```
+     */
+    RemoveAll(match:(item : T) => boolean) : number;
+
+    /**
+     * Removes the element at the specified index of the `List<T>`.
+     * @param index - The zero-based index of the element to remove.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:20})
+     mylist.RemoveAt(1)
+     mylist.ToArray()
+     // [{"Name":"Jack","Age":10},{"Name":"Joe","Age":20}]
+     ```
+     */
+    RemoveAt(index:number): void;
+
+    /**
+     * Removes a range of elements from the `List<T>`.
+     * @param index - The zero-based starting index of the range of elements to remove.
+     * @param count - The number of elements to remove.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:20})
+     mylist.RemoveRange(1, 2)
+     mylist.ToArray()
+     // [{"Name":"Jack","Age":10}]
+     ```
+     */
+    RemoveRange(index:number, count:number): void;
+
+    /**
+     * Reverses the order of the elements in the entire `List<T>`.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:20})
+     mylist.ReverseNative()
+     mylist.ToArray()
+     // [{"Name":"Joe","Age":20},{"Name":"Jane","Age":20},
+     //  {"Name":"Jack","Age":10}]
+     ```
+     */
+    ReverseNative():void
+    
+    /**
+     * Reverses the order of the elements in the specified range.
+     * @param index - The zero-based starting index of the range to reverse.
+     * @param count - The number of elements in the range to reverse.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:20})
+     mylist.Add({Name:"Joe", Age:20})
+     mylist.ReverseNative(0, 2)
+     mylist.ToArray()
+     // [{"Name":"Jane","Age":20},{"Name":"Jack","Age":10},
+     //  {"Name":"Joe","Age":20}]
+     ```
+     */
+    ReverseNative(index:number, count:number):void
+
+    /**
+     * Sorts the elements in the entire `List<T>` using the specified comparer.
+     * @param comparer - The `ISortComparer<T>` implementation to use when comparing elements.
+     ```javascript
+     let ageComparer = (a, b) => (a.Age > b.Age ? 1 : a.Age < b.Age ? -1 : 0)
+     let mylist = new List(ageComparer)
+     mylist.Add({Name:"John", Age:20})
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:50})
+     mylist.Add({Name:"Joe", Age:20})
+     mylist.Sort()
+     mylist.ToArray()
+     // [{"Name":"Jack","Age":10},{"Name":"John","Age":20},
+     //  {"Name":"Joe","Age":20},{"Name":"Jane","Age":50}]
+
+     let nameComparer = (a, b) => (a.Name > b.Name ? 1 : a.Name < b.Name ? -1 : 0)
+     mylist.Sort(nameComparer)
+     mylist.ToArray()
+     // [{"Name":"Jack","Age":10},{"Name":"Jane","Age":50},
+     //  {"Name":"Joe","Age":20},{"Name":"John","Age":20}]
+     ```
+     */
+    Sort(comparer?: ISortComparer<T>) : void;
+
+    /**
+     * Sorts the elements in a range of elements in `List<T>` using the specified comparer.
+     * @param index - The zero-based starting index of the range to sort.
+     * @param count - The length of the range to sort.
+     * @param comparer - The `ISortComparer<T>` implementation to use when comparing elements.
+     ```javascript
+     let ageComparer = (a, b) => (a.Age > b.Age ? 1 : a.Age < b.Age ? -1 : 0)
+     let mylist = new List(ageComparer)
+     mylist.Add({Name:"John", Age:20})
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:50})
+     mylist.Add({Name:"Joe", Age:20})
+     mylist.Sort(0, 3, mylist.Comparer)
+     mylist.ToArray()
+     // [{"Name":"Jack","Age":10},{"Name":"John","Age":20},
+     //  {"Name":"Jane","Age":50},{"Name":"Joe","Age":20}]
+     ```
+     */
+    Sort(index: number, count: number, comparer: ISortComparer<T>) : void;
+
+    /**
+     * Determines whether every element in the `List<T>` matches the conditions defined by the specified predicate.
+     * @param match - The function that defines the conditions to check against the elements.
+     * @returns true if every element in the `List<T>` matches the conditions defined by the specified predicate; otherwise, false. If the list has no elements, the return value is true.
+     ```javascript
+     let mylist = new List()
+     mylist.Add({Name:"John", Age:20})
+     mylist.Add({Name:"Jack", Age:10})
+     mylist.Add({Name:"Jane", Age:50})
+     mylist.TrueForAll(t=>t.Age>5)
+     // true
+     mylist.TrueForAll(t=>t.Age>10)
+     // false
+     ```
+     */
+    TrueForAll(match:(item : T) => boolean) : boolean;
+}
+
 // DataStructures/Lookup
 /**
  * Represents a collection of keys each mapped to one or more values.
@@ -1771,6 +2489,7 @@ declare const linqify : {
                             <T>(source : (()=>IterableIterator<T>) | IEnumerable<T>) : IEnumerable<T>,
                             Enumerable: typeof Enumerable,
                             Dictionary: typeof Dictionary,
+                            List:typeof List,
                             HashSet:typeof HashSet,
                             EqualityComparers:typeof EqualityComparers,
                             SortComparers:typeof SortComparers,
@@ -1792,10 +2511,11 @@ declare const linqify : {
                                 <T>(source : (()=>IterableIterator<T>) | IEnumerable<T>) : IEnumerable<T>,
                                 Enumerable: typeof Enumerable,
                                 Dictionary:typeof Dictionary,
+                                List:typeof List,
                                 HashSet:typeof HashSet,
                                 EqualityComparers:typeof EqualityComparers,
                                 SortComparers:typeof SortComparers
                             }
                         };
 
-export {Enumerable, Dictionary, HashSet, EqualityComparers, SortComparers, linqify};
+export {Enumerable, Dictionary, List, HashSet, EqualityComparers, SortComparers, linqify};

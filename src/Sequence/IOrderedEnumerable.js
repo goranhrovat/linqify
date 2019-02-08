@@ -7,14 +7,10 @@ const { IEnumerable } = require("./IEnumerable");
 
 class IOrderedEnumerable extends IEnumerable {
 	constructor(gen, source, cmpfuns) {
-		super();
+		super(gen, source, cmpfuns);
 		this.gen = gen;
 		this.source = source;
 		this.cmpfuns = cmpfuns;
-	}
-
-	[Symbol.iterator]() {
-		return this.gen(this.source, this.cmpfuns);
 	}
 
 	ThenBy(keySelector, comparer) {

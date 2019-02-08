@@ -6,7 +6,9 @@ const { IGrouping } = require("../Sequence/IGrouping");
 
 class Lookup extends IEnumerable {
 	constructor(source, comparer = EqualityComparers.PrimitiveComparer) {
-		super();
+		super(function*() {
+			for (let t of this.data) yield new IGrouping(t.Key, t.Value);
+		});
 		this.comparer = comparer;
 		this.count = 0;
 		this.data = new Dictionary(comparer);
@@ -21,10 +23,6 @@ class Lookup extends IEnumerable {
 		};
 
 		for (let t of source) Add(t.Key, t.Value);
-	}
-
-	*[Symbol.iterator]() {
-		for (let t of this.data) yield new IGrouping(t.Key, t.Value);
 	}
 
 	get CountNative() {

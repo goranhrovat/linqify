@@ -1,13 +1,15 @@
 var { IEnumerable } = require("./IEnumerable");
 const { tryAddConflictProperty } = require("../NoConflict/AddConflict");
 
+let generatorConstructor = function*() {}.constructor;
+
 class Enumerable {
 	static From(source) {
 		if (source instanceof IEnumerable) return source;
 
 		if (
 			source.constructor.name === "GeneratorFunction" ||
-			source instanceof function*() {}.constructor
+			source instanceof generatorConstructor
 		)
 			return new IEnumerable(source);
 
@@ -39,7 +41,7 @@ class Enumerable {
 		let funFinal = fun;
 		if (
 			fun.constructor.name === "GeneratorFunction" ||
-			fun instanceof function*() {}.constructor
+			fun instanceof generatorConstructor
 		) {
 			// if generator
 			funFinal = function(...args) {
