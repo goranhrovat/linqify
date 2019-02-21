@@ -52,7 +52,7 @@ import {Enumerable, List, Dictionary, HashSet, EqualityComparers,
 ```
 #### Get the specific version
 ```html
-<script src="https://unpkg.com/linqify@1.1.1"></script>
+<script src="https://unpkg.com/linqify@1.2.0"></script>
 ```
 #### Get the latest minor and patch version of specific major version
 ```html
@@ -86,17 +86,17 @@ import {Enumerable, List, Dictionary, HashSet, EqualityComparers,
 
 ### Define custom Sort comparer
 ```javascript
-function ageSortComparer (a, b) {
+function ageComparer (a, b) {
     if (a.Age > b.Age) return 1;
     else if (a.Age < b.Age) return -1;
     else return 0;
 }
 let people = [{Name:"Jack", Age:18}, {Name:"Joe",  Age:22}, {Name:"Jack", Age:20}];
 
-people.OrderBy(t=>t, ageSortComparer).ToArray();
+people.OrderBy(t=>t, ageComparer).ToArray();
 // [{"Name":"Jack","Age":18},{"Name":"Jack","Age":20},{"Name":"Joe","Age":22}]
  
-people.OrderByDescending(t=>t, ageSortComparer).ToArray();
+people.OrderByDescending(t=>t, ageComparer).ToArray();
 // [{"Name":"Joe","Age":22},{"Name":"Jack","Age":20},{"Name":"Jack","Age":18}]
 ```
 
@@ -125,7 +125,8 @@ myhashset.Add({Name:"Jane", Age:25});
 // true
 ```
 
-### Easily extend the library with generator function
+### Easily extend the library
+#### With generator function
 ```javascript
 Enumerable.setMethod("EvenElements", function*() {
     let ind = 0;
@@ -135,8 +136,7 @@ Enumerable.setMethod("EvenElements", function*() {
 ["a","b","c","d"].EvenElements().ToArray();
 // ["a", "c"]
 ```
-
-### Or extend with normal function
+#### Or with normal function
 ```javascript
 Enumerable.setMethod("Variance", function() {
     let avg = this.Average();
@@ -144,6 +144,28 @@ Enumerable.setMethod("Variance", function() {
 });
 [1,3,4,8,12].Variance();
 // 15.440000000000001
+```
+
+### Create custom anonymous method
+#### Output the names as many times as they are old
+```javascript
+let people = [{Name:"Jack", Age:3}, {Name:"Joe", Age:2}, {Name:"Jane", Age:1}]
+people.Custom(function* () {
+    for (let t of this)
+      yield* Enumerable.Repeat(t.Name, t.Age)
+}).Select(t=>t.toUpperCase()).ToArray()
+// ["JACK", "JACK", "JACK", "JOE", "JOE", "JANE"]
+```
+#### Get the oldest person (aka MaxBy)
+```javascript
+let people = [{Name:"Jack", Age:18}, {Name:"Joe", Age:22}, {Name:"Jane", Age:20}]
+let oldest = people.Custom((source)=>{
+    let currOldest = source.FirstOrDefault();
+    for (let t of source) if (t.Age > currOldest.Age) currOldest = t;
+    return currOldest;
+})
+oldest
+// {Name:"Joe", Age:22}
 ```
 
 ### ToList, ToDictionary, ToHashSet, ToLookup
@@ -259,6 +281,7 @@ lq([1,2,3]).Select(t=>t*t).ToArray();
 [Concat](https://linqify.github.io/classes/ienumerable.html#concat),
 [Contains](https://linqify.github.io/classes/ienumerable.html#contains),
 [Count](https://linqify.github.io/classes/ienumerable.html#count),
+[Custom](https://linqify.github.io/classes/ienumerable.html#custom),
 [DefaultIfEmpty](https://linqify.github.io/classes/ienumerable.html#defaultifempty),
 [Distinct](https://linqify.github.io/classes/ienumerable.html#distinct),
 [ElementAt](https://linqify.github.io/classes/ienumerable.html#elementat),

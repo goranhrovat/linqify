@@ -5,11 +5,11 @@ class IGrouping extends IEnumerable {
 		super(function*() {
 			yield* source;
 		});
-		this.key = key;
+		this._key = key;
 	}
 
 	get Key() {
-		return this.key;
+		return this._key;
 	}
 }
 

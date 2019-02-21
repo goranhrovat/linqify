@@ -4,7 +4,8 @@ const { getType, defaultVal } = require("../Utils/TypeUtils");
 const { EqualityComparers } = require("../Utils/EqualityComparers");
 const { SortComparers } = require("../Utils/SortComparers");
 
-const { Enumerable } = require("../Sequence/Enumerable");
+const { Enumerable, emptyGenerator } = require("../Sequence/Enumerable");
+const { IEnumerable } = require("../Sequence/IEnumerable");
 const { HashSet } = require("../DataStructures/HashSet");
 const { Dictionary } = require("../DataStructures/Dictionary");
 const { List } = require("../DataStructures/List");
@@ -37,9 +38,7 @@ setMtd("Aggregate", function(arg1, arg2, resultSelector = t => t) {
 });
 
 setMtd("All", function(predicate) {
-	for (let t of this) {
-		if (!predicate(t)) return false;
-	}
+	for (let t of this) if (!predicate(t)) return false;
 	return true;
 });
 
@@ -53,8 +52,8 @@ setMtd("Append", function*(element) {
 	yield element;
 });
 
-setMtd("AsEnumerable", function*() {
-	yield* this;
+setMtd("AsEnumerable", function() {
+	return this;
 });
 
 setMtd("Average", function(selector = t => t) {
@@ -69,8 +68,8 @@ setMtd("Average", function(selector = t => t) {
 	return sum / count;
 });
 
-setMtd("Cast", function*() {
-	yield* this;
+setMtd("Cast", function() {
+	return this;
 });
 
 setMtd("Concat", function*(second) {
@@ -89,15 +88,26 @@ setMtd("Contains", function(
 
 setMtd("Count", function(predicate = _t => true) {
 	let cur = 0;
-
 	for (let t of this) if (predicate(t)) cur++;
 	return cur;
 });
 
-setMtd("DefaultIfEmpty", function*(defaultValue = null) {
+setMtd("Custom", function(fun) {
+	if (
+		fun.constructor.name === "GeneratorFunction" ||
+		fun instanceof emptyGenerator.constructor
+	) {
+		// if generator
+		return new IEnumerable(fun.bind(this, this));
+	} else {
+		return fun.call(this, this);
+	}
+});
+
+setMtd("DefaultIfEmpty", function(defaultValue = null) {
 	let val = this[Symbol.iterator]().next();
-	if (val.done) yield defaultValue;
-	else yield* this;
+	if (val.done) return Enumerable.Empty().Append(defaultValue); //yield defaultValue;
+	return this; //else yield* this;
 });
 
 setMtd("Distinct", function*(comparer = EqualityComparers.PrimitiveComparer) {
@@ -127,6 +137,7 @@ setMtd("Except", function*(
 	second,
 	comparer = EqualityComparers.PrimitiveComparer
 ) {
+	if (second == null) throw "Second is null";
 	let sec = Enumerable.From(second).ToHashSet(comparer);
 	for (let t of this) if (sec.Add(t)) yield t;
 });
@@ -210,6 +221,7 @@ setMtd("Intersect", function*(
 	second,
 	comparer = EqualityComparers.PrimitiveComparer
 ) {
+	if (second == null) throw "Second is null";
 	let first = this.ToHashSet(comparer);
 	for (let t of second) {
 		let val = first.TryGetValue(t);
@@ -319,6 +331,7 @@ setMtd("SequenceEqual", function(
 	second,
 	comparer = EqualityComparers.PrimitiveComparer
 ) {
+	if (second == null) throw "Second is null";
 	let thisIterator = this[Symbol.iterator]();
 	let secondIterator = second[Symbol.iterator]();
 	// eslint-disable-next-line no-constant-condition
@@ -475,6 +488,7 @@ setMtd("Union", function*(
 	second,
 	comparer = EqualityComparers.PrimitiveComparer
 ) {
+	if (second == null) throw "Second is null";
 	let hashset = new HashSet(comparer);
 	for (let t of this) if (hashset.Add(t)) yield t;
 	for (let t of second) if (hashset.Add(t)) yield t;

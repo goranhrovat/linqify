@@ -34,14 +34,14 @@ declare const EqualityComparers : {
 /**
  * Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other.
  */
-declare type ISortComparer<T> = (x : T, y : T) => number;
+declare type IComparer<T> = (x : T, y : T) => number;
 
 /**
  * Implements default basic and reverse comparer.
  */
 declare const SortComparers : {
-    DefaultComparer : ISortComparer<any>,
-    DefaultComparerReverse : ISortComparer<any>,
+    DefaultComparer : IComparer<any>,
+    DefaultComparerReverse : IComparer<any>,
 }
 
 // KeyValuePair
@@ -51,12 +51,17 @@ declare const SortComparers : {
 declare type KeyValuePair<TKey,TValue> = { Key: TKey, Value: TValue }
 
 // Utils/SortUtils
-declare function getComparer<TSource, TKey>(keySelector : (source : TSource)=>TKey, comparer? : ISortComparer<TKey>) : ISortComparer<TKey>;
-declare function getComparerReverse<TSource, TKey>(keySelector : (source : TSource)=>TKey, comparer? : ISortComparer<TKey>) : ISortComparer<TKey>;
-declare function sortGen<T>(source : IterableIterator<T>, cmpfuns:ISortComparer<T>[]) : IterableIterator<T>;
+/**@hidden */
+declare function getComparer<TSource, TKey>(keySelector : (source : TSource)=>TKey, comparer? : IComparer<TKey>) : IComparer<TKey>;
+/**@hidden */
+declare function getComparerReverse<TSource, TKey>(keySelector : (source : TSource)=>TKey, comparer? : IComparer<TKey>) : IComparer<TKey>;
+/**@hidden */
+declare function sortGen<T>(source : IterableIterator<T>, cmpfuns:IComparer<T>[]) : IterableIterator<T>;
 
 // Utils/TypeUtils
+/**@hidden */
 declare function getType(obj : string) : string;
+/**@hidden */
 declare function defaultVal(type : string) : any;
 
 // Sequence/IEnumerable & IOrderedEnumerable & Methods/Methods
@@ -73,26 +78,26 @@ declare class IEnumerable<T> {
     /**
      * Sorts the elements of a sequence in ascending order.
      * @param keySelector - A function to extract a key from an element.
-     * @param comparer - An `ISortComparer<TKey>` to compare keys.
+     * @param comparer - An `IComparer<TKey>` to compare keys.
      * @returns An `IOrderedEnumerable<T>` whose elements are sorted in ascending according to a key.
      ```javascript
      ["Jane", "Doe", "Joe"].OrderBy(t=>t).ToArray()
      // ["Doe", "Jane", "Joe"]
      ```
      */
-    OrderBy<TKey>(keySelector : (item : T)=>TKey, comparer? : ISortComparer<TKey>) : IOrderedEnumerable<T>;
+    OrderBy<TKey>(keySelector : (item : T)=>TKey, comparer? : IComparer<TKey>) : IOrderedEnumerable<T>;
 
     /**
      * Sorts the elements of a sequence in descending order.
      * @param keySelector - A function to extract a key from an element.
-     * @param comparer - An `ISortComparer<TKey>` to compare keys.
+     * @param comparer - An `IComparer<TKey>` to compare keys.
      * @returns An `IOrderedEnumerable<T>` whose elements are sorted in descending order according to a key.
      ```javascript
      ["Jane", "Doe", "Joe"].OrderByDescending(t=>t).ToArray()
      // ["Joe", "Jane", "Doe"]
      ```
      */
-    OrderByDescending<TKey>(keySelector : (item : T)=>TKey, comparer? : ISortComparer<TKey>) : IOrderedEnumerable<T>;
+    OrderByDescending<TKey>(keySelector : (item : T)=>TKey, comparer? : IComparer<TKey>) : IOrderedEnumerable<T>;
 
     /**
      * Applies an accumulator function over a sequence. The specified seed value is used as the initial accumulator value, and the specified function is used to select the result value.
@@ -215,6 +220,40 @@ declare class IEnumerable<T> {
      ```
      */
     Count(predicate? : (item : T)=>boolean) : number;
+
+    /**
+     * Wrapper for custom projection or filtering.
+     * @param fun - A generator function which yields transformed source.
+     * @returns New `IEnumerable<K>` yielded from generator function.
+     ```javascript
+     let people = [{Name:"Jack", Age:3}, {Name:"Joe", Age:2}, {Name:"Jane", Age:1}]
+     people.Custom(function* () {
+         // Output the names as many times as they are old
+         for (let t of this)
+            yield* Enumerable.Repeat(t.Name, t.Age)
+     }).Select(t=>t.toUpperCase()).ToArray()
+     // ["JACK", "JACK", "JACK", "JOE", "JOE", "JANE"]
+     ```
+     */
+    Custom<K>(fun : (source:IEnumerable<T>)=>(()=>IterableIterator<K>)) : IEnumerable<K>;
+    
+    /**
+     * Wrapper for custom aggregation of source sequence.
+     * @param fun - Function which aggregates sequence and returns a value.
+     * @returns Final value aggregated in function.
+     ```javascript
+     let people = [{Name:"Jack", Age:18}, {Name:"Joe", Age:22}, {Name:"Jane", Age:20}]
+     let oldest = people.Custom((source)=>{
+         // get the oldest person (aka MaxBy) 
+         let currOldest = source.FirstOrDefault();
+         for (let t of source) if (t.Age > currOldest.Age) currOldest = t;
+         return currOldest;
+     })
+     oldest
+     // {Name:"Joe", Age:22}
+     ```
+     */
+    Custom<K>(fun : (source:IEnumerable<T>)=>K) : K;
 
     /**
      * Returns the elements of an IEnumerable<T>, or a default valued singleton collection if the sequence is empty.
@@ -850,7 +889,7 @@ declare class IEnumerable<T> {
 
     /**
      * Creates a `List<T>` from an `IEnumerable<T>`.
-     * @param comparer - An `ISortComparer<TKey>` to compare keys.
+     * @param comparer - An `IComparer<TKey>` to compare keys.
      * @returns A `List<T>` that contains elements from the input sequence.
      ```javascript
      let people = [{Name:"Jack", Age:18}, {Name:"Joe", Age:22}, {Name:"Jack", Age:20}]
@@ -860,7 +899,7 @@ declare class IEnumerable<T> {
      // [{Name:"Jack", Age:18}, {Name:"Joe", Age:22}, {Name:"Jack", Age:20}, {Name:"Jane", Age:19}]
      ```
      */
-    ToList(comparer? : ISortComparer<T>) : List<T>;
+    ToList(comparer? : IComparer<T>) : List<T>;
 
     /**
      * Creates a `Lookup<TKey,TElement>` from an `IEnumerable<T>` according to a specified key selector function, a comparer and an element selector function.
@@ -1050,7 +1089,7 @@ declare class IOrderedEnumerable<T> extends IEnumerable<T> {
     /**
      * Performs a subsequent ordering of the elements in a sequence in ascending order by using a specified comparer.
      * @param keySelector - A function to extract a key from each element.
-     * @param comparer - An `ISortComparer<TKey>` to compare keys.
+     * @param comparer - An `IComparer<TKey>` to compare keys.
      * @returns An `IOrderedEnumerable<T>` whose elements are sorted according to a key.
      ```javascript
      let people = [{Name:"Jack", Age:18}, {Name:"Joe", Age:22}, {Name:"Jack", Age:16}]
@@ -1060,12 +1099,12 @@ declare class IOrderedEnumerable<T> extends IEnumerable<T> {
      // [{"Name":"Jack","Age":16},{"Name":"Jack","Age":18},{"Name":"Joe","Age":22}]
      ```
      */
-    ThenBy<TKey>(keySelector : (item : T)=>TKey, comparer? : ISortComparer<TKey>) : IOrderedEnumerable<T>;
+    ThenBy<TKey>(keySelector : (item : T)=>TKey, comparer? : IComparer<TKey>) : IOrderedEnumerable<T>;
 
     /**
      * Performs a subsequent ordering of the elements in a sequence in descending order.
      * @param keySelector - A function to extract a key from each element.
-     * @param comparer - An `ISortComparer<TKey>` to compare keys.
+     * @param comparer - An `IComparer<TKey>` to compare keys.
      * @returns An `IOrderedEnumerable<T>` whose elements are sorted in descending order according to a key.
      ```javascript
      let people = [{Name:"Jack", Age:18}, {Name:"Joe", Age:18}, {Name:"Jack", Age:16}]
@@ -1075,7 +1114,7 @@ declare class IOrderedEnumerable<T> extends IEnumerable<T> {
      // [{"Name":"Jack","Age":16},{"Name":"Joe","Age":18},{"Name":"Jack","Age":18}]
      ```
      */
-    ThenByDescending<TKey>(keySelector : (item : T)=>TKey, comparer? : ISortComparer<TKey>) : IOrderedEnumerable<T>;
+    ThenByDescending<TKey>(keySelector : (item : T)=>TKey, comparer? : IComparer<TKey>) : IOrderedEnumerable<T>;
 }
 
 // Sequence/IGrouping
@@ -1736,7 +1775,7 @@ declare class List<T> extends IEnumerable<T> {
     
     /**
      * Initializes a new instance of the `List<T>` class that is empty and has the default initial capacity.
-     * @param comparer - An `ISortComparer<TKey>` to compare items.
+     * @param comparer - An `IComparer<TKey>` to compare items.
      ```javascript
      let mylist = new List()
      mylist.Add({Name:"Jack", Age:30})
@@ -1744,12 +1783,12 @@ declare class List<T> extends IEnumerable<T> {
      // [{"Name":"Jack","Age":30}]
      ```
      */
-    constructor(comparer?: ISortComparer<T>);
+    constructor(comparer?: IComparer<T>);
 
     /**
      * Initializes a new instance of the `List<T>` class that contains elements copied from the specified collection.
      * @param collection - The collection whose elements are copied to the new list.
-     * @param comparer - An `ISortComparer<TKey>` to compare items.
+     * @param comparer - An `IComparer<TKey>` to compare items.
      ```javascript
      let mylist = new List([{"Name":"Jane","Age":20}])
      mylist.Add({Name:"Jack", Age:30})
@@ -1757,12 +1796,12 @@ declare class List<T> extends IEnumerable<T> {
      // [{"Name":"Jane","Age":20},{"Name":"Jack","Age":30}]
      ```
      */
-    constructor(collection : IEnumerable<T>, comparer?: ISortComparer<T>);
+    constructor(collection : IEnumerable<T>, comparer?: IComparer<T>);
 
     /**
-     * Gets the `ISortComparer<T>` that is used to compare items.
+     * Gets the `IComparer<T>` that is used to compare items.
      */
-    readonly Comparer : ISortComparer<T>;
+    readonly Comparer : IComparer<T>;
 
     /**
      * Gets the number of elements contained in the `List<T>`.
@@ -1831,7 +1870,7 @@ declare class List<T> extends IEnumerable<T> {
     /**
      * Searches the entire sorted `List<T>` for an element using the specified comparer and returns the zero-based index of the element.
      * @param item - The object to locate.
-     * @param comparer - The `ISortComparer<T>` implementation to use when comparing elements.
+     * @param comparer - The `IComparer<T>` implementation to use when comparing elements.
      * @returns The zero-based index of item in the sorted `List<T>`, if item is found; otherwise, a negative number that is the bitwise complement of the index of the next element that is larger than item or, if there is no larger element, the bitwise complement of Count.
      ```javascript
      let ageComparer = (a, b) => (a.Age > b.Age ? 1 : a.Age < b.Age ? -1 : 0)
@@ -1853,14 +1892,14 @@ declare class List<T> extends IEnumerable<T> {
      //  {"Name":"John","Age":40}]
      ```
      */
-    BinarySearch(item : T, comparer?: ISortComparer<T>) : number;
+    BinarySearch(item : T, comparer?: IComparer<T>) : number;
 
     /**
      * Searches a range of elements in the sorted `List<T>` for an element using the specified comparer and returns the zero-based index of the element.
      * @param index - The zero-based starting index of the range to search.
      * @param count - The length of the range to search.
      * @param item - The object to locate.
-     * @param comparer - The `ISortComparer<T>` implementation to use when comparing elements.
+     * @param comparer - The `IComparer<T>` implementation to use when comparing elements.
      * @returns The zero-based index of item in the sorted `List<T>`, if item is found; otherwise, a negative number that is the bitwise complement of the index of the next element that is larger than item or, if there is no larger element, the bitwise complement of Count.
      ```javascript
      let ageComparer = (a, b) => (a.Age > b.Age ? 1 : a.Age < b.Age ? -1 : 0)
@@ -1882,7 +1921,7 @@ declare class List<T> extends IEnumerable<T> {
      //  {"Name":"John","Age":40}]
      ```
      */
-    BinarySearch(index: number, count : number, item : T, comparer: ISortComparer<T>) : number;
+    BinarySearch(index: number, count : number, item : T, comparer: IComparer<T>) : number;
 
     /**
      * Removes all elements from the `List<T>`.
@@ -2358,7 +2397,7 @@ declare class List<T> extends IEnumerable<T> {
 
     /**
      * Sorts the elements in the entire `List<T>` using the specified comparer.
-     * @param comparer - The `ISortComparer<T>` implementation to use when comparing elements.
+     * @param comparer - The `IComparer<T>` implementation to use when comparing elements.
      ```javascript
      let ageComparer = (a, b) => (a.Age > b.Age ? 1 : a.Age < b.Age ? -1 : 0)
      let mylist = new List(ageComparer)
@@ -2378,13 +2417,13 @@ declare class List<T> extends IEnumerable<T> {
      //  {"Name":"Joe","Age":20},{"Name":"John","Age":20}]
      ```
      */
-    Sort(comparer?: ISortComparer<T>) : void;
+    Sort(comparer?: IComparer<T>) : void;
 
     /**
      * Sorts the elements in a range of elements in `List<T>` using the specified comparer.
      * @param index - The zero-based starting index of the range to sort.
      * @param count - The length of the range to sort.
-     * @param comparer - The `ISortComparer<T>` implementation to use when comparing elements.
+     * @param comparer - The `IComparer<T>` implementation to use when comparing elements.
      ```javascript
      let ageComparer = (a, b) => (a.Age > b.Age ? 1 : a.Age < b.Age ? -1 : 0)
      let mylist = new List(ageComparer)
@@ -2398,7 +2437,7 @@ declare class List<T> extends IEnumerable<T> {
      //  {"Name":"Jane","Age":50},{"Name":"Joe","Age":20}]
      ```
      */
-    Sort(index: number, count: number, comparer: ISortComparer<T>) : void;
+    Sort(index: number, count: number, comparer: IComparer<T>) : void;
 
     /**
      * Determines whether every element in the `List<T>` matches the conditions defined by the specified predicate.

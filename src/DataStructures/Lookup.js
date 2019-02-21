@@ -7,18 +7,19 @@ const { IGrouping } = require("../Sequence/IGrouping");
 class Lookup extends IEnumerable {
 	constructor(source, comparer = EqualityComparers.PrimitiveComparer) {
 		super(function*() {
-			for (let t of this.data) yield new IGrouping(t.Key, t.Value);
+			for (let t of this._data) yield new IGrouping(t.Key, t.Value);
 		});
-		this.comparer = comparer;
-		this.count = 0;
-		this.data = new Dictionary(comparer);
+		this._comparer = comparer;
+		this._count = 0;
+		this._data = new Dictionary(comparer);
 
 		let Add = (key, element) => {
-			if (!this.data.ContainsKey(key)) {
-				this.data.Add(key, [element]);
-				this.count++;
+			let val = this._data.TryGetValue(key);
+			if (val.contains) {
+				val.value.push(element);
 			} else {
-				this.data.Get(key).push(element);
+				this._data.Add(key, [element]);
+				this._count++;
 			}
 		};
 
@@ -26,11 +27,11 @@ class Lookup extends IEnumerable {
 	}
 
 	get CountNative() {
-		return this.count;
+		return this._count;
 	}
 
 	Get(key) {
-		let tryValue = this.data.TryGetValue(key);
+		let tryValue = this._data.TryGetValue(key);
 
 		return tryValue.contains
 			? Enumerable.From(tryValue.value)
@@ -42,7 +43,7 @@ class Lookup extends IEnumerable {
 	}
 
 	ContainsNative(key) {
-		return this.data.ContainsKey(key);
+		return this._data.ContainsKey(key);
 	}
 }
 

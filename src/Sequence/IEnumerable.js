@@ -1,11 +1,10 @@
 class IEnumerable {
-	constructor(gen, ...args) {
-		this.gen = gen;
-		this.args = args;
+	constructor(gen) {
+		this._gen = gen;
 	}
 
 	[Symbol.iterator]() {
-		return this.gen(...this.args);
+		return this._gen();
 	}
 }
 

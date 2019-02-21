@@ -50,10 +50,10 @@ test("HashSet", () => {
 	expect(hashset.Remove({ a: "test" })).toBeTruthy();
 	expect(hashset.Remove({ a: "test" })).toBeFalsy();
 	expect(hashset.ContainsNative({ a: "test" })).toBeFalsy();
-	expect(hashset.data.has("test3")).toBeTruthy();
+	expect(hashset._data.has("test3")).toBeTruthy();
 	expect(hashset.CountNative).toBe(1);
 	expect(hashset.Remove({ a: "test3" })).toBeTruthy();
-	expect(hashset.data.has("test")).toBeFalsy();
+	expect(hashset._data.has("test")).toBeFalsy();
 	expect(hashset.CountNative).toBe(0);
 
 	hashset = new HashSet(null);

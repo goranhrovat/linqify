@@ -1,7 +1,8 @@
 var { IEnumerable } = require("./IEnumerable");
 const { tryAddConflictProperty } = require("../NoConflict/AddConflict");
 
-let generatorConstructor = function*() {}.constructor;
+let emptyGenerator = function*() {};
+const emptyEnumerable = new IEnumerable(emptyGenerator);
 
 class Enumerable {
 	static From(source) {
@@ -9,11 +10,11 @@ class Enumerable {
 
 		if (
 			source.constructor.name === "GeneratorFunction" ||
-			source instanceof generatorConstructor
+			source instanceof emptyGenerator.constructor
 		)
 			return new IEnumerable(source);
 
-		return IEnumerable.prototype.AsEnumerable.bind(source)();
+		return Enumerable.Empty().Concat(source);
 	}
 
 	static Range(start, count) {
@@ -27,9 +28,7 @@ class Enumerable {
 	static Repeat(value, count) {
 		if (count < 0) throw "count is less than 0";
 		return new IEnumerable(function*() {
-			for (let i = 0; i < count; i++) {
-				yield value;
-			}
+			while (count--) yield value;
 		});
 	}
 
@@ -41,17 +40,13 @@ class Enumerable {
 		let funFinal = fun;
 		if (
 			fun.constructor.name === "GeneratorFunction" ||
-			fun instanceof generatorConstructor
+			fun instanceof emptyGenerator.constructor
 		) {
 			// if generator
 			funFinal = function(...args) {
-				return new IEnumerable(fun.bind(this), ...args);
+				return new IEnumerable(fun.bind(this, ...args));
 			};
 		}
-		// else { // if not generator return value immediately
-		//     //funFinal = function(...args) {return fun.bind(this)(...args)};
-		//     funFinal = fun;
-		// }
 
 		Object.defineProperty(IEnumerable.prototype, methodName, {
 			enumerable: false,
@@ -65,6 +60,5 @@ class Enumerable {
 		}
 	}
 }
-const emptyEnumerable = new IEnumerable(function*() {});
 
-module.exports = { Enumerable };
+module.exports = { Enumerable, emptyGenerator };

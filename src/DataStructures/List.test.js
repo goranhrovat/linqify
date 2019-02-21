@@ -1,4 +1,4 @@
-const { List, SortComparers } = process.env.LINQIFY_PATH
+const { List, SortComparers, Enumerable } = process.env.LINQIFY_PATH
 	? require("../../" + process.env.LINQIFY_PATH)
 	: require("../linqify");
 
@@ -307,12 +307,12 @@ test("List", () => {
 
 	expect(() => mylist3.InsertRange(-1, [1, 5, 4])).toThrow("Not a valid range");
 	expect(() => mylist3.InsertRange(5, [1, 5, 4])).toThrow("Not a valid range");
-	expect(() => mylist3.InsertRange(4, [1, 5, 4])).not.toThrow(
-		"Not a valid range"
-	);
-	expect(() => mylist3.InsertRange(0, [1, 5, 4])).not.toThrow(
-		"Not a valid range"
-	);
+	expect(() => mylist3.InsertRange(4, [1, 5, 4])).not.toThrow();
+	expect(() => mylist3.InsertRange(0, [1, 5, 4])).not.toThrow();
+	expect(() =>
+		mylist3.InsertRange(0, Enumerable.From([1, 5, 4]))
+	).not.toThrow();
+	expect(() => mylist3.RemoveRange(0, 3)).not.toThrow();
 	expect(() => mylist3.InsertRange(2, [1, 5, 4].AsEnumerable())).not.toThrow(
 		"Not a valid range"
 	);

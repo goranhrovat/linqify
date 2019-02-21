@@ -6,23 +6,22 @@ const {
 const { IEnumerable } = require("./IEnumerable");
 
 class IOrderedEnumerable extends IEnumerable {
-	constructor(gen, source, cmpfuns) {
-		super(gen, source, cmpfuns);
-		this.gen = gen;
-		this.source = source;
-		this.cmpfuns = cmpfuns;
+	constructor(source, cmpfuns) {
+		super(sortGen.bind(source, cmpfuns));
+		this._source = source;
+		this._cmpfuns = cmpfuns;
 	}
 
 	ThenBy(keySelector, comparer) {
-		return new IOrderedEnumerable(sortGen, this.source, [
-			...this.cmpfuns,
+		return new IOrderedEnumerable(this._source, [
+			...this._cmpfuns,
 			getComparer(keySelector, comparer)
 		]);
 	}
 
 	ThenByDescending(keySelector, comparer) {
-		return new IOrderedEnumerable(sortGen, this.source, [
-			...this.cmpfuns,
+		return new IOrderedEnumerable(this._source, [
+			...this._cmpfuns,
 			getComparerReverse(keySelector, comparer)
 		]);
 	}
@@ -33,9 +32,7 @@ Object.defineProperty(IEnumerable.prototype, "OrderBy", {
 	writable: false,
 	configurable: true,
 	value: function(keySelector, comparer) {
-		return new IOrderedEnumerable(sortGen, this, [
-			getComparer(keySelector, comparer)
-		]);
+		return new IOrderedEnumerable(this, [getComparer(keySelector, comparer)]);
 	}
 });
 
@@ -44,7 +41,7 @@ Object.defineProperty(IEnumerable.prototype, "OrderByDescending", {
 	writable: false,
 	configurable: true,
 	value: function(keySelector, comparer) {
-		return new IOrderedEnumerable(sortGen, this, [
+		return new IOrderedEnumerable(this, [
 			getComparerReverse(keySelector, comparer)
 		]);
 	}

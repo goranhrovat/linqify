@@ -11,31 +11,31 @@ class Dictionary extends IEnumerable {
 	 */
 	constructor(arg1, comparer = EqualityComparers.PrimitiveComparer) {
 		super(function*() {
-			for (let t of this.data)
+			for (let t of this._data)
 				for (let k of t[1]) yield { Key: k.key, Value: k.value };
 		});
-		this.count = 0;
-		this.data = new Map();
+		this._count = 0;
+		this._data = new Map();
 		comparer = comparer || EqualityComparers.PrimitiveComparer;
 		if (arg1 === undefined) {
 			// 1
-			this.comparer = comparer;
+			this._comparer = comparer;
 		} else if (getType(arg1) === "Object" || getType(arg1) === "null") {
 			// 4
-			this.comparer = arg1 || EqualityComparers.PrimitiveComparer;
+			this._comparer = arg1 || EqualityComparers.PrimitiveComparer;
 		} else {
 			// 2, 3
-			this.comparer = comparer;
+			this._comparer = comparer;
 			for (let t of arg1) this.Add(t.Key, t.Value);
 		}
 	}
 
 	get Comparer() {
-		return this.comparer;
+		return this._comparer;
 	}
 
 	get CountNative() {
-		return this.count;
+		return this._count;
 	}
 
 	get Keys() {
@@ -47,50 +47,50 @@ class Dictionary extends IEnumerable {
 	}
 
 	Add(key, value) {
-		if (!this.data.has(this.comparer.GetHashCode(key))) {
-			this.data.set(this.comparer.GetHashCode(key), [{ key, value }]);
+		if (!this._data.has(this._comparer.GetHashCode(key))) {
+			this._data.set(this._comparer.GetHashCode(key), [{ key, value }]);
 		} else {
-			for (let t of this.data.get(this.comparer.GetHashCode(key))) {
-				if (this.comparer.Equals(t.key, key)) {
+			for (let t of this._data.get(this._comparer.GetHashCode(key))) {
+				if (this._comparer.Equals(t.key, key)) {
 					throw "Key already exists";
 				}
 			}
-			this.data.get(this.comparer.GetHashCode(key)).push({ key, value });
+			this._data.get(this._comparer.GetHashCode(key)).push({ key, value });
 		}
-		this.count++;
+		this._count++;
 	}
 
 	Clear() {
-		this.data.clear();
-		this.count = 0;
+		this._data.clear();
+		this._count = 0;
 	}
 
 	ContainsKey(key) {
-		if (this.data.has(this.comparer.GetHashCode(key))) {
-			for (let t of this.data.get(this.comparer.GetHashCode(key))) {
-				if (this.comparer.Equals(t.key, key)) return true;
+		if (this._data.has(this._comparer.GetHashCode(key))) {
+			for (let t of this._data.get(this._comparer.GetHashCode(key))) {
+				if (this._comparer.Equals(t.key, key)) return true;
 			}
 		}
 		return false;
 	}
 
 	ContainsValue(value) {
-		for (let t of this.data) {
+		for (let t of this._data) {
 			for (let k of t[1]) if (k.value === value) return true;
 		}
 		return false;
 	}
 
 	Remove(key) {
-		if (this.data.has(this.comparer.GetHashCode(key))) {
+		if (this._data.has(this._comparer.GetHashCode(key))) {
 			let i = 0;
-			for (let t of this.data.get(this.comparer.GetHashCode(key))) {
-				if (this.comparer.Equals(t.key, key)) {
-					this.data.get(this.comparer.GetHashCode(key)).splice(i, 1);
-					if (this.data.get(this.comparer.GetHashCode(key)).length === 0) {
-						this.data.delete(this.comparer.GetHashCode(key));
+			for (let t of this._data.get(this._comparer.GetHashCode(key))) {
+				if (this._comparer.Equals(t.key, key)) {
+					this._data.get(this._comparer.GetHashCode(key)).splice(i, 1);
+					if (this._data.get(this._comparer.GetHashCode(key)).length === 0) {
+						this._data.delete(this._comparer.GetHashCode(key));
 					}
-					this.count--;
+					this._count--;
 					return true;
 				}
 				i++;
@@ -100,18 +100,18 @@ class Dictionary extends IEnumerable {
 	}
 
 	Get(key) {
-		if (this.data.has(this.comparer.GetHashCode(key))) {
-			for (let t of this.data.get(this.comparer.GetHashCode(key))) {
-				if (this.comparer.Equals(t.key, key)) return t.value;
+		if (this._data.has(this._comparer.GetHashCode(key))) {
+			for (let t of this._data.get(this._comparer.GetHashCode(key))) {
+				if (this._comparer.Equals(t.key, key)) return t.value;
 			}
 		}
 		throw "Key does not exist";
 	}
 
 	Set(key, value) {
-		if (this.data.has(this.comparer.GetHashCode(key))) {
-			for (let t of this.data.get(this.comparer.GetHashCode(key))) {
-				if (this.comparer.Equals(t.key, key)) {
+		if (this._data.has(this._comparer.GetHashCode(key))) {
+			for (let t of this._data.get(this._comparer.GetHashCode(key))) {
+				if (this._comparer.Equals(t.key, key)) {
 					t.value = value;
 					return;
 				}
@@ -127,9 +127,9 @@ class Dictionary extends IEnumerable {
 	}
 
 	TryGetValue(key) {
-		if (this.data.has(this.comparer.GetHashCode(key))) {
-			for (let t of this.data.get(this.comparer.GetHashCode(key))) {
-				if (this.comparer.Equals(t.key, key))
+		if (this._data.has(this._comparer.GetHashCode(key))) {
+			for (let t of this._data.get(this._comparer.GetHashCode(key))) {
+				if (this._comparer.Equals(t.key, key))
 					return { value: t.value, contains: true };
 			}
 		}
@@ -137,10 +137,10 @@ class Dictionary extends IEnumerable {
 	}
 }
 
-Dictionary.KeyCollection = class extends IEnumerable {
-	constructor(dictionary) {
+let _KeyValueCollection = class extends IEnumerable {
+	constructor(dictionary, property) {
 		super(function*() {
-			for (let t of dictionary) yield t.Key;
+			for (let t of dictionary) yield t[property];
 		});
 		this.dictionary = dictionary;
 	}
@@ -155,24 +155,15 @@ Dictionary.KeyCollection = class extends IEnumerable {
 	}
 };
 
-Dictionary.ValueCollection = class extends IEnumerable {
+Dictionary.KeyCollection = class extends _KeyValueCollection {
 	constructor(dictionary) {
-		super(function*() {
-			for (let t of dictionary) yield t.Value;
-		});
-		this.dictionary = dictionary;
+		super(dictionary, "Key");
 	}
+};
 
-	get CountNative() {
-		return this.dictionary.CountNative;
-	}
-
-	CopyTo(array, index) {
-		let i = 0;
-		for (let t of this) {
-			array[index + i] = t;
-			i++;
-		}
+Dictionary.ValueCollection = class extends _KeyValueCollection {
+	constructor(dictionary) {
+		super(dictionary, "Value");
 	}
 };
 

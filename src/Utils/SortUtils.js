@@ -1,7 +1,7 @@
 const { SortComparers } = require("./SortComparers");
 
 function getComparer(keySelector, comparer) {
-	if (comparer === undefined) {
+	if (comparer == null) {
 		return (a, b) =>
 			SortComparers.DefaultComparer(keySelector(a), keySelector(b));
 	} else {
@@ -9,18 +9,18 @@ function getComparer(keySelector, comparer) {
 	}
 }
 function getComparerReverse(keySelector, comparer) {
-	if (comparer === undefined) {
+	if (comparer == null) {
 		return (a, b) =>
 			SortComparers.DefaultComparerReverse(keySelector(a), keySelector(b));
 	} else {
 		return (a, b) => -comparer(keySelector(a), keySelector(b));
 	}
 }
-function* sortGen(source, cmpfuns) {
+function* sortGen(cmpfuns) {
 	if (cmpfuns.length == 1) {
-		yield* [...source].sort(cmpfuns[0]);
+		yield* [...this].sort(cmpfuns[0]);
 	} else {
-		yield* [...source].sort((a, b) => {
+		yield* [...this].sort((a, b) => {
 			for (let cf of cmpfuns) {
 				let res = cf(a, b);
 				if (res != 0) return res;

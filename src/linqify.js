@@ -31,14 +31,7 @@ require("./Methods/Methods");
 const linqify = Enumerable.From;
 for (let [key, value] of Object.entries(linqObjects)) linqify[key] = value;
 linqify["noConflict"] = noConflict;
-// const linqify = {
-// 	Dictionary,
-// 	Enumerable,
-// 	EqualityComparers,
-// 	HashSet,
-// 	SortComparers,
-// 	noConflict
-// };
+
 module.exports = {
 	Dictionary,
 	Enumerable,

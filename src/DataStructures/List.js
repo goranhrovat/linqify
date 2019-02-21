@@ -11,14 +11,14 @@ class List extends IEnumerable {
 	 */
 	constructor(arg1, comparer) {
 		super(function*() {
-			for (let t of this.data) yield t;
+			for (let t of this._data) yield t;
 		});
-		this.data = [];
-		this.comparer = comparer || SortComparers.DefaultComparer;
+		this._data = [];
+		this._comparer = comparer || SortComparers.DefaultComparer;
 		if (arg1 !== undefined) {
 			if (getType(arg1) === "function" || getType(arg1) === "null") {
 				// 4
-				this.comparer = arg1 || SortComparers.DefaultComparer;
+				this._comparer = arg1 || SortComparers.DefaultComparer;
 			} else {
 				// 2, 3
 				for (let t of arg1) this.Add(t);
@@ -28,25 +28,25 @@ class List extends IEnumerable {
 	}
 
 	get Comparer() {
-		return this.comparer;
+		return this._comparer;
 	}
 
 	get CountNative() {
-		return this.data.length;
+		return this._data.length;
 	}
 
 	Get(index) {
 		if (index < 0 || index >= this.CountNative) throw "Index not valid";
-		return this.data[index];
+		return this._data[index];
 	}
 
 	Set(index, item) {
 		if (index < 0 || index >= this.CountNative) throw "Index not valid";
-		this.data[index] = item;
+		this._data[index] = item;
 	}
 
 	Add(item) {
-		this.data.push(item);
+		this._data.push(item);
 	}
 
 	AddRange(collection) {
@@ -55,12 +55,12 @@ class List extends IEnumerable {
 
 	/**
 	 * item
-	 * item, ISortComparer
-	 * index, count, item, ISortComparer
+	 * item, IComparer
+	 * index, count, item, IComparer
 	 */
 	BinarySearch(...args) {
 		let item;
-		let comparer = this.comparer;
+		let comparer = this._comparer;
 		let index = 0;
 		let count = this.CountNative;
 		if (args.length === 1) {
@@ -69,7 +69,7 @@ class List extends IEnumerable {
 			[item, comparer] = args;
 		} else if (args.length === 4) {
 			[index, count, item, comparer] = args;
-			comparer = comparer || this.comparer;
+			comparer = comparer || this._comparer;
 		} else {
 			throw "Wrong number of arguments";
 		}
@@ -84,7 +84,7 @@ class List extends IEnumerable {
 		while (start <= stop) {
 			middle = Math.floor((start + stop) / 2);
 
-			let cmpRes = comparer(item, this.data[middle]);
+			let cmpRes = comparer(item, this._data[middle]);
 			if (cmpRes === 0) return middle;
 			if (cmpRes < 0) stop = middle - 1;
 			else start = middle + 1;
@@ -94,11 +94,11 @@ class List extends IEnumerable {
 	}
 
 	Clear() {
-		this.data.length = 0;
+		this._data.length = 0;
 	}
 
 	ContainsNative(item) {
-		return this.Any(t => this.comparer(item, t) === 0);
+		return this.Any(t => this._comparer(item, t) === 0);
 	}
 
 	ConvertAll(converter) {
@@ -136,7 +136,7 @@ class List extends IEnumerable {
 			throw "Not a valid range";
 
 		for (let i = 0; i < count; i++) {
-			array[arrayIndex + i] = this.data[index + i];
+			array[arrayIndex + i] = this._data[index + i];
 		}
 	}
 
@@ -149,7 +149,7 @@ class List extends IEnumerable {
 	}
 
 	FindAll(match) {
-		return this.Where(match).ToList(this.comparer);
+		return this.Where(match).ToList(this._comparer);
 	}
 
 	/**
@@ -177,7 +177,7 @@ class List extends IEnumerable {
 			throw "Not a valid range";
 
 		for (let i = startIndex; i < startIndex + count; i++) {
-			if (match(this.data[i])) return i;
+			if (match(this._data[i])) return i;
 		}
 		return -1;
 	}
@@ -212,7 +212,7 @@ class List extends IEnumerable {
 
 		let last_i = -1;
 		for (let i = startIndex; i < startIndex + count; i++) {
-			if (match(this.data[i])) last_i = i;
+			if (match(this._data[i])) last_i = i;
 		}
 		return last_i;
 	}
@@ -223,7 +223,7 @@ class List extends IEnumerable {
 		if (index < 0 || count < 0 || index + count > this.CountNative)
 			throw "Not a valid range";
 
-		return new List(this.data.slice(index, index + count), this.comparer);
+		return new List(this.Skip(index).Take(count), this._comparer);
 	}
 
 	/**
@@ -236,7 +236,7 @@ class List extends IEnumerable {
 			throw "Not a valid range";
 
 		for (let i = index; i < index + count; i++) {
-			if (this.comparer(item, this.data[i]) === 0) return i;
+			if (this._comparer(item, this._data[i]) === 0) return i;
 		}
 		return -1;
 	}
@@ -244,7 +244,7 @@ class List extends IEnumerable {
 	Insert(index, item) {
 		if (index < 0 || index > this.CountNative) throw "Not a valid range";
 
-		this.data.splice(index, 0, item);
+		this._data.splice(index, 0, item);
 	}
 
 	InsertRange(index, collection) {
@@ -252,7 +252,7 @@ class List extends IEnumerable {
 
 		if (getType(collection) != "Array") collection = [...collection];
 		var args = [index, 0].concat(collection);
-		this.data.splice.apply(this.data, args);
+		this._data.splice.apply(this._data, args);
 	}
 
 	/**
@@ -266,15 +266,15 @@ class List extends IEnumerable {
 
 		let foundInd = -1;
 		for (let i = index; i < index + count; i++) {
-			if (this.comparer(item, this.data[i]) === 0) foundInd = i;
+			if (this._comparer(item, this._data[i]) === 0) foundInd = i;
 		}
 		return foundInd;
 	}
 
 	Remove(item) {
 		for (let i = 0; i < this.CountNative; i++) {
-			if (this.comparer(item, this.data[i]) === 0) {
-				this.data.splice(i, 1);
+			if (this._comparer(item, this._data[i]) === 0) {
+				this._data.splice(i, 1);
 				return true;
 			}
 		}
@@ -283,19 +283,19 @@ class List extends IEnumerable {
 
 	RemoveAll(match) {
 		let oldCount = this.CountNative;
-		this.data = this.data.filter(t => !match(t));
+		this._data = this._data.filter(t => !match(t));
 		return oldCount - this.CountNative;
 	}
 
 	RemoveAt(index) {
 		if (index < 0 || index >= this.CountNative) throw "Not a valid range";
-		this.data.splice(index, 1);
+		this._data.splice(index, 1);
 	}
 
 	RemoveRange(index, count) {
 		if (index < 0 || count < 0 || index + count > this.CountNative)
 			throw "Not a valid range";
-		this.data.splice(index, count);
+		this._data.splice(index, count);
 	}
 
 	/**
@@ -307,33 +307,33 @@ class List extends IEnumerable {
 			throw "Not a valid range";
 
 		if (index === 0 && count === this.CountNative) {
-			this.data.reverse();
+			this._data.reverse();
 		} else {
-			this.data = this.data
+			this._data = this._data
 				.slice(0, index)
 				.concat(
-					this.data.slice(index, index + count).reverse(),
-					this.data.slice(index + count, this.CountNative)
+					this._data.slice(index, index + count).reverse(),
+					this._data.slice(index + count, this.CountNative)
 				);
 		}
 	}
 
 	/**
-	 * ISortComparer
-	 * index, count, ISortComparer
+	 * IComparer
+	 * index, count, IComparer
 	 * ()
 	 */
 	Sort(...args) {
 		let index = 0;
 		let count = this.CountNative - index;
-		let comparer = this.comparer;
+		let comparer = this._comparer;
 
 		if (args.length > 0) {
 			if (args.length === 1) {
 				[comparer] = args;
 			} else if (args.length === 3) {
 				[index, count, comparer] = args;
-				comparer = comparer || this.comparer;
+				comparer = comparer || this._comparer;
 			} else {
 				throw "Wrong number of arguments";
 			}
@@ -343,13 +343,13 @@ class List extends IEnumerable {
 			throw "Not a valid range";
 
 		if (index === 0 && count === this.CountNative) {
-			this.data.sort(comparer);
+			this._data.sort(comparer);
 		} else {
-			this.data = this.data
+			this._data = this._data
 				.slice(0, index)
 				.concat(
-					this.data.slice(index, index + count).sort(comparer),
-					this.data.slice(index + count, this.CountNative)
+					this._data.slice(index, index + count).sort(comparer),
+					this._data.slice(index + count, this.CountNative)
 				);
 		}
 	}

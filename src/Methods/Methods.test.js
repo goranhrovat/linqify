@@ -94,6 +94,47 @@ test("Count", () => {
 	expect([1, 2, 3, 4, 5].Count(t => t > 2)).toBe(3);
 });
 
+test("Custom", () => {
+	expect(
+		[1, 2, 3].Custom(function() {
+			let sum = 0;
+			for (let t of this) sum += t;
+			return sum * 2;
+		})
+	).toBe(12);
+
+	expect(
+		[1, 2, 3].Custom(source => {
+			let sum = 0;
+			for (let t of source) sum += t;
+			return sum * 2;
+		})
+	).toBe(12);
+
+	expect(
+		[1, 2, 3]
+			.Custom(function*() {
+				// double adn select only bigger than 2
+				for (let t of this) {
+					if (t * 2 > 2) yield t * 2;
+				}
+			})
+			.Select(t => t * 2)
+			.ToArray()
+	).toEqual([8, 12]);
+
+	expect(
+		[1, 2, 3]
+			.Custom(function*(source) {
+				// double adn select only bigger than 2
+				for (let t of source) {
+					if (t * 2 > 2) yield t * 2;
+				}
+			})
+			.ToArray()
+	).toEqual([4, 6]);
+});
+
 test("DefaultIfEmpty", () => {
 	expect([1, 2, 3, 4, 5].DefaultIfEmpty(7).ToArray()).toEqual([1, 2, 3, 4, 5]);
 	expect([].DefaultIfEmpty(7).ToArray()).toEqual([7]);
@@ -133,6 +174,8 @@ test("ElementAtOrDefault", () => {
 });
 
 test("Except", () => {
+	expect(() => [].Except(undefined).ToArray()).toThrow("Second is null");
+	expect(() => [].Except(null).ToArray()).toThrow("Second is null");
 	expect([4, 1, 1, 2, 3, 3, 4, 5, 2].Except([4, 2, 3, 4, 8]).ToArray()).toEqual(
 		[1, 5]
 	);
@@ -338,6 +381,8 @@ test("GroupJoin", () => {
 });
 
 test("Intersect", () => {
+	expect(() => [].Intersect(undefined).ToArray()).toThrow("Second is null");
+	expect(() => [].Intersect(null).ToArray()).toThrow("Second is null");
 	expect(
 		[4, 1, 1, 2, 3, 3, 4, 5, 2].Intersect([4, 2, 3, 4, 8]).ToArray()
 	).toEqual([4, 2, 3]);
@@ -559,6 +604,8 @@ test("SelectMany", () => {
 });
 
 test("SequenceEqual", () => {
+	expect(() => [].SequenceEqual(undefined)).toThrow("Second is null");
+	expect(() => [].SequenceEqual(null)).toThrow("Second is null");
 	expect([4, 1, 1, 2, 3, 3, 4, 5, 2].SequenceEqual([4, 1, 1, 2])).toBeFalsy();
 	expect([4, 3].SequenceEqual([4, 1, 1, 2])).toBeFalsy();
 	expect(
@@ -1045,6 +1092,8 @@ test("ToSet", () => {
 });
 
 test("Union", () => {
+	expect(() => [].Union(undefined).ToArray()).toThrow("Second is null");
+	expect(() => [].Union(null).ToArray()).toThrow("Second is null");
 	expect(
 		Enumerable.Empty()
 			.Union([4, 2, 3, 4])
