@@ -52,7 +52,7 @@ class Dictionary extends IEnumerable {
 		} else {
 			for (let t of this._data.get(this._comparer.GetHashCode(key))) {
 				if (this._comparer.Equals(t.key, key)) {
-					throw "Key already exists";
+					throw new Error("Key already exists");
 				}
 			}
 			this._data.get(this._comparer.GetHashCode(key)).push({ key, value });
@@ -105,7 +105,7 @@ class Dictionary extends IEnumerable {
 				if (this._comparer.Equals(t.key, key)) return t.value;
 			}
 		}
-		throw "Key does not exist";
+		throw new Error("Key does not exist");
 	}
 
 	Set(key, value) {

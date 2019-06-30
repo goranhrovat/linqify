@@ -21,7 +21,7 @@ setMtd("Aggregate", function(arg1, arg2, resultSelector = t => t) {
 	let fun, seed;
 	let thisIterator = this[Symbol.iterator]();
 	let val = thisIterator.next();
-	if (val.done) throw "Source contains no elements";
+	if (val.done) throw new Error("Source contains no elements");
 	if (getType(arg1) === "function") {
 		// first argument is accumulator function and is only argument
 		seed = defaultVal(getType(val.value));
@@ -73,7 +73,7 @@ setMtd("Cast", function() {
 });
 
 setMtd("Concat", function*(second) {
-	if (second == null) throw "Second is null";
+	if (second == null) throw new Error("Second is null");
 	yield* this;
 	yield* second;
 });
@@ -122,7 +122,7 @@ setMtd("ElementAt", function(index) {
 			if (cur++ === index) return t;
 		}
 	}
-	throw "Out of range";
+	throw new Error("Out of range");
 });
 
 setMtd("ElementAtOrDefault", function(index, defaultValue = null) {
@@ -137,14 +137,14 @@ setMtd("Except", function*(
 	second,
 	comparer = EqualityComparers.PrimitiveComparer
 ) {
-	if (second == null) throw "Second is null";
+	if (second == null) throw new Error("Second is null");
 	let sec = Enumerable.From(second).ToHashSet(comparer);
 	for (let t of this) if (sec.Add(t)) yield t;
 });
 
 setMtd("First", function(predicate = _t => true) {
 	for (let t of this) if (predicate(t)) return t;
-	throw "No first element";
+	throw new Error("No first element");
 });
 
 setMtd("FirstOrDefault", function(predicate = _t => true, defaultValue = null) {
@@ -194,7 +194,7 @@ setMtd("GroupBy", function(
 		resultSelector = arg2; // 5
 		if (getType(arg3) === "Object") comparer = arg3; // 6
 	} else {
-		throw "Wrong arguments";
+		throw new Error("Wrong arguments");
 	}
 
 	return this.ToLookup(keySelector, elementSelector, comparer).Select(g =>
@@ -221,7 +221,7 @@ setMtd("Intersect", function*(
 	second,
 	comparer = EqualityComparers.PrimitiveComparer
 ) {
-	if (second == null) throw "Second is null";
+	if (second == null) throw new Error("Second is null");
 	let first = this.ToHashSet(comparer);
 	for (let t of second) {
 		let val = first.TryGetValue(t);
@@ -257,7 +257,7 @@ setMtd("Last", function(predicate = _t => true) {
 			last = t;
 			notfound = false;
 		}
-	if (notfound) throw "No last element";
+	if (notfound) throw new Error("No last element");
 	return last;
 });
 
@@ -270,7 +270,7 @@ setMtd("LastOrDefault", function(predicate = _t => true, defaultValue = null) {
 setMtd("Max", function(selector = t => t) {
 	let thisIterator = this[Symbol.iterator]();
 	let val = thisIterator.next();
-	if (val.done) throw "Source contains no elements";
+	if (val.done) throw new Error("Source contains no elements");
 	let myval = selector(val.value);
 
 	for (let t of this) if (selector(t) > myval) myval = selector(t);
@@ -281,7 +281,7 @@ setMtd("Max", function(selector = t => t) {
 setMtd("Min", function(selector = t => t) {
 	let thisIterator = this[Symbol.iterator]();
 	let val = thisIterator.next();
-	if (val.done) throw "Source contains no elements";
+	if (val.done) throw new Error("Source contains no elements");
 	let myval = selector(val.value);
 
 	for (let t of this) if (selector(t) < myval) myval = selector(t);
@@ -331,7 +331,7 @@ setMtd("SequenceEqual", function(
 	second,
 	comparer = EqualityComparers.PrimitiveComparer
 ) {
-	if (second == null) throw "Second is null";
+	if (second == null) throw new Error("Second is null");
 	let thisIterator = this[Symbol.iterator]();
 	let secondIterator = second[Symbol.iterator]();
 	// eslint-disable-next-line no-constant-condition
@@ -347,8 +347,8 @@ setMtd("SequenceEqual", function(
 setMtd("Single", function(predicate = _t => true) {
 	let thisIterator = this.Where(predicate)[Symbol.iterator]();
 	let val = thisIterator.next();
-	if (val.done) throw "No element";
-	if (!thisIterator.next().done) throw "More than 1 element";
+	if (val.done) throw new Error("No element");
+	if (!thisIterator.next().done) throw new Error("More than 1 element");
 	return val.value;
 });
 
@@ -359,7 +359,7 @@ setMtd("SingleOrDefault", function(
 	let thisIterator = this.Where(predicate)[Symbol.iterator]();
 	let val = thisIterator.next();
 	if (val.done) return defaultValue;
-	if (!thisIterator.next().done) throw "More than 1 element";
+	if (!thisIterator.next().done) throw new Error("More than 1 element");
 	return val.value;
 });
 
@@ -488,7 +488,7 @@ setMtd("Union", function*(
 	second,
 	comparer = EqualityComparers.PrimitiveComparer
 ) {
-	if (second == null) throw "Second is null";
+	if (second == null) throw new Error("Second is null");
 	let hashset = new HashSet(comparer);
 	for (let t of this) if (hashset.Add(t)) yield t;
 	for (let t of second) if (hashset.Add(t)) yield t;
@@ -500,7 +500,7 @@ setMtd("Where", function*(predicate) {
 });
 
 setMtd("Zip", function*(second, resultSelector) {
-	if (second == null) throw "Second is null";
+	if (second == null) throw new Error("Second is null");
 	let thisIterator = this[Symbol.iterator]();
 	let secondIterator = second[Symbol.iterator]();
 	while (true) {

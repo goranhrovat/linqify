@@ -36,12 +36,14 @@ class List extends IEnumerable {
 	}
 
 	Get(index) {
-		if (index < 0 || index >= this.CountNative) throw "Index not valid";
+		if (index < 0 || index >= this.CountNative)
+			throw new Error("Index not valid");
 		return this._data[index];
 	}
 
 	Set(index, item) {
-		if (index < 0 || index >= this.CountNative) throw "Index not valid";
+		if (index < 0 || index >= this.CountNative)
+			throw new Error("Index not valid");
 		this._data[index] = item;
 	}
 
@@ -71,11 +73,11 @@ class List extends IEnumerable {
 			[index, count, item, comparer] = args;
 			comparer = comparer || this._comparer;
 		} else {
-			throw "Wrong number of arguments";
+			throw new Error("Wrong number of arguments");
 		}
 
 		if (index < 0 || count < 0 || index + count > this.CountNative)
-			throw "Not a valid range";
+			throw new Error("Not a valid range");
 
 		let start = index;
 		let stop = index + count - 1;
@@ -123,7 +125,7 @@ class List extends IEnumerable {
 		} else if (args.length === 4) {
 			[index, array, arrayIndex, count] = args;
 		} else {
-			throw "Wrong number of arguments";
+			throw new Error("Wrong number of arguments");
 		}
 
 		if (
@@ -133,7 +135,7 @@ class List extends IEnumerable {
 			index + count > this.CountNative ||
 			arrayIndex + count > array.length
 		)
-			throw "Not a valid range";
+			throw new Error("Not a valid range");
 
 		for (let i = 0; i < count; i++) {
 			array[arrayIndex + i] = this._data[index + i];
@@ -170,11 +172,11 @@ class List extends IEnumerable {
 		} else if (args.length === 3) {
 			[startIndex, count, match] = args;
 		} else {
-			throw "Wrong number of arguments";
+			throw new Error("Wrong number of arguments");
 		}
 
 		if (startIndex < 0 || count < 0 || startIndex + count > this.CountNative)
-			throw "Not a valid range";
+			throw new Error("Not a valid range");
 
 		for (let i = startIndex; i < startIndex + count; i++) {
 			if (match(this._data[i])) return i;
@@ -204,11 +206,11 @@ class List extends IEnumerable {
 		} else if (args.length === 3) {
 			[startIndex, count, match] = args;
 		} else {
-			throw "Wrong number of arguments";
+			throw new Error("Wrong number of arguments");
 		}
 
 		if (startIndex < 0 || count < 0 || startIndex + count > this.CountNative)
-			throw "Not a valid range";
+			throw new Error("Not a valid range");
 
 		let last_i = -1;
 		for (let i = startIndex; i < startIndex + count; i++) {
@@ -221,7 +223,7 @@ class List extends IEnumerable {
 
 	GetRange(index, count) {
 		if (index < 0 || count < 0 || index + count > this.CountNative)
-			throw "Not a valid range";
+			throw new Error("Not a valid range");
 
 		return new List(this.Skip(index).Take(count), this._comparer);
 	}
@@ -233,7 +235,7 @@ class List extends IEnumerable {
 	 */
 	IndexOf(item, index = 0, count = this.CountNative - index) {
 		if (index < 0 || count < 0 || index + count > this.CountNative)
-			throw "Not a valid range";
+			throw new Error("Not a valid range");
 
 		for (let i = index; i < index + count; i++) {
 			if (this._comparer(item, this._data[i]) === 0) return i;
@@ -242,13 +244,15 @@ class List extends IEnumerable {
 	}
 
 	Insert(index, item) {
-		if (index < 0 || index > this.CountNative) throw "Not a valid range";
+		if (index < 0 || index > this.CountNative)
+			throw new Error("Not a valid range");
 
 		this._data.splice(index, 0, item);
 	}
 
 	InsertRange(index, collection) {
-		if (index < 0 || index > this.CountNative) throw "Not a valid range";
+		if (index < 0 || index > this.CountNative)
+			throw new Error("Not a valid range");
 
 		if (getType(collection) != "Array") collection = [...collection];
 		var args = [index, 0].concat(collection);
@@ -262,7 +266,7 @@ class List extends IEnumerable {
 	 */
 	LastIndexOf(item, index = 0, count = this.CountNative - index) {
 		if (index < 0 || count < 0 || index + count > this.CountNative)
-			throw "Not a valid range";
+			throw new Error("Not a valid range");
 
 		let foundInd = -1;
 		for (let i = index; i < index + count; i++) {
@@ -288,13 +292,14 @@ class List extends IEnumerable {
 	}
 
 	RemoveAt(index) {
-		if (index < 0 || index >= this.CountNative) throw "Not a valid range";
+		if (index < 0 || index >= this.CountNative)
+			throw new Error("Not a valid range");
 		this._data.splice(index, 1);
 	}
 
 	RemoveRange(index, count) {
 		if (index < 0 || count < 0 || index + count > this.CountNative)
-			throw "Not a valid range";
+			throw new Error("Not a valid range");
 		this._data.splice(index, count);
 	}
 
@@ -304,7 +309,7 @@ class List extends IEnumerable {
 	 */
 	ReverseNative(index = 0, count = this.CountNative - index) {
 		if (index < 0 || count < 0 || index + count > this.CountNative)
-			throw "Not a valid range";
+			throw new Error("Not a valid range");
 
 		if (index === 0 && count === this.CountNative) {
 			this._data.reverse();
@@ -335,12 +340,12 @@ class List extends IEnumerable {
 				[index, count, comparer] = args;
 				comparer = comparer || this._comparer;
 			} else {
-				throw "Wrong number of arguments";
+				throw new Error("Wrong number of arguments");
 			}
 		}
 
 		if (index < 0 || count < 0 || index + count > this.CountNative)
-			throw "Not a valid range";
+			throw new Error("Not a valid range");
 
 		if (index === 0 && count === this.CountNative) {
 			this._data.sort(comparer);

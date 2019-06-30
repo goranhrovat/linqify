@@ -18,7 +18,7 @@ class Enumerable {
 	}
 
 	static Range(start, count) {
-		if (count < 0) throw "count is less than 0";
+		if (count < 0) throw new Error("count is less than 0");
 		return new IEnumerable(function*() {
 			let end = start + count;
 			for (let i = start; i < end; i++) yield i;
@@ -26,7 +26,7 @@ class Enumerable {
 	}
 
 	static Repeat(value, count) {
-		if (count < 0) throw "count is less than 0";
+		if (count < 0) throw new Error("count is less than 0");
 		return new IEnumerable(function*() {
 			while (count--) yield value;
 		});

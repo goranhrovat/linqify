@@ -52,7 +52,7 @@ import {Enumerable, List, Dictionary, HashSet, EqualityComparers,
 ```
 #### Get the specific version
 ```html
-<script src="https://unpkg.com/linqify@1.2.0"></script>
+<script src="https://unpkg.com/linqify@1.2.1"></script>
 ```
 #### Get the latest minor and patch version of specific major version
 ```html
@@ -88,8 +88,8 @@ import {Enumerable, List, Dictionary, HashSet, EqualityComparers,
 ```javascript
 function ageComparer (a, b) {
     if (a.Age > b.Age) return 1;
-    else if (a.Age < b.Age) return -1;
-    else return 0;
+    if (a.Age < b.Age) return -1;
+    return 0;
 }
 let people = [{Name:"Jack", Age:18}, {Name:"Joe",  Age:22}, {Name:"Jack", Age:20}];
 

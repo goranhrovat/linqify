@@ -6,7 +6,8 @@ const {
 } = require("./AddConflict");
 
 const noConflict = function() {
-	if (noConflictMode.value) throw "You can call noConflict only once!";
+	if (noConflictMode.value)
+		throw new Error("You can call noConflict only once!");
 
 	if (typeof window !== "undefined") {
 		// only browser - remove global vars
