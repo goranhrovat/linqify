@@ -11,7 +11,8 @@ test("defaultVal", () => {
 	expect(typeof defaultVal("symbol")).toBe("symbol");
 	expect(defaultVal("undefined")).toBe(void 0);
 	expect(defaultVal("")).toEqual({});
-	expect(defaultVal("Number")).toEqual(Number(0));
+	expect(defaultVal("number")).toEqual(Number(0));
+
 	expect(defaultVal("number")).toBe(0);
 	let a = {};
 	a.constructor = { name: null };

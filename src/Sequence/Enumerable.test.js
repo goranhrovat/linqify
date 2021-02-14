@@ -4,13 +4,17 @@ var { Enumerable } = process.env.LINQIFY_PATH
 //var {Enumerable} = require('../../src/linqify');
 
 test("From", () => {
-	let myarr = Enumerable.From(function*() {
+	let myarr = Enumerable.From(function* () {
 		yield 2;
 		yield 5;
 		yield 8;
 	});
 	expect(myarr.ToArray()).toEqual([2, 5, 8]);
-	expect([...Enumerable.From([1, 2, 3]).Select(t => t * 2)]).toEqual([2, 4, 6]);
+	expect([...Enumerable.From([1, 2, 3]).Select((t) => t * 2)]).toEqual([
+		2,
+		4,
+		6,
+	]);
 	expect([...Enumerable.From(Enumerable.From([1, 2, 3]))]).toEqual([1, 2, 3]);
 });
 
@@ -26,7 +30,7 @@ test("Repeate", () => {
 		"abc",
 		"abc",
 		"abc",
-		"abc"
+		"abc",
 	]);
 	expect(() => Enumerable.Repeat("abc", -1).ToArray()).toThrow(
 		"count is less than 0"
@@ -38,7 +42,7 @@ test("Empty", () => {
 });
 
 test("setMethod", () => {
-	Enumerable.setMethod("EvenElements", function*() {
+	Enumerable.setMethod("EvenElements", function* () {
 		let ind = 0;
 		for (let t of this) if (ind++ % 2 === 0) yield t;
 	});

@@ -2,7 +2,7 @@ var { IEnumerable } = require("./IEnumerable");
 
 class IGrouping extends IEnumerable {
 	constructor(key, source) {
-		super(function*() {
+		super(function* () {
 			yield* source;
 		});
 		this._key = key;

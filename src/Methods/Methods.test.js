@@ -7,7 +7,7 @@ var { Enumerable } = process.env.LINQIFY_PATH
 
 let comparer = {
 	Equals: (a, b) => a.a === b.a,
-	GetHashCode: a => a.a
+	GetHashCode: (a) => a.a,
 };
 
 test("Aggregate", () => {
@@ -15,7 +15,11 @@ test("Aggregate", () => {
 		[1, 2, 3, 4, 5].ToHashSet().Aggregate(2, (seed, next) => seed + next)
 	).toBe(17);
 	expect(
-		[1, 2, 3, 4, 5].Aggregate(2, (seed, next) => seed + next, t => t * 2)
+		[1, 2, 3, 4, 5].Aggregate(
+			2,
+			(seed, next) => seed + next,
+			(t) => t * 2
+		)
 	).toBe(34);
 	expect([1, 2, 3, 4, 5].Aggregate((seed, next) => seed + next)).toBe(15);
 	expect(() => [].Aggregate(2, (seed, next) => seed + next)).toThrow(
@@ -41,20 +45,20 @@ test("Aggregate", () => {
 });
 
 test("All", () => {
-	expect([true, true, true, true].All(t => t)).toBeTruthy();
-	expect([true, false, true, true].All(t => t)).toBeFalsy();
-	expect([4, 80, 1, 2, 3, 4, 5].All(t => t > 0)).toBeTruthy();
-	expect([4, 80, 1, 2, 3, 4, 5].All(t => t > 3)).toBeFalsy();
-	expect([].All(t => t > 3)).toBeTruthy();
+	expect([true, true, true, true].All((t) => t)).toBeTruthy();
+	expect([true, false, true, true].All((t) => t)).toBeFalsy();
+	expect([4, 80, 1, 2, 3, 4, 5].All((t) => t > 0)).toBeTruthy();
+	expect([4, 80, 1, 2, 3, 4, 5].All((t) => t > 3)).toBeFalsy();
+	expect([].All((t) => t > 3)).toBeTruthy();
 });
 
 test("Any", () => {
-	expect([true, true, true, true].Any(t => t)).toBeTruthy();
-	expect([null, true, false, true, true].Any(t => t)).toBeTruthy();
-	expect([false, false, false, false].Any(t => t)).toBeFalsy();
-	expect([4, 80, 1, 2, 3, 4, 5].Any(t => t > 10)).toBeTruthy();
-	expect([4, 80, 1, 2, 3, 4, 5].Any(t => t > 500)).toBeFalsy();
-	expect([].Any(t => t > 3)).toBeFalsy();
+	expect([true, true, true, true].Any((t) => t)).toBeTruthy();
+	expect([null, true, false, true, true].Any((t) => t)).toBeTruthy();
+	expect([false, false, false, false].Any((t) => t)).toBeFalsy();
+	expect([4, 80, 1, 2, 3, 4, 5].Any((t) => t > 10)).toBeTruthy();
+	expect([4, 80, 1, 2, 3, 4, 5].Any((t) => t > 500)).toBeFalsy();
+	expect([].Any((t) => t > 3)).toBeFalsy();
 	expect([].Any()).toBeFalsy();
 	expect([1, 2].Any()).toBeTruthy();
 });
@@ -68,7 +72,7 @@ test("AsEnumerable", () => {
 });
 
 test("Average", () => {
-	expect(["1", "2", "3", "4", "5"].Average(t => parseInt(t))).toBe(3);
+	expect(["1", "2", "3", "4", "5"].Average((t) => parseInt(t))).toBe(3);
 	expect([1, 2, 3, 4, 5].Average()).toBe(3);
 	expect([1, 2, 3, 4, 5, null].Average()).toBe(3);
 	expect([null].Average()).toBe(NaN);
@@ -91,12 +95,12 @@ test("Contains", () => {
 
 test("Count", () => {
 	expect([1, 2, 3, 4, 5].Count()).toBe(5);
-	expect([1, 2, 3, 4, 5].Count(t => t > 2)).toBe(3);
+	expect([1, 2, 3, 4, 5].Count((t) => t > 2)).toBe(3);
 });
 
 test("Custom", () => {
 	expect(
-		[1, 2, 3].Custom(function() {
+		[1, 2, 3].Custom(function () {
 			let sum = 0;
 			for (let t of this) sum += t;
 			return sum * 2;
@@ -104,7 +108,7 @@ test("Custom", () => {
 	).toBe(12);
 
 	expect(
-		[1, 2, 3].Custom(source => {
+		[1, 2, 3].Custom((source) => {
 			let sum = 0;
 			for (let t of source) sum += t;
 			return sum * 2;
@@ -113,19 +117,19 @@ test("Custom", () => {
 
 	expect(
 		[1, 2, 3]
-			.Custom(function*() {
+			.Custom(function* () {
 				// double adn select only bigger than 2
 				for (let t of this) {
 					if (t * 2 > 2) yield t * 2;
 				}
 			})
-			.Select(t => t * 2)
+			.Select((t) => t * 2)
 			.ToArray()
 	).toEqual([8, 12]);
 
 	expect(
 		[1, 2, 3]
-			.Custom(function*(source) {
+			.Custom(function* (source) {
 				// double adn select only bigger than 2
 				for (let t of source) {
 					if (t * 2 > 2) yield t * 2;
@@ -147,7 +151,7 @@ test("Distinct", () => {
 		1,
 		2,
 		3,
-		5
+		5,
 	]);
 	expect([].Distinct().ToArray()).toEqual([]);
 	expect(
@@ -176,15 +180,15 @@ test("ElementAtOrDefault", () => {
 test("Except", () => {
 	expect(() => [].Except(undefined).ToArray()).toThrow("Second is null");
 	expect(() => [].Except(null).ToArray()).toThrow("Second is null");
-	expect([4, 1, 1, 2, 3, 3, 4, 5, 2].Except([4, 2, 3, 4, 8]).ToArray()).toEqual(
-		[1, 5]
-	);
+	expect(
+		[4, 1, 1, 2, 3, 3, 4, 5, 2].Except([4, 2, 3, 4, 8]).ToArray()
+	).toEqual([1, 5]);
 	expect([4, 1, 1, 2, 3, 3, 4, 5, 2].Except([18, 25]).ToArray()).toEqual([
 		4,
 		1,
 		2,
 		3,
-		5
+		5,
 	]);
 	expect(
 		[{ a: "test" }, { a: "test" }, { a: "test2" }]
@@ -194,17 +198,17 @@ test("Except", () => {
 });
 
 test("First", () => {
-	expect([1, 2, 3, 4, 5].First(t => t == 5)).toBe(5);
+	expect([1, 2, 3, 4, 5].First((t) => t == 5)).toBe(5);
 	expect([1, 2, 3, 4, 5].First()).toBe(1);
 	expect(() => [].First()).toThrow("No first element");
 	expect("test".First()).toBe("t");
 });
 
 test("FirstOrDefault", () => {
-	expect([1, 2, 3, 4, 5].FirstOrDefault(t => t == 5)).toBe(5);
+	expect([1, 2, 3, 4, 5].FirstOrDefault((t) => t == 5)).toBe(5);
 	expect([1, 2, 3, 4, 5].FirstOrDefault()).toBe(1);
 	expect([].FirstOrDefault()).toBe(null);
-	expect([].FirstOrDefault(_t => true, 5)).toBe(5);
+	expect([].FirstOrDefault((_t) => true, 5)).toBe(5);
 });
 
 test("ForEach", () => {
@@ -219,94 +223,145 @@ test("GroupBy", () => {
 	let arr = [
 		{ name: "John", age: 15 },
 		{ name: "Doe", age: 15 },
-		{ name: "Jane", age: 12 }
+		{ name: "Jane", age: 12 },
 	];
 	let ageComparer = {
 		Equals: (a, b) => a.age === b.age,
-		GetHashCode: a => a.age
+		GetHashCode: (a) => a.age,
 	};
 
 	expect(
 		[1, 2, 3, 4, 5, 9]
-			.GroupBy(t => t % 2)
-			.Select(t => ({ key: t.Key, avg: t.Average() }))
+			.GroupBy((t) => t % 2)
+			.Select((t) => ({ key: t.Key, avg: t.Average() }))
 			.ToArray()
-	).toEqual([{ avg: 4.5, key: 1 }, { avg: 3, key: 0 }]);
+	).toEqual([
+		{ avg: 4.5, key: 1 },
+		{ avg: 3, key: 0 },
+	]);
 
 	// 1
 	expect(
 		arr
-			.GroupBy(t => t.age, t => t.name, (key, elmList) => [key, [...elmList]])
+			.GroupBy(
+				(t) => t.age,
+				(t) => t.name,
+				(key, elmList) => [key, [...elmList]]
+			)
 			.ToArray()
-	).toEqual([[15, ["John", "Doe"]], [12, ["Jane"]]]);
+	).toEqual([
+		[15, ["John", "Doe"]],
+		[12, ["Jane"]],
+	]);
 	// 2
 	expect(
 		arr
 			.GroupBy(
-				t => t,
-				t => t.name,
+				(t) => t,
+				(t) => t.name,
 				(key, elmList) => [key.age, [...elmList]],
 				ageComparer
 			)
 			.ToArray()
-	).toEqual([[15, ["John", "Doe"]], [12, ["Jane"]]]);
+	).toEqual([
+		[15, ["John", "Doe"]],
+		[12, ["Jane"]],
+	]);
 	// 3
 	expect(
 		arr
-			.GroupBy(t => t.age, t => t.name)
-			.Select(t => [t.Key, [...t]])
+			.GroupBy(
+				(t) => t.age,
+				(t) => t.name
+			)
+			.Select((t) => [t.Key, [...t]])
 			.ToArray()
-	).toEqual([[15, ["John", "Doe"]], [12, ["Jane"]]]);
+	).toEqual([
+		[15, ["John", "Doe"]],
+		[12, ["Jane"]],
+	]);
 	// 4
 	expect(
 		arr
-			.GroupBy(t => t, t => t.name, ageComparer)
-			.Select(t => [t.Key.age, [...t]])
+			.GroupBy(
+				(t) => t,
+				(t) => t.name,
+				ageComparer
+			)
+			.Select((t) => [t.Key.age, [...t]])
 			.ToArray()
-	).toEqual([[15, ["John", "Doe"]], [12, ["Jane"]]]);
+	).toEqual([
+		[15, ["John", "Doe"]],
+		[12, ["Jane"]],
+	]);
 	// 5
 	expect(
 		arr
-			.GroupBy(t => t.age, (key, elmList) => [key, elmList])
-			.Select(t => [t[0], [...t[1]]])
+			.GroupBy(
+				(t) => t.age,
+				(key, elmList) => [key, elmList]
+			)
+			.Select((t) => [t[0], [...t[1]]])
 			.ToArray()
 	).toEqual([
-		[15, [{ name: "John", age: 15 }, { name: "Doe", age: 15 }]],
-		[12, [{ name: "Jane", age: 12 }]]
+		[
+			15,
+			[
+				{ name: "John", age: 15 },
+				{ name: "Doe", age: 15 },
+			],
+		],
+		[12, [{ name: "Jane", age: 12 }]],
 	]);
 	// 6
 	expect(
 		arr
-			.GroupBy(t => t, (key, elmList) => [key.age, elmList], ageComparer)
-			.Select(t => [t[0], [...t[1]]])
+			.GroupBy(
+				(t) => t,
+				(key, elmList) => [key.age, elmList],
+				ageComparer
+			)
+			.Select((t) => [t[0], [...t[1]]])
 			.ToArray()
 	).toEqual([
-		[15, [{ name: "John", age: 15 }, { name: "Doe", age: 15 }]],
-		[12, [{ name: "Jane", age: 12 }]]
+		[
+			15,
+			[
+				{ name: "John", age: 15 },
+				{ name: "Doe", age: 15 },
+			],
+		],
+		[12, [{ name: "Jane", age: 12 }]],
 	]);
 	// 7 and else
 	expect(
 		[1, 2, 3, 4, 5]
-			.GroupBy(t => t % 2)
-			.Select(t => [t.Key, [...t]])
+			.GroupBy((t) => t % 2)
+			.Select((t) => [t.Key, [...t]])
 			.ToArray()
-	).toEqual([[1, [1, 3, 5]], [0, [2, 4]]]);
+	).toEqual([
+		[1, [1, 3, 5]],
+		[0, [2, 4]],
+	]);
 
 	// 8
 	expect(
 		[{ a: "test" }, { a: "test2" }, { a: "test" }]
-			.GroupBy(t => t, comparer)
-			.Select(t => [t.Key, [...t]])
+			.GroupBy((t) => t, comparer)
+			.Select((t) => [t.Key, [...t]])
 			.ToArray()
 	).toEqual([
 		[{ a: "test" }, [{ a: "test" }, { a: "test" }]],
-		[{ a: "test2" }, [{ a: "test2" }]]
+		[{ a: "test2" }, [{ a: "test2" }]],
 	]);
 	// else
 	expect(() =>
 		[1, 2, 3, 4, 5]
-			.GroupBy(t => t % 2, (_a, _b, _c) => ({}))
-			.Select(t => [t.Key, [...t]])
+			.GroupBy(
+				(t) => t % 2,
+				(_a, _b, _c) => ({})
+			)
+			.Select((t) => [t.Key, [...t]])
 			.ToArray()
 	).toThrow("Wrong arguments");
 });
@@ -315,33 +370,33 @@ test("GroupJoin", () => {
 	let people = [
 		{ Name: "Hedlund, Magnus" },
 		{ Name: "Adams, Terry" },
-		{ Name: "Weiss, Charlotte" }
+		{ Name: "Weiss, Charlotte" },
 	];
 	let nameComparer = {
 		Equals: (a, b) => a.Name === b.Name,
-		GetHashCode: a => a.Name
+		GetHashCode: (a) => a.Name,
 	};
 	// 1 with comparer
 	let pets = [
 		{ Name: "Barley", Owner: { Name: "Adams, Terry" } },
 		{ Name: "Boots", Owner: { Name: "Adams, Terry" } },
 		{ Name: "Whiskers", Owner: { Name: "Weiss, Charlotte" } },
-		{ Name: "Daisy", Owner: { Name: "Hedlund, Magnus" } }
+		{ Name: "Daisy", Owner: { Name: "Hedlund, Magnus" } },
 	];
 
 	let res = people
 		.GroupJoin(
 			pets,
-			person => person,
-			pet => pet.Owner,
+			(person) => person,
+			(pet) => pet.Owner,
 			(person, petCollection) => ({
 				OwnerName: person.Name,
 				Pets: [
 					petCollection
-						.Select(pet => pet.Name)
+						.Select((pet) => pet.Name)
 						.Aggregate((seed, item) => seed + " " + item)
-						.trim()
-				]
+						.trim(),
+				],
 			}),
 			nameComparer
 		)
@@ -350,7 +405,7 @@ test("GroupJoin", () => {
 	expect(res).toEqual([
 		{ OwnerName: "Hedlund, Magnus", Pets: ["Daisy"] },
 		{ OwnerName: "Adams, Terry", Pets: ["Barley Boots"] },
-		{ OwnerName: "Weiss, Charlotte", Pets: ["Whiskers"] }
+		{ OwnerName: "Weiss, Charlotte", Pets: ["Whiskers"] },
 	]);
 
 	// 2 without comparer
@@ -358,17 +413,17 @@ test("GroupJoin", () => {
 		{ Name: "Barley", Owner: people[1] },
 		{ Name: "Boots", Owner: people[1] },
 		{ Name: "Whiskers", Owner: people[2] },
-		{ Name: "Daisy", Owner: people[0] }
+		{ Name: "Daisy", Owner: people[0] },
 	];
 
 	let res2 = people
 		.GroupJoin(
 			pets2,
-			person => person,
-			pet => pet.Owner,
+			(person) => person,
+			(pet) => pet.Owner,
 			(person, petCollection) => ({
 				OwnerName: person.Name,
-				Pets: [...petCollection.Select(pet => pet.Name)]
+				Pets: [...petCollection.Select((pet) => pet.Name)],
 			})
 		)
 		.ToArray();
@@ -376,7 +431,7 @@ test("GroupJoin", () => {
 	expect(res2).toEqual([
 		{ OwnerName: "Hedlund, Magnus", Pets: ["Daisy"] },
 		{ OwnerName: "Adams, Terry", Pets: ["Barley", "Boots"] },
-		{ OwnerName: "Weiss, Charlotte", Pets: ["Whiskers"] }
+		{ OwnerName: "Weiss, Charlotte", Pets: ["Whiskers"] },
 	]);
 });
 
@@ -395,17 +450,20 @@ test("Intersect", () => {
 
 	let nameComparer = {
 		Equals: (a, b) => a.Name === b.Name,
-		GetHashCode: a => a.Name
+		GetHashCode: (a) => a.Name,
 	};
 	let people = [
 		{ Name: "Jack", Age: 18 },
 		{ Name: "Joe", Age: 22 },
-		{ Name: "Jack", Age: 20 }
+		{ Name: "Jack", Age: 20 },
 	];
 	expect(
 		people
 			.Intersect(
-				[{ Name: "Joe", Age: 50 }, { Name: "Jane", Age: 24 }],
+				[
+					{ Name: "Joe", Age: 50 },
+					{ Name: "Jane", Age: 24 },
+				],
 				nameComparer
 			)
 			.ToArray()
@@ -417,11 +475,11 @@ test("Join", () => {
 		{ Name: "Hedlund, Magnus" },
 		{ Name: "Adams, Terry" },
 		{ Name: "Weiss, Charlotte" },
-		{ Name: "Without Pets" }
+		{ Name: "Without Pets" },
 	];
 	let nameComparer = {
 		Equals: (a, b) => a.Name === b.Name,
-		GetHashCode: a => a.Name
+		GetHashCode: (a) => a.Name,
 	};
 	// 1 with comparer
 	let pets = [
@@ -429,17 +487,17 @@ test("Join", () => {
 		{ Name: "Boots", Owner: { Name: "Adams, Terry" } },
 		{ Name: "Pet Without Owner", Owner: { Name: "Doe, Jane" } },
 		{ Name: "Whiskers", Owner: { Name: "Weiss, Charlotte" } },
-		{ Name: "Daisy", Owner: { Name: "Hedlund, Magnus" } }
+		{ Name: "Daisy", Owner: { Name: "Hedlund, Magnus" } },
 	];
 
 	let res = people
 		.Join(
 			pets,
-			person => person,
-			pet => pet.Owner,
+			(person) => person,
+			(pet) => pet.Owner,
 			(person, pet) => ({
 				OwnerName: person.Name,
-				Pet: pet.Name
+				Pet: pet.Name,
 			}),
 			nameComparer
 		)
@@ -449,7 +507,7 @@ test("Join", () => {
 		{ OwnerName: "Hedlund, Magnus", Pet: "Daisy" },
 		{ OwnerName: "Adams, Terry", Pet: "Barley" },
 		{ OwnerName: "Adams, Terry", Pet: "Boots" },
-		{ OwnerName: "Weiss, Charlotte", Pet: "Whiskers" }
+		{ OwnerName: "Weiss, Charlotte", Pet: "Whiskers" },
 	]);
 
 	// 2 without comparer
@@ -458,17 +516,17 @@ test("Join", () => {
 		{ Name: "Boots", Owner: people[1] },
 		{ Name: "Pet Without Owner", Owner: { Name: "Doe, Jane" } },
 		{ Name: "Whiskers", Owner: people[2] },
-		{ Name: "Daisy", Owner: people[0] }
+		{ Name: "Daisy", Owner: people[0] },
 	];
 
 	let res2 = people
 		.Join(
 			pets2,
-			person => person,
-			pet => pet.Owner,
+			(person) => person,
+			(pet) => pet.Owner,
 			(person, pet) => ({
 				OwnerName: person.Name,
-				Pet: pet.Name
+				Pet: pet.Name,
 			})
 		)
 		.ToArray();
@@ -477,13 +535,13 @@ test("Join", () => {
 		{ OwnerName: "Hedlund, Magnus", Pet: "Daisy" },
 		{ OwnerName: "Adams, Terry", Pet: "Barley" },
 		{ OwnerName: "Adams, Terry", Pet: "Boots" },
-		{ OwnerName: "Weiss, Charlotte", Pet: "Whiskers" }
+		{ OwnerName: "Weiss, Charlotte", Pet: "Whiskers" },
 	]);
 });
 
 test("Last", () => {
 	expect(Enumerable.Range(1, 10).Last()).toBe(10);
-	expect([1, 2, 3, 4, 5].Last(t => t < 3)).toBe(2);
+	expect([1, 2, 3, 4, 5].Last((t) => t < 3)).toBe(2);
 	expect([1, 2, 3, 4, 5].Last()).toBe(5);
 	expect([null].Last()).toBe(null);
 	expect([undefined].Last()).toBe(undefined);
@@ -492,23 +550,28 @@ test("Last", () => {
 
 test("LastOrDefault", () => {
 	expect(
-		new Map([[1, 2], [2, 3], [3, 4], [4, 5]]).LastOrDefault(t => t[0] < 3)
+		new Map([
+			[1, 2],
+			[2, 3],
+			[3, 4],
+			[4, 5],
+		]).LastOrDefault((t) => t[0] < 3)
 	).toEqual([2, 3]);
-	expect([1, 2, 3, 4, 5].LastOrDefault(t => t < 3)).toBe(2);
-	expect([1, 2, 3, 4, 5].LastOrDefault(_t => true, "test")).toBe(5);
+	expect([1, 2, 3, 4, 5].LastOrDefault((t) => t < 3)).toBe(2);
+	expect([1, 2, 3, 4, 5].LastOrDefault((_t) => true, "test")).toBe(5);
 	expect([1, 2, 3].LastOrDefault()).toBe(3);
 	expect([].LastOrDefault()).toBe(null);
-	expect([].LastOrDefault(_t => true, "test")).toBe("test");
+	expect([].LastOrDefault((_t) => true, "test")).toBe("test");
 });
 
 test("Max", () => {
-	expect([4, 80, 1, 2, 3, 4, 5].Max(t => t * 2)).toBe(160);
+	expect([4, 80, 1, 2, 3, 4, 5].Max((t) => t * 2)).toBe(160);
 	expect([4, 80, -1, 2, 3, 4, 5, 100, null].Max()).toBe(100);
 	expect(() => [].Max()).toThrow("Source contains no elements");
 });
 
 test("Min", () => {
-	expect([4, 80, 1, 2, 3, 4, 5].Min(t => t * 2)).toBe(2);
+	expect([4, 80, 1, 2, 3, 4, 5].Min((t) => t * 2)).toBe(2);
 	expect([4, 80, -1, 2, 3, 4, 5, null].Min()).toBe(-1);
 	expect(() => [].Min()).toThrow("Source contains no elements");
 });
@@ -536,7 +599,7 @@ test("Prepend", () => {
 		3,
 		4,
 		5,
-		2
+		2,
 	]);
 });
 
@@ -550,24 +613,24 @@ test("Reverse", () => {
 		2,
 		1,
 		1,
-		4
+		4,
 	]);
 });
 
 test("Select", () => {
-	expect([1, 2, 3, 4, 5].Select(t => t * 2).ToArray()).toEqual([
+	expect([1, 2, 3, 4, 5].Select((t) => t * 2).ToArray()).toEqual([
 		2,
 		4,
 		6,
 		8,
-		10
+		10,
 	]);
 	expect([1, 2, 3, 4, 5].Select((t, i) => t * 2 + i).ToArray()).toEqual([
 		2,
 		5,
 		8,
 		11,
-		14
+		14,
 	]);
 });
 
@@ -576,12 +639,12 @@ test("SelectMany", () => {
 		{ Name: "t", Items: ["a", "b"] },
 		{ Name: "u", Items: ["c", "d"] },
 		{ Name: "v", Items: ["e", "f"] },
-		{ Name: "w", Items: ["g"] }
+		{ Name: "w", Items: ["g"] },
 	];
 
 	let mylist = persons
 		.SelectMany(
-			(t, i) => t.Items.Select(z => z + i),
+			(t, i) => t.Items.Select((z) => z + i),
 			(per, item) => ({ name: per.Name, item })
 		)
 		.ToArray();
@@ -593,11 +656,11 @@ test("SelectMany", () => {
 		{ name: "u", item: "d1" },
 		{ name: "v", item: "e2" },
 		{ name: "v", item: "f2" },
-		{ name: "w", item: "g3" }
+		{ name: "w", item: "g3" },
 	]);
 
 	let mylist2 = persons
-		.SelectMany((t, i) => t.Items.Select(z => z + i))
+		.SelectMany((t, i) => t.Items.Select((z) => z + i))
 		.ToArray();
 
 	expect(mylist2).toEqual(["a0", "b0", "c1", "d1", "e2", "f2", "g3"]);
@@ -616,18 +679,18 @@ test("SequenceEqual", () => {
 
 test("Single", () => {
 	expect([4].Single()).toBe(4);
-	expect(() => [4].Single(t => t > 5)).toThrow("No element");
-	expect(() => [4, 9, 8].Single(t => t > 5)).toThrow("More than 1 element");
-	expect([8].Single(t => t > 5)).toBe(8);
+	expect(() => [4].Single((t) => t > 5)).toThrow("No element");
+	expect(() => [4, 9, 8].Single((t) => t > 5)).toThrow("More than 1 element");
+	expect([8].Single((t) => t > 5)).toBe(8);
 });
 
 test("SingleOrDefault", () => {
 	expect([4].SingleOrDefault()).toBe(4);
-	expect([4].SingleOrDefault(t => t > 5, "test")).toBe("test");
-	expect(() => [4, 9, 8].SingleOrDefault(t => t > 5, "test")).toThrow(
+	expect([4].SingleOrDefault((t) => t > 5, "test")).toBe("test");
+	expect(() => [4, 9, 8].SingleOrDefault((t) => t > 5, "test")).toThrow(
 		"More than 1 element"
 	);
-	expect([8].SingleOrDefault(t => t > 5)).toBe(8);
+	expect([8].SingleOrDefault((t) => t > 5)).toBe(8);
 });
 
 test("Skip", () => {
@@ -637,7 +700,7 @@ test("Skip", () => {
 		3,
 		4,
 		5,
-		2
+		2,
 	]);
 	expect([4, 1, 1, 2, 3, 3, 4, 5, 2].Skip(30).ToArray()).toEqual([]);
 });
@@ -647,7 +710,7 @@ test("SkipLast", () => {
 		4,
 		1,
 		1,
-		2
+		2,
 	]);
 	expect([4, 1, 1, 2, 3, 3, 4, 5, 2].SkipLast(8).ToArray()).toEqual([4]);
 	expect([4, 1, 1, 2, 3, 3, 4, 5, 2].SkipLast(20).ToArray()).toEqual([]);
@@ -656,13 +719,12 @@ test("SkipLast", () => {
 test("SkipWhile", () => {
 	expect(
 		Enumerable.Range(1, 10)
-			.SkipWhile(t => t < 10)
+			.SkipWhile((t) => t < 10)
 			.ToArray()
 	).toEqual([10]);
-	expect([4, 1, 1, 2, 3, 3, 4, 5, 2].SkipWhile(t => t < 5).ToArray()).toEqual([
-		5,
-		2
-	]);
+	expect(
+		[4, 1, 1, 2, 3, 3, 4, 5, 2].SkipWhile((t) => t < 5).ToArray()
+	).toEqual([5, 2]);
 	expect(
 		[4, 1, 1, 2, 3, 3, 4, 5, 2].SkipWhile((t, i) => i < 5).ToArray()
 	).toEqual([3, 4, 5, 2]);
@@ -671,7 +733,7 @@ test("SkipWhile", () => {
 test("Sum", () => {
 	expect(Enumerable.Range(1, 100).Sum()).toBe(5050);
 	expect([1, 2, 3, null].Sum()).toBe(6);
-	expect([1, 2, 3].Sum(t => t * 2)).toBe(12);
+	expect([1, 2, 3].Sum((t) => t * 2)).toBe(12);
 });
 
 test("Take", () => {
@@ -686,15 +748,9 @@ test("TakeLast", () => {
 });
 
 test("TakeWhile", () => {
-	expect([4, 1, 1, 2, 3, 3, 4, 5, 2].TakeWhile(t => t < 5).ToArray()).toEqual([
-		4,
-		1,
-		1,
-		2,
-		3,
-		3,
-		4
-	]);
+	expect(
+		[4, 1, 1, 2, 3, 3, 4, 5, 2].TakeWhile((t) => t < 5).ToArray()
+	).toEqual([4, 1, 1, 2, 3, 3, 4]);
 	expect(
 		[4, 1, 1, 2, 3, 3, 4, 5, 2].TakeWhile((t, i) => i < 5).ToArray()
 	).toEqual([4, 1, 1, 2, 3]);
@@ -708,29 +764,53 @@ test("ToArray", () => {
 
 	expect(
 		[{ a: "test" }, { a: "test2" }]
-			.ToDictionary(t => t, t => t.a, comparer)
+			.ToDictionary(
+				(t) => t,
+				(t) => t.a,
+				comparer
+			)
 			.ToArray()
 	).toEqual([
 		{ Key: { a: "test" }, Value: "test" },
-		{ Key: { a: "test2" }, Value: "test2" }
+		{ Key: { a: "test2" }, Value: "test2" },
 	]);
 	expect(() =>
 		[{ a: "test" }, { a: "test" }, { a: "test2" }]
-			.ToDictionary(t => t, t => t.a, comparer)
+			.ToDictionary(
+				(t) => t,
+				(t) => t.a,
+				comparer
+			)
 			.ToArray()
 	).toThrow("Key already exists");
 
 	expect(
 		[{ a: "test" }, { a: "test" }, { a: "test2" }]
-			.ToLookup(t => t, t => t.a, comparer)
+			.ToLookup(
+				(t) => t,
+				(t) => t.a,
+				comparer
+			)
 			.ToArray()
-			.Select(t => [t.Key, [...t]])
+			.Select((t) => [t.Key, [...t]])
 			.ToArray()
-	).toEqual([[{ a: "test" }, ["test", "test"]], [{ a: "test2" }, ["test2"]]]);
+	).toEqual([
+		[{ a: "test" }, ["test", "test"]],
+		[{ a: "test2" }, ["test2"]],
+	]);
 
 	expect([1, 2, 3, 4, 5].AsEnumerable().ToArray()).toEqual([1, 2, 3, 4, 5]);
 
-	expect(new Map([[1, 2], [2, 3], [2, 4]]).ToArray()).toEqual([[1, 2], [2, 4]]);
+	expect(
+		new Map([
+			[1, 2],
+			[2, 3],
+			[2, 4],
+		]).ToArray()
+	).toEqual([
+		[1, 2],
+		[2, 4],
+	]);
 
 	expect(new Set([2, 5, 5, 9]).ToArray()).toEqual([2, 5, 9]);
 
@@ -742,92 +822,138 @@ test("ToDictionary", () => {
 	expect(
 		[{ a: "test" }, { a: "test" }, { a: "test2" }]
 			.ToHashSet(comparer)
-			.ToDictionary(t => t, t => t.a)
+			.ToDictionary(
+				(t) => t,
+				(t) => t.a
+			)
 			.ToArray()
 	).toEqual([
 		{ Key: { a: "test" }, Value: "test" },
-		{ Key: { a: "test2" }, Value: "test2" }
+		{ Key: { a: "test2" }, Value: "test2" },
 	]);
 
 	expect(
 		[{ a: "test" }, { a: "test2" }]
-			.ToDictionary(t => t, t => t.a, comparer)
-			.ToDictionary(t => t.Key, t => t.Value)
+			.ToDictionary(
+				(t) => t,
+				(t) => t.a,
+				comparer
+			)
+			.ToDictionary(
+				(t) => t.Key,
+				(t) => t.Value
+			)
 			.ToArray()
 	).toEqual([
 		{ Key: { a: "test" }, Value: "test" },
-		{ Key: { a: "test2" }, Value: "test2" }
+		{ Key: { a: "test2" }, Value: "test2" },
 	]);
 
 	expect(
 		[{ a: "test" }, { a: "test2" }]
-			.ToDictionary(t => t, comparer)
-			.ToDictionary(t => t.Key, t => t.Value)
+			.ToDictionary((t) => t, comparer)
+			.ToDictionary(
+				(t) => t.Key,
+				(t) => t.Value
+			)
 			.ToArray()
 	).toEqual([
 		{ Key: { a: "test" }, Value: { a: "test" } },
-		{ Key: { a: "test2" }, Value: { a: "test2" } }
+		{ Key: { a: "test2" }, Value: { a: "test2" } },
 	]);
 
 	expect(
 		[{ a: "test" }, { a: "test2" }]
-			.ToDictionary(t => t.a)
-			.ToDictionary(t => t.Key, t => t.Value)
+			.ToDictionary((t) => t.a)
+			.ToDictionary(
+				(t) => t.Key,
+				(t) => t.Value
+			)
 			.ToArray()
 	).toEqual([
 		{ Value: { a: "test" }, Key: "test" },
-		{ Value: { a: "test2" }, Key: "test2" }
+		{ Value: { a: "test2" }, Key: "test2" },
 	]);
 
 	expect(
 		[{ a: "test" }, { a: "test" }, { a: "test2" }]
-			.ToLookup(t => t.a, t => t)
-			.ToDictionary(t => t.Key, t => t)
-			.Select(t => [t.Key, [...t.Value]])
+			.ToLookup(
+				(t) => t.a,
+				(t) => t
+			)
+			.ToDictionary(
+				(t) => t.Key,
+				(t) => t
+			)
+			.Select((t) => [t.Key, [...t.Value]])
 			.ToArray()
 	).toEqual([
 		["test", [{ a: "test" }, { a: "test" }]],
-		["test2", [{ a: "test2" }]]
+		["test2", [{ a: "test2" }]],
 	]);
 
 	expect(
 		[1, 2, 3, 4, 5]
 			.AsEnumerable()
-			.ToDictionary(t => t, t => t * 2)
+			.ToDictionary(
+				(t) => t,
+				(t) => t * 2
+			)
 			.ToArray()
 	).toEqual([
 		{ Key: 1, Value: 2 },
 		{ Key: 2, Value: 4 },
 		{ Key: 3, Value: 6 },
 		{ Key: 4, Value: 8 },
-		{ Key: 5, Value: 10 }
+		{ Key: 5, Value: 10 },
 	]);
 
 	expect(
-		new Map([[1, 2], [2, 3], [2, 4], [3, 4], [5, 10]])
-			.ToDictionary(t => t[0], t => t[1])
+		new Map([
+			[1, 2],
+			[2, 3],
+			[2, 4],
+			[3, 4],
+			[5, 10],
+		])
+			.ToDictionary(
+				(t) => t[0],
+				(t) => t[1]
+			)
 			.ToArray()
 	).toEqual([
 		{ Key: 1, Value: 2 },
 		{ Key: 2, Value: 4 },
 		{ Key: 3, Value: 4 },
-		{ Key: 5, Value: 10 }
+		{ Key: 5, Value: 10 },
 	]);
 
 	expect(
-		new Set([1, 2, 3, 3, 4, 5]).ToDictionary(t => t, t => t * 2).ToArray()
+		new Set([1, 2, 3, 3, 4, 5])
+			.ToDictionary(
+				(t) => t,
+				(t) => t * 2
+			)
+			.ToArray()
 	).toEqual([
 		{ Key: 1, Value: 2 },
 		{ Key: 2, Value: 4 },
 		{ Key: 3, Value: 6 },
 		{ Key: 4, Value: 8 },
-		{ Key: 5, Value: 10 }
+		{ Key: 5, Value: 10 },
 	]);
 
-	expect([2, 5, 9].ToDictionary(t => t, t => t * 2).ToArray()).toEqual([
+	expect(
+		[2, 5, 9]
+			.ToDictionary(
+				(t) => t,
+				(t) => t * 2
+			)
+			.ToArray()
+	).toEqual([
 		{ Key: 2, Value: 4 },
 		{ Key: 5, Value: 10 },
-		{ Key: 9, Value: 18 }
+		{ Key: 9, Value: 18 },
 	]);
 });
 
@@ -842,38 +968,56 @@ test("ToHashSet", () => {
 
 	expect(
 		[{ a: "test" }, { a: "test2" }]
-			.ToDictionary(t => t, t => t.a, comparer)
-			.Select(t => t.Key)
+			.ToDictionary(
+				(t) => t,
+				(t) => t.a,
+				comparer
+			)
+			.Select((t) => t.Key)
 			.ToHashSet()
 			.ToArray()
 	).toEqual([{ a: "test" }, { a: "test2" }]);
 
 	expect(
 		[{ a: "test" }, { a: "test" }, { a: "test2" }]
-			.ToLookup(t => t, t => t.a, comparer)
-			.Select(t => t.Key)
+			.ToLookup(
+				(t) => t,
+				(t) => t.a,
+				comparer
+			)
+			.Select((t) => t.Key)
 			.ToHashSet()
 			.ToArray()
 	).toEqual([{ a: "test" }, { a: "test2" }]);
 
 	expect(
 		[{ a: "test" }, { a: "test" }, { a: "test2" }]
-			.ToLookup(t => t, t => t.a, comparer)
-			.Select(t => [...t])
+			.ToLookup(
+				(t) => t,
+				(t) => t.a,
+				comparer
+			)
+			.Select((t) => [...t])
 			.ToHashSet()
 			.ToArray()
 	).toEqual([["test", "test"], ["test2"]]);
 
-	expect(
-		[1, 2, 3, 3, 4, 5]
-			.AsEnumerable()
-			.ToHashSet()
-			.ToArray()
-	).toEqual([1, 2, 3, 4, 5]);
+	expect([1, 2, 3, 3, 4, 5].AsEnumerable().ToHashSet().ToArray()).toEqual([
+		1,
+		2,
+		3,
+		4,
+		5,
+	]);
 
 	expect(
-		new Map([[1, 2], [2, 3], [2, 4], [3, 4]])
-			.Select(t => t[1])
+		new Map([
+			[1, 2],
+			[2, 3],
+			[2, 4],
+			[3, 4],
+		])
+			.Select((t) => t[1])
 			.ToHashSet()
 			.ToArray()
 	).toEqual([2, 4]);
@@ -895,7 +1039,7 @@ test("ToList", () => {
 	let people = [
 		{ Name: "John", Age: 15 },
 		{ Name: "Jane", Age: 30 },
-		{ Name: "John", Age: 20 }
+		{ Name: "John", Age: 20 },
 	];
 	expect(people.ToList().CountNative).toBe(3);
 	expect(
@@ -905,7 +1049,7 @@ test("ToList", () => {
 	let people2 = [
 		{ Name: "Jack", Age: 18 },
 		{ Name: "Joe", Age: 22 },
-		{ Name: "Jack", Age: 20 }
+		{ Name: "Jack", Age: 20 },
 	];
 	let mylist = people2.ToList();
 	mylist.Add({ Name: "Jane", Age: 19 });
@@ -913,7 +1057,7 @@ test("ToList", () => {
 		{ Name: "Jack", Age: 18 },
 		{ Name: "Joe", Age: 22 },
 		{ Name: "Jack", Age: 20 },
-		{ Name: "Jane", Age: 19 }
+		{ Name: "Jane", Age: 19 },
 	]);
 
 	let mylist3 = [1, 3, 4, 8, 12].ToList();
@@ -926,135 +1070,254 @@ test("ToLookup", () => {
 	expect(
 		[{ a: "test" }, { a: "test" }, { a: "test2" }]
 			.ToHashSet(comparer)
-			.ToLookup(t => t, t => t.a)
-			.Select(t => [t.Key, ...t])
+			.ToLookup(
+				(t) => t,
+				(t) => t.a
+			)
+			.Select((t) => [t.Key, ...t])
 			.ToArray()
-	).toEqual([[{ a: "test" }, "test"], [{ a: "test2" }, "test2"]]);
+	).toEqual([
+		[{ a: "test" }, "test"],
+		[{ a: "test2" }, "test2"],
+	]);
 
 	expect(
 		[{ a: "test" }, { a: "test2" }]
-			.ToDictionary(t => t, t => t.a, comparer)
-			.ToLookup(t => t.Key, t => t.Value)
-			.Select(t => [t.Key, ...t])
+			.ToDictionary(
+				(t) => t,
+				(t) => t.a,
+				comparer
+			)
+			.ToLookup(
+				(t) => t.Key,
+				(t) => t.Value
+			)
+			.Select((t) => [t.Key, ...t])
 			.ToArray()
-	).toEqual([[{ a: "test" }, "test"], [{ a: "test2" }, "test2"]]);
+	).toEqual([
+		[{ a: "test" }, "test"],
+		[{ a: "test2" }, "test2"],
+	]);
 
 	expect(
 		[{ a: "test" }, { a: "test" }, { a: "test2" }]
-			.ToLookup(t => t.a, t => t)
-			.ToLookup(t => t.Key, t => [...t])
-			.Select(t => [t.Key, ...t])
+			.ToLookup(
+				(t) => t.a,
+				(t) => t
+			)
+			.ToLookup(
+				(t) => t.Key,
+				(t) => [...t]
+			)
+			.Select((t) => [t.Key, ...t])
 			.ToArray()
 	).toEqual([
 		["test", [{ a: "test" }, { a: "test" }]],
-		["test2", [{ a: "test2" }]]
+		["test2", [{ a: "test2" }]],
 	]);
 
 	expect(
 		[1, 2, 3, 3, 4, 5]
 			.AsEnumerable()
-			.ToLookup(t => t, t => t * 2)
-			.Select(t => ({ Key: t.Key, Value: [...t] }))
+			.ToLookup(
+				(t) => t,
+				(t) => t * 2
+			)
+			.Select((t) => ({ Key: t.Key, Value: [...t] }))
 			.ToArray()
 	).toEqual([
 		{ Key: 1, Value: [2] },
 		{ Key: 2, Value: [4] },
 		{ Key: 3, Value: [6, 6] },
 		{ Key: 4, Value: [8] },
-		{ Key: 5, Value: [10] }
+		{ Key: 5, Value: [10] },
 	]);
 
 	expect(
 		[1, 2, 3, 3, 4, 5]
 			.AsEnumerable()
-			.ToLookup(t => t)
-			.Select(t => ({ Key: t.Key, Value: [...t] }))
+			.ToLookup((t) => t)
+			.Select((t) => ({ Key: t.Key, Value: [...t] }))
 			.ToArray()
 	).toEqual([
 		{ Key: 1, Value: [1] },
 		{ Key: 2, Value: [2] },
 		{ Key: 3, Value: [3, 3] },
 		{ Key: 4, Value: [4] },
-		{ Key: 5, Value: [5] }
+		{ Key: 5, Value: [5] },
 	]);
 
 	expect(
-		new Map([[1, 2], [2, 3], [2, 4], [3, 4], [5, 10]])
-			.ToLookup(t => t[1], t => t[0])
-			.Select(t => [t.Key, [...t]])
+		new Map([
+			[1, 2],
+			[2, 3],
+			[2, 4],
+			[3, 4],
+			[5, 10],
+		])
+			.ToLookup(
+				(t) => t[1],
+				(t) => t[0]
+			)
+			.Select((t) => [t.Key, [...t]])
 			.ToArray()
-	).toEqual([[2, [1]], [4, [2, 3]], [10, [5]]]);
+	).toEqual([
+		[2, [1]],
+		[4, [2, 3]],
+		[10, [5]],
+	]);
 
 	expect(
 		new Set([1, 2, 3, 3, 4, 5])
-			.ToLookup(t => t, t => t * 2)
-			.Select(t => ({ Key: t.Key, Value: [...t] }))
+			.ToLookup(
+				(t) => t,
+				(t) => t * 2
+			)
+			.Select((t) => ({ Key: t.Key, Value: [...t] }))
 			.ToArray()
 	).toEqual([
 		{ Key: 1, Value: [2] },
 		{ Key: 2, Value: [4] },
 		{ Key: 3, Value: [6] },
 		{ Key: 4, Value: [8] },
-		{ Key: 5, Value: [10] }
+		{ Key: 5, Value: [10] },
 	]);
 
 	expect(
 		[1, 2, 3, 3, 4, 5]
-			.ToLookup(t => t, t => t * 2)
-			.Select(t => ({ Key: t.Key, Value: [...t] }))
+			.ToLookup(
+				(t) => t,
+				(t) => t * 2
+			)
+			.Select((t) => ({ Key: t.Key, Value: [...t] }))
 			.ToArray()
 	).toEqual([
 		{ Key: 1, Value: [2] },
 		{ Key: 2, Value: [4] },
 		{ Key: 3, Value: [6, 6] },
 		{ Key: 4, Value: [8] },
-		{ Key: 5, Value: [10] }
+		{ Key: 5, Value: [10] },
 	]);
 });
 
 test("ToMap", () => {
 	// test for HashSet, Dictionary, Lookup, Enumerable, Map, Set, Array
 	expect(
-		[{ a: "test" }, { a: "test" }, { a: "test2" }]
-			.ToHashSet(comparer)
-			.ToMap(t => t, t => t.a)
-	).toEqual(new Map([[{ a: "test" }, "test"], [{ a: "test2" }, "test2"]]));
+		[{ a: "test" }, { a: "test" }, { a: "test2" }].ToHashSet(comparer).ToMap(
+			(t) => t,
+			(t) => t.a
+		)
+	).toEqual(
+		new Map([
+			[{ a: "test" }, "test"],
+			[{ a: "test2" }, "test2"],
+		])
+	);
 
 	expect(
 		[{ a: "test" }, { a: "test2" }]
-			.ToDictionary(t => t.a, t => t)
-			.ToMap(t => t.Key, t => t.Value)
-	).toEqual(new Map([["test", { a: "test" }], ["test2", { a: "test2" }]]));
+			.ToDictionary(
+				(t) => t.a,
+				(t) => t
+			)
+			.ToMap(
+				(t) => t.Key,
+				(t) => t.Value
+			)
+	).toEqual(
+		new Map([
+			["test", { a: "test" }],
+			["test2", { a: "test2" }],
+		])
+	);
 
 	expect(
 		[{ a: "test" }, { a: "test" }, { a: "test2" }]
-			.ToLookup(t => t.a, t => t)
-			.ToMap(t => t.Key, t => t)
-			.Select(t => [t[0], [...t[1]]])
+			.ToLookup(
+				(t) => t.a,
+				(t) => t
+			)
+			.ToMap(
+				(t) => t.Key,
+				(t) => t
+			)
+			.Select((t) => [t[0], [...t[1]]])
 			.ToArray()
 	).toEqual([
 		["test", [{ a: "test" }, { a: "test" }]],
-		["test2", [{ a: "test2" }]]
+		["test2", [{ a: "test2" }]],
 	]);
 
-	expect([1, 2, 3, 3, 4, 5].AsEnumerable().ToMap(t => t, t => t * 2)).toEqual(
-		new Map([[1, 2], [2, 4], [3, 6], [4, 8], [5, 10]])
+	expect(
+		[1, 2, 3, 3, 4, 5].AsEnumerable().ToMap(
+			(t) => t,
+			(t) => t * 2
+		)
+	).toEqual(
+		new Map([
+			[1, 2],
+			[2, 4],
+			[3, 6],
+			[4, 8],
+			[5, 10],
+		])
 	);
 
-	expect([1, 2, 3, 3, 4, 5].AsEnumerable().ToMap(t => t)).toEqual(
-		new Map([[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]])
+	expect([1, 2, 3, 3, 4, 5].AsEnumerable().ToMap((t) => t)).toEqual(
+		new Map([
+			[1, 1],
+			[2, 2],
+			[3, 3],
+			[4, 4],
+			[5, 5],
+		])
 	);
 
 	expect(
-		new Map([[1, 2], [2, 3], [2, 4], [3, 4]]).ToMap(t => t[0], t => t[1])
-	).toEqual(new Map([[1, 2], [2, 3], [2, 4], [3, 4]]));
-
-	expect(new Set([1, 2, 3, 3, 4, 5]).ToMap(t => t, t => t * 2)).toEqual(
-		new Map([[1, 2], [2, 4], [3, 6], [4, 8], [5, 10]])
+		new Map([
+			[1, 2],
+			[2, 3],
+			[2, 4],
+			[3, 4],
+		]).ToMap(
+			(t) => t[0],
+			(t) => t[1]
+		)
+	).toEqual(
+		new Map([
+			[1, 2],
+			[2, 3],
+			[2, 4],
+			[3, 4],
+		])
 	);
 
-	expect([2, 5, 9].ToMap(t => t, t => t * 2)).toEqual(
-		new Map([[2, 4], [5, 10], [9, 18]])
+	expect(
+		new Set([1, 2, 3, 3, 4, 5]).ToMap(
+			(t) => t,
+			(t) => t * 2
+		)
+	).toEqual(
+		new Map([
+			[1, 2],
+			[2, 4],
+			[3, 6],
+			[4, 8],
+			[5, 10],
+		])
+	);
+
+	expect(
+		[2, 5, 9].ToMap(
+			(t) => t,
+			(t) => t * 2
+		)
+	).toEqual(
+		new Map([
+			[2, 4],
+			[5, 10],
+			[9, 18],
+		])
 	);
 });
 
@@ -1066,15 +1329,23 @@ test("ToSet", () => {
 
 	expect(
 		[{ a: "test" }, { a: "test2" }]
-			.ToDictionary(t => t, t => t.a, comparer)
-			.Select(t => t.Value)
+			.ToDictionary(
+				(t) => t,
+				(t) => t.a,
+				comparer
+			)
+			.Select((t) => t.Value)
 			.ToSet()
 	).toEqual(new Set(["test", "test2"]));
 
 	expect(
 		[{ a: "test" }, { a: "test" }, { a: "test2" }]
-			.ToLookup(t => t, t => t.a, comparer)
-			.Select(t => t.Key)
+			.ToLookup(
+				(t) => t,
+				(t) => t.a,
+				comparer
+			)
+			.Select((t) => t.Key)
 			.ToSet()
 	).toEqual(new Set([{ a: "test" }, { a: "test2" }]));
 
@@ -1083,7 +1354,14 @@ test("ToSet", () => {
 	);
 
 	expect(
-		new Map([[1, 2], [2, 3], [2, 4], [3, 4]]).Select(t => t[1]).ToSet()
+		new Map([
+			[1, 2],
+			[2, 3],
+			[2, 4],
+			[3, 4],
+		])
+			.Select((t) => t[1])
+			.ToSet()
 	).toEqual(new Set([2, 4]));
 
 	expect(new Set([2, 5, 5, 9]).ToSet()).toEqual(new Set([2, 5, 9]));
@@ -1094,19 +1372,19 @@ test("ToSet", () => {
 test("Union", () => {
 	expect(() => [].Union(undefined).ToArray()).toThrow("Second is null");
 	expect(() => [].Union(null).ToArray()).toThrow("Second is null");
-	expect(
-		Enumerable.Empty()
-			.Union([4, 2, 3, 4])
-			.Union([8])
-			.ToArray()
-	).toEqual([4, 2, 3, 8]);
+	expect(Enumerable.Empty().Union([4, 2, 3, 4]).Union([8]).ToArray()).toEqual([
+		4,
+		2,
+		3,
+		8,
+	]);
 	expect([4, 1, 1, 2, 3, 3, 4, 5, 2].Union([4, 2, 3, 4, 8]).ToArray()).toEqual([
 		4,
 		1,
 		2,
 		3,
 		5,
-		8
+		8,
 	]);
 	expect([4, 1, 1, 2, 3, 3, 4, 5, 2].Union([18, 25]).ToArray()).toEqual([
 		4,
@@ -1115,7 +1393,7 @@ test("Union", () => {
 		3,
 		5,
 		18,
-		25
+		25,
 	]);
 	expect(
 		[{ a: "test" }, { a: "test3" }, { a: "test" }]
@@ -1125,13 +1403,13 @@ test("Union", () => {
 });
 
 test("Where", () => {
-	expect([4, 1, 1, 2, 3, 3, 4, 5, 2].Where(t => t < 4).ToArray()).toEqual([
+	expect([4, 1, 1, 2, 3, 3, 4, 5, 2].Where((t) => t < 4).ToArray()).toEqual([
 		1,
 		1,
 		2,
 		3,
 		3,
-		2
+		2,
 	]);
 	expect(
 		[4, 1, 1, 2, 3, 3, 4, 5, 2].Where((t, i) => i % 2 == 0).ToArray()

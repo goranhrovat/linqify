@@ -7,7 +7,7 @@ const globalVars = [
 	"List",
 	"EqualityComparers",
 	"SortComparers",
-	"linqify"
+	"linqify",
 ];
 for (let t of globalVars) addConflictGlobalVar(t);
 
@@ -19,7 +19,7 @@ const {
 	EqualityComparers,
 	HashSet,
 	List,
-	SortComparers
+	SortComparers,
 } = linqObjects;
 
 require("./Sequence/IOrderedEnumerable");
@@ -39,5 +39,5 @@ module.exports = {
 	HashSet,
 	List,
 	SortComparers,
-	linqify
+	linqify,
 };

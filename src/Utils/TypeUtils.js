@@ -20,7 +20,7 @@ function defaultVal(type) {
 		case "boolean":
 			return false;
 		case "function":
-			return function() {};
+			return function () {};
 		case "null":
 			return null;
 		case "number":

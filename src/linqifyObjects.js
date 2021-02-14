@@ -11,5 +11,5 @@ module.exports = {
 	HashSet,
 	EqualityComparers,
 	SortComparers,
-	List
+	List,
 };

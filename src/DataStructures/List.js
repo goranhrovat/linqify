@@ -10,7 +10,7 @@ class List extends IEnumerable {
 	 * comparer
 	 */
 	constructor(arg1, comparer) {
-		super(function*() {
+		super(function* () {
 			for (let t of this._data) yield t;
 		});
 		this._data = [];
@@ -100,7 +100,7 @@ class List extends IEnumerable {
 	}
 
 	ContainsNative(item) {
-		return this.Any(t => this._comparer(item, t) === 0);
+		return this.Any((t) => this._comparer(item, t) === 0);
 	}
 
 	ConvertAll(converter) {
@@ -287,7 +287,7 @@ class List extends IEnumerable {
 
 	RemoveAll(match) {
 		let oldCount = this.CountNative;
-		this._data = this._data.filter(t => !match(t));
+		this._data = this._data.filter((t) => !match(t));
 		return oldCount - this.CountNative;
 	}
 

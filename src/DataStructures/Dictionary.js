@@ -10,7 +10,7 @@ class Dictionary extends IEnumerable {
 	 * comparer
 	 */
 	constructor(arg1, comparer = EqualityComparers.PrimitiveComparer) {
-		super(function*() {
+		super(function* () {
 			for (let t of this._data)
 				for (let k of t[1]) yield { Key: k.key, Value: k.value };
 		});
@@ -139,7 +139,7 @@ class Dictionary extends IEnumerable {
 
 let _KeyValueCollection = class extends IEnumerable {
 	constructor(dictionary, property) {
-		super(function*() {
+		super(function* () {
 			for (let t of dictionary) yield t[property];
 		});
 		this.dictionary = dictionary;

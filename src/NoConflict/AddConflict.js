@@ -3,13 +3,13 @@ var nativeExstensions = [];
 var nativeExstensionsNames = new Set();
 var noConflictMode = { value: false };
 
-const addConflictGlobalVar = function(name) {
+const addConflictGlobalVar = function (name) {
 	if (typeof window !== "undefined") {
 		globalVars.push({ name, value: window[name] });
 	}
 };
 
-const tryAddConflictProperty = function(type, methodName, value) {
+const tryAddConflictProperty = function (type, methodName, value) {
 	if (noConflictMode.value) return;
 	// check
 	if (type.prototype.hasOwnProperty(methodName)) {
@@ -27,7 +27,7 @@ const tryAddConflictProperty = function(type, methodName, value) {
 		nativeExstensions.push({
 			methodName,
 			type,
-			descriptor: Object.getOwnPropertyDescriptor(type.prototype, methodName)
+			descriptor: Object.getOwnPropertyDescriptor(type.prototype, methodName),
 		});
 		nativeExstensionsNames.add(type.name + "_" + methodName);
 	}
@@ -36,7 +36,7 @@ const tryAddConflictProperty = function(type, methodName, value) {
 		enumerable: false,
 		writable: false,
 		configurable: true,
-		value
+		value,
 	});
 };
 
@@ -46,5 +46,5 @@ module.exports = {
 	globalVars,
 	nativeExstensions,
 	nativeExstensionsNames,
-	noConflictMode
+	noConflictMode,
 };

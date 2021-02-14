@@ -12,7 +12,7 @@ class HashSet extends IEnumerable {
 	 * comparer
 	 */
 	constructor(arg1, comparer) {
-		super(function*() {
+		super(function* () {
 			for (let t of this._data) for (let k of t[1]) yield k;
 		});
 		this._count = 0;
@@ -77,7 +77,7 @@ class HashSet extends IEnumerable {
 	CreateSetComparer() {
 		return {
 			Equals: (x, y) => x.SetEquals(y),
-			GetHashCode: obj => obj.CountNative
+			GetHashCode: (obj) => obj.CountNative,
 		};
 	}
 
@@ -89,7 +89,7 @@ class HashSet extends IEnumerable {
 	IntersectWith(other) {
 		// the same equality comparer as the current
 		let oth = Enumerable.From(other).ToHashSet(this._comparer);
-		this.RemoveWhere(t => !oth.ContainsNative(t));
+		this.RemoveWhere((t) => !oth.ContainsNative(t));
 	}
 
 	IsProperSubsetOf(other) {
@@ -132,7 +132,7 @@ class HashSet extends IEnumerable {
 	}
 
 	Overlaps(other) {
-		return Enumerable.From(other).Any(t => this.ContainsNative(t));
+		return Enumerable.From(other).Any((t) => this.ContainsNative(t));
 	}
 
 	Remove(item) {
@@ -171,7 +171,7 @@ class HashSet extends IEnumerable {
 	SymmetricExceptWith(other) {
 		Enumerable.From(other)
 			.Distinct(this._comparer)
-			.ForEach(t => (this.ContainsNative(t) ? this.Remove(t) : this.Add(t)));
+			.ForEach((t) => (this.ContainsNative(t) ? this.Remove(t) : this.Add(t)));
 	}
 
 	TryGetValue(equalValue) {

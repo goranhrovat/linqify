@@ -10,12 +10,20 @@ let person3 = {
 		transport: [
 			{ auto: true, values: [1, 2, 5] },
 			{ auto: false, values: [1, 3, 6] },
-			{ auto: true, values: [1, 4, 7] }
-		]
-	}
+			{ auto: true, values: [1, 4, 7] },
+		],
+	},
 };
 test("GetHashStringRecursive", () => {
-	expect(GetHashStringRecursive(new Map([[1, 2], [3, 4], [5, 6]]))).toBe(
+	expect(
+		GetHashStringRecursive(
+			new Map([
+				[1, 2],
+				[3, 4],
+				[5, 6],
+			])
+		)
+	).toBe(
 		"[Map->0:[Array->0:[number->1],1:[number->2],],1:[Array->0:[number->3],1:[number->4],],2:[Array->0:[number->5],1:[number->6],],]"
 	);
 	expect(GetHashStringRecursive(new Set([1, 2, 3]))).toBe(

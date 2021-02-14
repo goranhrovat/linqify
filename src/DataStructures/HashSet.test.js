@@ -5,12 +5,12 @@ var { HashSet, Enumerable } = process.env.LINQIFY_PATH
 
 let comparer = {
 	Equals: (a, b) => a.a === b.a,
-	GetHashCode: a => a.a
+	GetHashCode: (a) => a.a,
 };
 
 let comparerCollision = {
 	Equals: (a, b) => a.a === b.a,
-	GetHashCode: a => 1
+	GetHashCode: (a) => 1,
 };
 
 test("HashSet", () => {
@@ -25,11 +25,11 @@ test("HashSet", () => {
 
 	expect(hashsetColl.TryGetValue({ a: "test" })).toEqual({
 		actualValue: undefined,
-		contains: false
+		contains: false,
 	});
 	expect(hashsetColl.TryGetValue({ a: "test2" })).toEqual({
 		actualValue: { a: "test2" },
-		contains: true
+		contains: true,
 	});
 
 	let hashset = new HashSet(comparer);
@@ -70,7 +70,7 @@ test("HashSet", () => {
 	var setArr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 	let hsRW = setArr.ToHashSet();
-	hsRW.RemoveWhere(t => t % 2 === 0);
+	hsRW.RemoveWhere((t) => t % 2 === 0);
 	expect(hsRW.ToArray()).toEqual([1, 3, 5, 7, 9]);
 
 	hs2.CopyTo(setArr, 4);
@@ -174,7 +174,7 @@ test("HashSet set operations", () => {
 		{ a: "test1" },
 		{ a: "test2" },
 		{ a: "test3" },
-		{ a: "test4" }
+		{ a: "test4" },
 	]);
 
 	let hsTGV = new HashSet(comparer);
@@ -187,7 +187,7 @@ test("HashSet set operations", () => {
 
 	expect(tgv1).toEqual({
 		contains: true,
-		actualValue: { a: "test2", b: "bVal" }
+		actualValue: { a: "test2", b: "bVal" },
 	});
 	expect(tgv2).toEqual({ contains: false, actualValue: undefined });
 });

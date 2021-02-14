@@ -5,7 +5,7 @@ const { tryAddConflictProperty } = require("../NoConflict/AddConflict");
 for (let type of [Array, Map, Set, String]) {
 	for (let methodName of Object.getOwnPropertyNames(
 		IEnumerable.prototype
-	).filter(t => t !== "constructor")) {
+	).filter((t) => t !== "constructor")) {
 		tryAddConflictProperty(type, methodName, IEnumerable.prototype[methodName]);
 	}
 }

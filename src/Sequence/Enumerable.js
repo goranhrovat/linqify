@@ -1,7 +1,7 @@
 var { IEnumerable } = require("./IEnumerable");
 const { tryAddConflictProperty } = require("../NoConflict/AddConflict");
 
-let emptyGenerator = function*() {};
+let emptyGenerator = function* () {};
 const emptyEnumerable = new IEnumerable(emptyGenerator);
 
 class Enumerable {
@@ -19,7 +19,7 @@ class Enumerable {
 
 	static Range(start, count) {
 		if (count < 0) throw new Error("count is less than 0");
-		return new IEnumerable(function*() {
+		return new IEnumerable(function* () {
 			let end = start + count;
 			for (let i = start; i < end; i++) yield i;
 		});
@@ -27,7 +27,7 @@ class Enumerable {
 
 	static Repeat(value, count) {
 		if (count < 0) throw new Error("count is less than 0");
-		return new IEnumerable(function*() {
+		return new IEnumerable(function* () {
 			while (count--) yield value;
 		});
 	}
@@ -43,7 +43,7 @@ class Enumerable {
 			fun instanceof emptyGenerator.constructor
 		) {
 			// if generator
-			funFinal = function(...args) {
+			funFinal = function (...args) {
 				return new IEnumerable(fun.bind(this, ...args));
 			};
 		}
@@ -52,7 +52,7 @@ class Enumerable {
 			enumerable: false,
 			writable: false,
 			configurable: true,
-			value: funFinal
+			value: funFinal,
 		});
 
 		for (let type of [Array, Map, Set, String]) {

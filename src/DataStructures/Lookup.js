@@ -6,7 +6,7 @@ const { IGrouping } = require("../Sequence/IGrouping");
 
 class Lookup extends IEnumerable {
 	constructor(source, comparer = EqualityComparers.PrimitiveComparer) {
-		super(function*() {
+		super(function* () {
 			for (let t of this._data) yield new IGrouping(t.Key, t.Value);
 		});
 		this._comparer = comparer;
@@ -39,7 +39,7 @@ class Lookup extends IEnumerable {
 	}
 
 	ApplyResultSelector(resultSelector) {
-		return this.Select(t => resultSelector(t.Key, t));
+		return this.Select((t) => resultSelector(t.Key, t));
 	}
 
 	ContainsNative(key) {

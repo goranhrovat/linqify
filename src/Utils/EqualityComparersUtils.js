@@ -5,13 +5,13 @@ const { getType } = require("./TypeUtils");
 
 // https://gist.github.com/hyamamoto/fd435505d29ebfa3d9716fd2be8d42f0
 // (Compatible to Java's String.hashCode()) s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]
-const HashCode = function(s) {
+const HashCode = function (s) {
 	let h;
 	for (let i = 0; i < s.length; i++)
 		h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
 	return h;
 };
-const GetHashStringRecursive = function(obj) {
+const GetHashStringRecursive = function (obj) {
 	let hashString = "[" + getType(obj) + "->";
 	if (obj != null && typeof obj == "object") {
 		if (typeof obj[Symbol.iterator] === "function") obj = [...obj];
@@ -23,7 +23,7 @@ const GetHashStringRecursive = function(obj) {
 	return hashString + "]";
 };
 
-const EqualsRecursive = function(x, y) {
+const EqualsRecursive = function (x, y) {
 	if (getType(x) != getType(y)) return false;
 	if (x != null && y != null && typeof x == "object") {
 		if (
@@ -36,6 +36,10 @@ const EqualsRecursive = function(x, y) {
 		if (Object.keys(x).length !== Object.keys(y).length) return false;
 		for (let key of Object.keys(x).sort())
 			if (!EqualsRecursive(x[key], y[key])) return false;
+
+		if (x instanceof Date && y instanceof Date) {
+			return x.getTime() == y.getTime();
+		}
 		return true;
 	} else {
 		return x === y;

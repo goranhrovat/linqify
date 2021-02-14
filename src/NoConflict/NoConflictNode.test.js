@@ -6,14 +6,14 @@ Object.defineProperty(Array.prototype, "Select", {
 	enumerable: false,
 	writable: false,
 	configurable: true,
-	value: () => 123
+	value: () => 123,
 });
 
 Object.defineProperty(Array.prototype, "Where", {
 	enumerable: false,
 	writable: false,
 	configurable: false,
-	value: () => 1234
+	value: () => 1234,
 });
 
 afterEach(() => {
@@ -30,7 +30,7 @@ test("nowindow", () => {
 	let lq = linqify.noConflict();
 	expect(
 		lq([1, 2])
-			.Where(t => t > 1)
+			.Where((t) => t > 1)
 			.ToArray()
 	).toEqual([2]);
 });

@@ -17,7 +17,7 @@ let setMtd = Enumerable.setMethod;
  seed func
  func
  */
-setMtd("Aggregate", function(arg1, arg2, resultSelector = t => t) {
+setMtd("Aggregate", function (arg1, arg2, resultSelector = (t) => t) {
 	let fun, seed;
 	let thisIterator = this[Symbol.iterator]();
 	let val = thisIterator.next();
@@ -37,26 +37,26 @@ setMtd("Aggregate", function(arg1, arg2, resultSelector = t => t) {
 	return resultSelector(seed);
 });
 
-setMtd("All", function(predicate) {
+setMtd("All", function (predicate) {
 	for (let t of this) if (!predicate(t)) return false;
 	return true;
 });
 
-setMtd("Any", function(predicate = _t => true) {
+setMtd("Any", function (predicate = (_t) => true) {
 	for (let t of this) if (predicate(t)) return true;
 	return false;
 });
 
-setMtd("Append", function*(element) {
+setMtd("Append", function* (element) {
 	yield* this;
 	yield element;
 });
 
-setMtd("AsEnumerable", function() {
+setMtd("AsEnumerable", function () {
 	return this;
 });
 
-setMtd("Average", function(selector = t => t) {
+setMtd("Average", function (selector = (t) => t) {
 	let count = 0;
 	let sum = 0;
 	for (let t of this) {
@@ -68,31 +68,31 @@ setMtd("Average", function(selector = t => t) {
 	return sum / count;
 });
 
-setMtd("Cast", function() {
+setMtd("Cast", function () {
 	return this;
 });
 
-setMtd("Concat", function*(second) {
+setMtd("Concat", function* (second) {
 	if (second == null) throw new Error("Second is null");
 	yield* this;
 	yield* second;
 });
 
-setMtd("Contains", function(
-	value,
-	comparer = EqualityComparers.PrimitiveComparer
-) {
-	for (let t of this) if (comparer.Equals(value, t)) return true;
-	return false;
-});
+setMtd(
+	"Contains",
+	function (value, comparer = EqualityComparers.PrimitiveComparer) {
+		for (let t of this) if (comparer.Equals(value, t)) return true;
+		return false;
+	}
+);
 
-setMtd("Count", function(predicate = _t => true) {
+setMtd("Count", function (predicate = (_t) => true) {
 	let cur = 0;
 	for (let t of this) if (predicate(t)) cur++;
 	return cur;
 });
 
-setMtd("Custom", function(fun) {
+setMtd("Custom", function (fun) {
 	if (
 		fun.constructor.name === "GeneratorFunction" ||
 		fun instanceof emptyGenerator.constructor
@@ -104,18 +104,18 @@ setMtd("Custom", function(fun) {
 	}
 });
 
-setMtd("DefaultIfEmpty", function(defaultValue = null) {
+setMtd("DefaultIfEmpty", function (defaultValue = null) {
 	let val = this[Symbol.iterator]().next();
 	if (val.done) return Enumerable.Empty().Append(defaultValue); //yield defaultValue;
 	return this; //else yield* this;
 });
 
-setMtd("Distinct", function*(comparer = EqualityComparers.PrimitiveComparer) {
+setMtd("Distinct", function* (comparer = EqualityComparers.PrimitiveComparer) {
 	let hashset = new HashSet(comparer);
 	for (let t of this) if (hashset.Add(t)) yield t;
 });
 
-setMtd("ElementAt", function(index) {
+setMtd("ElementAt", function (index) {
 	if (index >= 0) {
 		let cur = 0;
 		for (let t of this) {
@@ -125,7 +125,7 @@ setMtd("ElementAt", function(index) {
 	throw new Error("Out of range");
 });
 
-setMtd("ElementAtOrDefault", function(index, defaultValue = null) {
+setMtd("ElementAtOrDefault", function (index, defaultValue = null) {
 	let cur = 0;
 	for (let t of this) {
 		if (cur++ === index) return t;
@@ -133,26 +133,29 @@ setMtd("ElementAtOrDefault", function(index, defaultValue = null) {
 	return defaultValue;
 });
 
-setMtd("Except", function*(
-	second,
-	comparer = EqualityComparers.PrimitiveComparer
-) {
-	if (second == null) throw new Error("Second is null");
-	let sec = Enumerable.From(second).ToHashSet(comparer);
-	for (let t of this) if (sec.Add(t)) yield t;
-});
+setMtd(
+	"Except",
+	function* (second, comparer = EqualityComparers.PrimitiveComparer) {
+		if (second == null) throw new Error("Second is null");
+		let sec = Enumerable.From(second).ToHashSet(comparer);
+		for (let t of this) if (sec.Add(t)) yield t;
+	}
+);
 
-setMtd("First", function(predicate = _t => true) {
+setMtd("First", function (predicate = (_t) => true) {
 	for (let t of this) if (predicate(t)) return t;
 	throw new Error("No first element");
 });
 
-setMtd("FirstOrDefault", function(predicate = _t => true, defaultValue = null) {
-	for (let t of this) if (predicate(t)) return t;
-	return defaultValue;
-});
+setMtd(
+	"FirstOrDefault",
+	function (predicate = (_t) => true, defaultValue = null) {
+		for (let t of this) if (predicate(t)) return t;
+		return defaultValue;
+	}
+);
 
-setMtd("ForEach", function(callback) {
+setMtd("ForEach", function (callback) {
 	let ind = 0;
 	for (let t of this) callback(t, ind++);
 });
@@ -167,89 +170,98 @@ setMtd("ForEach", function(callback) {
  * 7) keySelector
  * 8) keySelector, comparer
  */
-setMtd("GroupBy", function(
-	keySelector,
-	arg2,
-	arg3,
-	comparer = EqualityComparers.PrimitiveComparer
-) {
-	let elementSelector = t => t;
-	let resultSelector = (key, elemList) => elemList;
-	if (arg2 === undefined) {
-		// 7
-	} else if (getType(arg2) === "Object") {
-		// 8
-		comparer = arg2;
-	} else if (arg2.length === 1) {
-		// 1-4
-		elementSelector = arg2;
-		if (arg3 !== undefined) {
-			if (getType(arg3) === "Object") comparer = arg3;
-			// 4
-			else resultSelector = arg3; // 1,2
+setMtd(
+	"GroupBy",
+	function (
+		keySelector,
+		arg2,
+		arg3,
+		comparer = EqualityComparers.PrimitiveComparer
+	) {
+		let elementSelector = (t) => t;
+		let resultSelector = (key, elemList) => elemList;
+		if (arg2 === undefined) {
+			// 7
+		} else if (getType(arg2) === "Object") {
+			// 8
+			comparer = arg2;
+		} else if (arg2.length === 1) {
+			// 1-4
+			elementSelector = arg2;
+			if (arg3 !== undefined) {
+				if (getType(arg3) === "Object") comparer = arg3;
+				// 4
+				else resultSelector = arg3; // 1,2
+			}
+			// 3
+		} else if (arg2.length === 2) {
+			// 5,6
+			resultSelector = arg2; // 5
+			if (getType(arg3) === "Object") comparer = arg3; // 6
+		} else {
+			throw new Error("Wrong arguments");
 		}
-		// 3
-	} else if (arg2.length === 2) {
-		// 5,6
-		resultSelector = arg2; // 5
-		if (getType(arg3) === "Object") comparer = arg3; // 6
-	} else {
-		throw new Error("Wrong arguments");
-	}
 
-	return this.ToLookup(keySelector, elementSelector, comparer).Select(g =>
-		resultSelector(g.Key, g)
-	);
-});
+		return this.ToLookup(keySelector, elementSelector, comparer).Select((g) =>
+			resultSelector(g.Key, g)
+		);
+	}
+);
 
 // Left Outer JOIN
-setMtd("GroupJoin", function*(
-	inner,
-	outerKeySelector,
-	innerKeySelector,
-	resultSelector,
-	comparer = EqualityComparers.PrimitiveComparer
-) {
-	let lookup = Enumerable.From(inner).ToLookup(innerKeySelector, comparer);
-	for (let outerElem of this) {
-		yield resultSelector(outerElem, lookup.Get(outerKeySelector(outerElem)));
+setMtd(
+	"GroupJoin",
+	function* (
+		inner,
+		outerKeySelector,
+		innerKeySelector,
+		resultSelector,
+		comparer = EqualityComparers.PrimitiveComparer
+	) {
+		let lookup = Enumerable.From(inner).ToLookup(innerKeySelector, comparer);
+		for (let outerElem of this) {
+			yield resultSelector(outerElem, lookup.Get(outerKeySelector(outerElem)));
+		}
+		//return this.Select(outerElem => resultSelector(outerElem, lookup.Get(outerKeySelector(outerElem))));
 	}
-	//return this.Select(outerElem => resultSelector(outerElem, lookup.Get(outerKeySelector(outerElem))));
-});
+);
 
-setMtd("Intersect", function*(
-	second,
-	comparer = EqualityComparers.PrimitiveComparer
-) {
-	if (second == null) throw new Error("Second is null");
-	let first = this.ToHashSet(comparer);
-	for (let t of second) {
-		let val = first.TryGetValue(t);
-		if (val.contains) {
-			first.Remove(t);
-			yield val.actualValue;
+setMtd(
+	"Intersect",
+	function* (second, comparer = EqualityComparers.PrimitiveComparer) {
+		if (second == null) throw new Error("Second is null");
+		let first = this.ToHashSet(comparer);
+		for (let t of second) {
+			let val = first.TryGetValue(t);
+			if (val.contains) {
+				first.Remove(t);
+				yield val.actualValue;
+			}
 		}
 	}
-});
+);
 
 // Inner Join
-setMtd("Join", function*(
-	inner,
-	outerKeySelector,
-	innerKeySelector,
-	resultSelector,
-	comparer = EqualityComparers.PrimitiveComparer
-) {
-	let lookup = Enumerable.From(inner).ToLookup(innerKeySelector, comparer);
-	for (let outerElem of this) {
-		for (let innerElem of lookup.Get(outerKeySelector(outerElem))) {
-			yield resultSelector(outerElem, innerElem);
+setMtd(
+	"Join",
+	function* (
+		inner,
+		outerKeySelector,
+		innerKeySelector,
+		resultSelector,
+		comparer = EqualityComparers.PrimitiveComparer
+	) {
+		let lookup = Enumerable.From(inner).ToLookup(innerKeySelector, comparer);
+		for (let outerElem of this) {
+			for (let innerElem of lookup.Get(outerKeySelector(outerElem))) {
+				yield resultSelector(outerElem, innerElem);
+			}
 		}
+		//return this.SelectMany(outerElem => lookup.Get(outerKeySelector(outerElem)), resultSelector);
 	}
-	//return this.SelectMany(outerElem => lookup.Get(outerKeySelector(outerElem)), resultSelector);
-});
+);
 
-setMtd("Last", function(predicate = _t => true) {
+setMtd("Last", function (predicate = (_t) => true) {
 	let last;
 	let notfound = true;
 	for (let t of this)
@@ -261,13 +273,16 @@ setMtd("Last", function(predicate = _t => true) {
 	return last;
 });
 
-setMtd("LastOrDefault", function(predicate = _t => true, defaultValue = null) {
-	let last = defaultValue;
-	for (let t of this) if (predicate(t)) last = t;
-	return last;
-});
+setMtd(
+	"LastOrDefault",
+	function (predicate = (_t) => true, defaultValue = null) {
+		let last = defaultValue;
+		for (let t of this) if (predicate(t)) last = t;
+		return last;
+	}
+);
 
-setMtd("Max", function(selector = t => t) {
+setMtd("Max", function (selector = (t) => t) {
 	let thisIterator = this[Symbol.iterator]();
 	let val = thisIterator.next();
 	if (val.done) throw new Error("Source contains no elements");
@@ -278,7 +293,7 @@ setMtd("Max", function(selector = t => t) {
 	return myval;
 });
 
-setMtd("Min", function(selector = t => t) {
+setMtd("Min", function (selector = (t) => t) {
 	let thisIterator = this[Symbol.iterator]();
 	let val = thisIterator.next();
 	if (val.done) throw new Error("Source contains no elements");
@@ -289,22 +304,22 @@ setMtd("Min", function(selector = t => t) {
 	return myval;
 });
 
-setMtd("OfType", function(type) {
-	return this.Where(t => getType(t) === type);
+setMtd("OfType", function (type) {
+	return this.Where((t) => getType(t) === type);
 });
 
-setMtd("Prepend", function*(element) {
+setMtd("Prepend", function* (element) {
 	yield element;
 	yield* this;
 });
 
-setMtd("Reverse", function*() {
+setMtd("Reverse", function* () {
 	var arr = [...this];
 	var i = arr.length;
 	while (i--) yield arr[i];
 });
 
-setMtd("Select", function*(selector) {
+setMtd("Select", function* (selector) {
 	let ind = 0;
 	for (let t of this) yield selector(t, ind++);
 });
@@ -315,36 +330,36 @@ setMtd("Select", function*(selector) {
  * collectionSelector (t)
  * collectionSelector (t, i)
  */
-setMtd("SelectMany", function*(
-	collectionSelector,
-	resultSelector = (_list, item) => item
-) {
-	let ind = 0;
-	for (let list of this) {
-		for (let item of collectionSelector(list, ind++)) {
-			yield resultSelector(list, item);
+setMtd(
+	"SelectMany",
+	function* (collectionSelector, resultSelector = (_list, item) => item) {
+		let ind = 0;
+		for (let list of this) {
+			for (let item of collectionSelector(list, ind++)) {
+				yield resultSelector(list, item);
+			}
 		}
 	}
-});
+);
 
-setMtd("SequenceEqual", function(
-	second,
-	comparer = EqualityComparers.PrimitiveComparer
-) {
-	if (second == null) throw new Error("Second is null");
-	let thisIterator = this[Symbol.iterator]();
-	let secondIterator = second[Symbol.iterator]();
-	// eslint-disable-next-line no-constant-condition
-	while (true) {
-		let val1 = thisIterator.next();
-		let val2 = secondIterator.next();
-		if (val1.done != val2.done) return false;
-		if (val1.done) return true;
-		if (!comparer.Equals(val1.value, val2.value)) return false;
+setMtd(
+	"SequenceEqual",
+	function (second, comparer = EqualityComparers.PrimitiveComparer) {
+		if (second == null) throw new Error("Second is null");
+		let thisIterator = this[Symbol.iterator]();
+		let secondIterator = second[Symbol.iterator]();
+		// eslint-disable-next-line no-constant-condition
+		while (true) {
+			let val1 = thisIterator.next();
+			let val2 = secondIterator.next();
+			if (val1.done != val2.done) return false;
+			if (val1.done) return true;
+			if (!comparer.Equals(val1.value, val2.value)) return false;
+		}
 	}
-});
+);
 
-setMtd("Single", function(predicate = _t => true) {
+setMtd("Single", function (predicate = (_t) => true) {
 	let thisIterator = this.Where(predicate)[Symbol.iterator]();
 	let val = thisIterator.next();
 	if (val.done) throw new Error("No element");
@@ -352,18 +367,18 @@ setMtd("Single", function(predicate = _t => true) {
 	return val.value;
 });
 
-setMtd("SingleOrDefault", function(
-	predicate = _t => true,
-	defaultValue = null
-) {
-	let thisIterator = this.Where(predicate)[Symbol.iterator]();
-	let val = thisIterator.next();
-	if (val.done) return defaultValue;
-	if (!thisIterator.next().done) throw new Error("More than 1 element");
-	return val.value;
-});
+setMtd(
+	"SingleOrDefault",
+	function (predicate = (_t) => true, defaultValue = null) {
+		let thisIterator = this.Where(predicate)[Symbol.iterator]();
+		let val = thisIterator.next();
+		if (val.done) return defaultValue;
+		if (!thisIterator.next().done) throw new Error("More than 1 element");
+		return val.value;
+	}
+);
 
-setMtd("Skip", function*(count) {
+setMtd("Skip", function* (count) {
 	let cur = 0;
 	for (let t of this) {
 		if (cur >= count) yield t;
@@ -371,11 +386,11 @@ setMtd("Skip", function*(count) {
 	}
 });
 
-setMtd("SkipLast", function(count) {
+setMtd("SkipLast", function (count) {
 	return this.Take(this.Count() - count);
 });
 
-setMtd("SkipWhile", function*(predicate) {
+setMtd("SkipWhile", function* (predicate) {
 	let thisIterator = this[Symbol.iterator]();
 	let val = thisIterator.next();
 	let ind = 0;
@@ -389,13 +404,13 @@ setMtd("SkipWhile", function*(predicate) {
 	}
 });
 
-setMtd("Sum", function(selector = t => t) {
+setMtd("Sum", function (selector = (t) => t) {
 	let sum = 0;
 	for (let t of this) sum += selector(t);
 	return sum;
 });
 
-setMtd("Take", function*(count) {
+setMtd("Take", function* (count) {
 	let cur = 0;
 	for (let t of this) {
 		if (cur++ < count) yield t;
@@ -403,11 +418,11 @@ setMtd("Take", function*(count) {
 	}
 });
 
-setMtd("TakeLast", function(count) {
+setMtd("TakeLast", function (count) {
 	return this.Skip(this.Count() - count);
 });
 
-setMtd("TakeWhile", function*(predicate) {
+setMtd("TakeWhile", function* (predicate) {
 	let ind = 0;
 	for (let t of this) {
 		if (predicate(t, ind++)) yield t;
@@ -415,7 +430,7 @@ setMtd("TakeWhile", function*(predicate) {
 	}
 });
 
-setMtd("ToArray", function() {
+setMtd("ToArray", function () {
 	return [...this];
 });
 
@@ -426,29 +441,32 @@ keySel, elemSelect, comparer
 keySel
 keySel, comparer
 */
-setMtd("ToDictionary", function(
-	keySelector,
-	arg2 = t => t,
-	comparer = EqualityComparers.PrimitiveComparer
-) {
-	let elementSelector;
-	if (getType(arg2) === "Object") {
-		elementSelector = t => t;
-		comparer = arg2;
-	} else {
-		elementSelector = arg2;
+setMtd(
+	"ToDictionary",
+	function (
+		keySelector,
+		arg2 = (t) => t,
+		comparer = EqualityComparers.PrimitiveComparer
+	) {
+		let elementSelector;
+		if (getType(arg2) === "Object") {
+			elementSelector = (t) => t;
+			comparer = arg2;
+		} else {
+			elementSelector = arg2;
+		}
+		return new Dictionary(
+			this.Select((t) => ({ Key: keySelector(t), Value: elementSelector(t) })),
+			comparer
+		);
 	}
-	return new Dictionary(
-		this.Select(t => ({ Key: keySelector(t), Value: elementSelector(t) })),
-		comparer
-	);
-});
+);
 
-setMtd("ToHashSet", function(comparer = EqualityComparers.PrimitiveComparer) {
+setMtd("ToHashSet", function (comparer = EqualityComparers.PrimitiveComparer) {
 	return new HashSet(this, comparer);
 });
 
-setMtd("ToList", function(comparer = SortComparers.DefaultComparer) {
+setMtd("ToList", function (comparer = SortComparers.DefaultComparer) {
 	return new List(this, comparer);
 });
 
@@ -458,48 +476,51 @@ setMtd("ToList", function(comparer = SortComparers.DefaultComparer) {
  * keySel
  * keySel, comparer
  */
-setMtd("ToLookup", function(
-	keySelector,
-	arg2 = t => t,
-	comparer = EqualityComparers.PrimitiveComparer
-) {
-	let elementSelector;
-	if (getType(arg2) === "Object") {
-		elementSelector = t => t;
-		comparer = arg2;
-	} else {
-		elementSelector = arg2;
+setMtd(
+	"ToLookup",
+	function (
+		keySelector,
+		arg2 = (t) => t,
+		comparer = EqualityComparers.PrimitiveComparer
+	) {
+		let elementSelector;
+		if (getType(arg2) === "Object") {
+			elementSelector = (t) => t;
+			comparer = arg2;
+		} else {
+			elementSelector = arg2;
+		}
+		return new Lookup(
+			this.Select((t) => ({ Key: keySelector(t), Value: elementSelector(t) })),
+			comparer
+		);
 	}
-	return new Lookup(
-		this.Select(t => ({ Key: keySelector(t), Value: elementSelector(t) })),
-		comparer
-	);
+);
+
+setMtd("ToMap", function (keySelector, elementSelector = (t) => t) {
+	return new Map(this.Select((t) => [keySelector(t), elementSelector(t)]));
 });
 
-setMtd("ToMap", function(keySelector, elementSelector = t => t) {
-	return new Map(this.Select(t => [keySelector(t), elementSelector(t)]));
-});
-
-setMtd("ToSet", function() {
+setMtd("ToSet", function () {
 	return new Set(this);
 });
 
-setMtd("Union", function*(
-	second,
-	comparer = EqualityComparers.PrimitiveComparer
-) {
-	if (second == null) throw new Error("Second is null");
-	let hashset = new HashSet(comparer);
-	for (let t of this) if (hashset.Add(t)) yield t;
-	for (let t of second) if (hashset.Add(t)) yield t;
-});
+setMtd(
+	"Union",
+	function* (second, comparer = EqualityComparers.PrimitiveComparer) {
+		if (second == null) throw new Error("Second is null");
+		let hashset = new HashSet(comparer);
+		for (let t of this) if (hashset.Add(t)) yield t;
+		for (let t of second) if (hashset.Add(t)) yield t;
+	}
+);
 
-setMtd("Where", function*(predicate) {
+setMtd("Where", function* (predicate) {
 	let ind = 0;
 	for (let t of this) if (predicate(t, ind++)) yield t;
 });
 
-setMtd("Zip", function*(second, resultSelector) {
+setMtd("Zip", function* (second, resultSelector) {
 	if (second == null) throw new Error("Second is null");
 	let thisIterator = this[Symbol.iterator]();
 	let secondIterator = second[Symbol.iterator]();

@@ -3,19 +3,19 @@ var { EqualityComparers } = process.env.LINQIFY_PATH
 	: require("../linqify");
 
 test("DeepComparer", () => {
-	let cmp = EqualityComparers.DeepComparer(t => ({
+	let cmp = EqualityComparers.DeepComparer((t) => ({
 		name: t.name,
-		props: { grades: t.grades }
+		props: { grades: t.grades },
 	}));
 	let person1 = {
 		grades: [1, 2, 3],
 		age: 20,
-		name: "test"
+		name: "test",
 	};
 	let person2 = {
 		name: "test",
 		age: 22,
-		grades: [1, 2, 3]
+		grades: [1, 2, 3],
 	};
 	let person3 = {
 		name: "test3",
@@ -27,9 +27,9 @@ test("DeepComparer", () => {
 			transport: [
 				{ auto: true, values: [1, 2, 5] },
 				{ auto: false, values: [1, 3, 6] },
-				{ auto: true, values: [1, 4, 7] }
-			]
-		}
+				{ auto: true, values: [1, 4, 7] },
+			],
+		},
 	};
 
 	expect(cmp.Equals(person1, person2)).toBeTruthy();
@@ -47,4 +47,11 @@ test("DeepComparer", () => {
 	expect(
 		EqualityComparers.DeepComparer().Equals([1, 2, 3], [1, 2])
 	).toBeFalsy();
+
+	let date1 = new Date(2000, 10);
+	let date2 = new Date(2000, 10);
+	let date3 = new Date(2001, 10);
+	expect(EqualityComparers.DeepComparer().Equals(date1, date2)).toBeTruthy();
+	expect(EqualityComparers.DeepComparer().Equals(date1, date3)).toBeFalsy();
+	expect(EqualityComparers.DeepComparer().Equals(date1, {})).toBeFalsy();
 });

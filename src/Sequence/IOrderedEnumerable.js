@@ -1,7 +1,7 @@
 const {
 	getComparer,
 	getComparerReverse,
-	sortGen
+	sortGen,
 } = require("../Utils/SortUtils");
 const { IEnumerable } = require("./IEnumerable");
 
@@ -15,14 +15,14 @@ class IOrderedEnumerable extends IEnumerable {
 	ThenBy(keySelector, comparer) {
 		return new IOrderedEnumerable(this._source, [
 			...this._cmpfuns,
-			getComparer(keySelector, comparer)
+			getComparer(keySelector, comparer),
 		]);
 	}
 
 	ThenByDescending(keySelector, comparer) {
 		return new IOrderedEnumerable(this._source, [
 			...this._cmpfuns,
-			getComparerReverse(keySelector, comparer)
+			getComparerReverse(keySelector, comparer),
 		]);
 	}
 }
@@ -31,20 +31,20 @@ Object.defineProperty(IEnumerable.prototype, "OrderBy", {
 	enumerable: false,
 	writable: false,
 	configurable: true,
-	value: function(keySelector, comparer) {
+	value: function (keySelector, comparer) {
 		return new IOrderedEnumerable(this, [getComparer(keySelector, comparer)]);
-	}
+	},
 });
 
 Object.defineProperty(IEnumerable.prototype, "OrderByDescending", {
 	enumerable: false,
 	writable: false,
 	configurable: true,
-	value: function(keySelector, comparer) {
+	value: function (keySelector, comparer) {
 		return new IOrderedEnumerable(this, [
-			getComparerReverse(keySelector, comparer)
+			getComparerReverse(keySelector, comparer),
 		]);
-	}
+	},
 });
 
 module.exports = { IOrderedEnumerable };

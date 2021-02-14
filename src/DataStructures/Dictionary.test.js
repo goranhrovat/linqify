@@ -5,12 +5,12 @@ var { Dictionary, Enumerable, EqualityComparers } = process.env.LINQIFY_PATH
 
 let comparer = {
 	Equals: (a, b) => a.a === b.a,
-	GetHashCode: a => a.a
+	GetHashCode: (a) => a.a,
 };
 
 let comparerCollision = {
 	Equals: (a, b) => a.a === b.a,
-	GetHashCode: a => 1
+	GetHashCode: (a) => 1,
 };
 
 test("Dictionary", () => {
@@ -30,7 +30,7 @@ test("Dictionary", () => {
 
 	expect(dictColl.TryGetValue({ a: "test4" })).toEqual({
 		contains: true,
-		value: 44
+		value: 44,
 	});
 
 	let dict0 = new Dictionary();
@@ -47,7 +47,7 @@ test("Dictionary", () => {
 	expect(dict.ContainsKey({ a: "test3" })).toBeFalsy();
 	expect(dict.ToArray()).toStrictEqual([
 		{ Key: { a: "test" }, Value: 1 },
-		{ Key: { a: "test2" }, Value: 2 }
+		{ Key: { a: "test2" }, Value: 2 },
 	]);
 
 	let dictIter = dict[Symbol.iterator]();
@@ -62,7 +62,7 @@ test("Dictionary", () => {
 	expect(keys.ToArray()).toEqual([
 		{ a: "test" },
 		{ a: "test2" },
-		{ a: "test3" }
+		{ a: "test3" },
 	]);
 	expect(vals.ToArray()).toEqual([1, 2, 3]);
 
@@ -76,11 +76,11 @@ test("Dictionary", () => {
 
 	expect(dict.TryGetValue({ a: "test3" })).toEqual({
 		value: 3,
-		contains: true
+		contains: true,
 	});
 	expect(dict.TryGetValue({ a: "test13" })).toEqual({
 		value: undefined,
-		contains: false
+		contains: false,
 	});
 
 	expect(keys.CountNative).toBe(2);
@@ -98,31 +98,35 @@ test("Dictionary", () => {
 	expect(vals.ToArray()).toEqual([]);
 
 	let dict3 = new Dictionary(
-		[{ Key: 1, Value: "1" }, { Key: 2, Value: "2" }, { Key: 3, Value: "3" }],
+		[
+			{ Key: 1, Value: "1" },
+			{ Key: 2, Value: "2" },
+			{ Key: 3, Value: "3" },
+		],
 		null
 	);
 	expect(dict3.ToArray()).toEqual([
 		{ Key: 1, Value: "1" },
 		{ Key: 2, Value: "2" },
-		{ Key: 3, Value: "3" }
+		{ Key: 3, Value: "3" },
 	]);
 	let dict4 = new Dictionary(
 		Enumerable.From([
 			{ Key: 1, Value: "1" },
 			{ Key: 2, Value: "2" },
-			{ Key: 3, Value: "3" }
+			{ Key: 3, Value: "3" },
 		])
 	);
 	expect(dict4.ToArray()).toEqual([
 		{ Key: 1, Value: "1" },
 		{ Key: 2, Value: "2" },
-		{ Key: 3, Value: "3" }
+		{ Key: 3, Value: "3" },
 	]);
 	let dict5 = new Dictionary(dict4);
 	expect(dict5.ToArray()).toEqual([
 		{ Key: 1, Value: "1" },
 		{ Key: 2, Value: "2" },
-		{ Key: 3, Value: "3" }
+		{ Key: 3, Value: "3" },
 	]);
 
 	let dict8 = new Dictionary(null);
@@ -132,6 +136,6 @@ test("Dictionary", () => {
 	dict8.Set(2, "test2");
 	expect(dict8.ToArray()).toEqual([
 		{ Key: 1, Value: "test1" },
-		{ Key: 2, Value: "test2" }
+		{ Key: 2, Value: "test2" },
 	]);
 });

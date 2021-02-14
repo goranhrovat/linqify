@@ -11,7 +11,7 @@ test("List", () => {
 		{ Name: "Jack", Age: 18 },
 		{ Name: "Joe", Age: 22 },
 		{ Name: "Jack", Age: 20 },
-		{ Name: "Jane", Age: 19 }
+		{ Name: "Jane", Age: 19 },
 	];
 
 	let mylist1 = new List();
@@ -39,7 +39,10 @@ test("List", () => {
 	expect(() => mylist4.Get(100)).toThrow("Index not valid");
 	expect(() => mylist4.Get(mylist4.CountNative)).toThrow("Index not valid");
 
-	mylist4.AddRange([{ Name: "Andy", Age: 50 }, { Name: "Peter", Age: 60 }]);
+	mylist4.AddRange([
+		{ Name: "Andy", Age: 50 },
+		{ Name: "Peter", Age: 60 },
+	]);
 
 	mylist4.Sort();
 
@@ -49,7 +52,7 @@ test("List", () => {
 		{ Age: 22, Name: "Joe" },
 		{ Age: 23, Name: "Joe" },
 		{ Age: 50, Name: "Andy" },
-		{ Age: 60, Name: "Peter" }
+		{ Age: 60, Name: "Peter" },
 	]);
 
 	let res1 = mylist4.BinarySearch({ Name: "Andy2", Age: 50 });
@@ -79,7 +82,7 @@ test("List", () => {
 		{ Age: 22, Name: "Joe" },
 		{ Age: 23, Name: "Joe" },
 		{ Age: 50, Name: "Andy" },
-		{ Age: 60, Name: "Peter" }
+		{ Age: 60, Name: "Peter" },
 	]);
 
 	let res3 = mylist4.BinarySearch(3, 2, { Name: "Andy20", Age: 20 }, comparer);
@@ -97,7 +100,7 @@ test("List", () => {
 		{ Age: 23, Name: "Joe" },
 		{ Age: 50, Name: "Andy" },
 		{ Age: 60, Name: "Peter" },
-		{ Age: 100, Name: "Andy20" }
+		{ Age: 100, Name: "Andy20" },
 	]);
 
 	let res5 = mylist4.BinarySearch(0, 7, { Name: "Andy20", Age: 17 }, comparer);
@@ -115,7 +118,7 @@ test("List", () => {
 		{ Age: 23, Name: "Joe" },
 		{ Age: 50, Name: "Andy" },
 		{ Age: 60, Name: "Peter" },
-		{ Age: 100, Name: "Andy20" }
+		{ Age: 100, Name: "Andy20" },
 	]);
 
 	let res6 = mylist4.BinarySearch(0, 7, { Name: "Andy20", Age: 17 }, comparer);
@@ -126,9 +129,9 @@ test("List", () => {
 	mylist5.Clear();
 	expect(mylist5.ToArray()).toEqual([]);
 
-	let mylist7 = mylist4.ConvertAll(t => ({ Name: t.Name, Age: t.Age / 2 }));
+	let mylist7 = mylist4.ConvertAll((t) => ({ Name: t.Name, Age: t.Age / 2 }));
 
-	expect(mylist7.Select(t => t.Age).ToArray()).toEqual([
+	expect(mylist7.Select((t) => t.Age).ToArray()).toEqual([
 		8.5,
 		9,
 		9.5,
@@ -137,7 +140,7 @@ test("List", () => {
 		11.5,
 		25,
 		30,
-		50
+		50,
 	]);
 
 	var arr = [];
@@ -158,85 +161,87 @@ test("List", () => {
 	expect(() => mylist3.CopyTo(1, arr, 5, 2)).not.toThrow();
 	expect(arr).toEqual([91, 92, 93, 94, 5, 92, 93, 8, 9, 10]);
 
-	expect(mylist4.Exists(t => t.Age > 100)).toBeFalsy();
-	expect(mylist4.Exists(t => t.Age == 11)).toBeFalsy();
+	expect(mylist4.Exists((t) => t.Age > 100)).toBeFalsy();
+	expect(mylist4.Exists((t) => t.Age == 11)).toBeFalsy();
 
-	expect(mylist4.Find(t => t.Age == 11)).toEqual(null);
-	expect(mylist4.Find(t => t.Age == 11, { Name: "Jane", Age: 40 })).toEqual({
+	expect(mylist4.Find((t) => t.Age == 11)).toEqual(null);
+	expect(mylist4.Find((t) => t.Age == 11, { Name: "Jane", Age: 40 })).toEqual({
 		Age: 40,
-		Name: "Jane"
+		Name: "Jane",
 	});
-	expect(mylist4.Find(t => t.Age == 20, { Name: "Jane", Age: 40 })).toEqual({
+	expect(mylist4.Find((t) => t.Age == 20, { Name: "Jane", Age: 40 })).toEqual({
 		Age: 20,
-		Name: "Andy20"
+		Name: "Andy20",
 	});
 
-	expect(mylist4.FindAll(t => t.Age > 40).ToArray()).toEqual([
+	expect(mylist4.FindAll((t) => t.Age > 40).ToArray()).toEqual([
 		{ Age: 50, Name: "Andy" },
 		{ Age: 60, Name: "Peter" },
-		{ Age: 100, Name: "Andy20" }
+		{ Age: 100, Name: "Andy20" },
 	]);
-	expect(mylist4.FindAll(t => t.Age > 150).ToArray()).toEqual([]);
+	expect(mylist4.FindAll((t) => t.Age > 150).ToArray()).toEqual([]);
 
 	// @ts-ignore
-	expect(() => mylist4.FindIndex(t => t.Age > 150, 1, 1, 1, 1)).toThrow(
+	expect(() => mylist4.FindIndex((t) => t.Age > 150, 1, 1, 1, 1)).toThrow(
 		"Wrong number of arguments"
 	);
-	expect(mylist4.FindIndex(t => t.Age > 150)).toBe(-1);
-	expect(mylist4.FindIndex(t => t.Age == 22)).toBe(4);
-	expect(mylist4.FindIndex(5, t => t.Age == 22)).toBe(-1);
-	expect(mylist4.FindIndex(5, t => t.Age == 60)).toBe(7);
-	expect(mylist4.FindIndex(2, 4, t => t.Age == 60)).toBe(-1);
-	expect(mylist4.FindIndex(2, 4, t => t.Age == 18)).toBe(-1);
-	expect(mylist4.FindIndex(2, 4, t => t.Age == 23)).toBe(5);
-	expect(mylist4.FindIndex(2, 4, t => t.Age == 19)).toBe(2);
-	expect(() => mylist4.FindIndex(-2, 4, t => t.Age == 19)).toThrow(
+	expect(mylist4.FindIndex((t) => t.Age > 150)).toBe(-1);
+	expect(mylist4.FindIndex((t) => t.Age == 22)).toBe(4);
+	expect(mylist4.FindIndex(5, (t) => t.Age == 22)).toBe(-1);
+	expect(mylist4.FindIndex(5, (t) => t.Age == 60)).toBe(7);
+	expect(mylist4.FindIndex(2, 4, (t) => t.Age == 60)).toBe(-1);
+	expect(mylist4.FindIndex(2, 4, (t) => t.Age == 18)).toBe(-1);
+	expect(mylist4.FindIndex(2, 4, (t) => t.Age == 23)).toBe(5);
+	expect(mylist4.FindIndex(2, 4, (t) => t.Age == 19)).toBe(2);
+	expect(() => mylist4.FindIndex(-2, 4, (t) => t.Age == 19)).toThrow(
 		"Not a valid range"
 	);
-	expect(() => mylist4.FindIndex(2, -4, t => t.Age == 19)).toThrow(
+	expect(() => mylist4.FindIndex(2, -4, (t) => t.Age == 19)).toThrow(
 		"Not a valid range"
 	);
-	expect(() => mylist4.FindIndex(-4, t => t.Age == 19)).toThrow(
+	expect(() => mylist4.FindIndex(-4, (t) => t.Age == 19)).toThrow(
 		"Not a valid range"
 	);
-	expect(() => mylist4.FindIndex(2, 100, t => t.Age == 19)).toThrow(
+	expect(() => mylist4.FindIndex(2, 100, (t) => t.Age == 19)).toThrow(
 		"Not a valid range"
 	);
 
-	expect(mylist4.FindLast(t => t.Age == 11)).toEqual(null);
-	expect(mylist4.FindLast(t => t.Age == 11, { Name: "Jane", Age: 40 })).toEqual(
+	expect(mylist4.FindLast((t) => t.Age == 11)).toEqual(null);
+	expect(
+		mylist4.FindLast((t) => t.Age == 11, { Name: "Jane", Age: 40 })
+	).toEqual({
+		Age: 40,
+		Name: "Jane",
+	});
+	expect(mylist4.FindLast((t) => t.Age > 5, { Name: "Jane", Age: 40 })).toEqual(
 		{
-			Age: 40,
-			Name: "Jane"
+			Age: 100,
+			Name: "Andy20",
 		}
 	);
-	expect(mylist4.FindLast(t => t.Age > 5, { Name: "Jane", Age: 40 })).toEqual({
-		Age: 100,
-		Name: "Andy20"
-	});
 
 	// @ts-ignore
-	expect(() => mylist4.FindLastIndex(t => t.Age > 150, 1, 1, 1, 1)).toThrow(
+	expect(() => mylist4.FindLastIndex((t) => t.Age > 150, 1, 1, 1, 1)).toThrow(
 		"Wrong number of arguments"
 	);
-	expect(mylist4.FindLastIndex(t => t.Age > 150)).toBe(-1);
-	expect(mylist4.FindLastIndex(t => t.Age > 22)).toBe(8);
-	expect(mylist4.FindLastIndex(5, t => t.Age == 22)).toBe(-1);
-	expect(mylist4.FindLastIndex(5, t => t.Age == 60)).toBe(7);
-	expect(mylist4.FindLastIndex(2, 4, t => t.Age == 60)).toBe(-1);
-	expect(mylist4.FindLastIndex(2, 4, t => t.Age == 18)).toBe(-1);
-	expect(mylist4.FindLastIndex(2, 4, t => t.Age == 23)).toBe(5);
-	expect(mylist4.FindLastIndex(2, 4, t => t.Age == 19)).toBe(2);
-	expect(() => mylist4.FindLastIndex(-2, 4, t => t.Age == 19)).toThrow(
+	expect(mylist4.FindLastIndex((t) => t.Age > 150)).toBe(-1);
+	expect(mylist4.FindLastIndex((t) => t.Age > 22)).toBe(8);
+	expect(mylist4.FindLastIndex(5, (t) => t.Age == 22)).toBe(-1);
+	expect(mylist4.FindLastIndex(5, (t) => t.Age == 60)).toBe(7);
+	expect(mylist4.FindLastIndex(2, 4, (t) => t.Age == 60)).toBe(-1);
+	expect(mylist4.FindLastIndex(2, 4, (t) => t.Age == 18)).toBe(-1);
+	expect(mylist4.FindLastIndex(2, 4, (t) => t.Age == 23)).toBe(5);
+	expect(mylist4.FindLastIndex(2, 4, (t) => t.Age == 19)).toBe(2);
+	expect(() => mylist4.FindLastIndex(-2, 4, (t) => t.Age == 19)).toThrow(
 		"Not a valid range"
 	);
-	expect(() => mylist4.FindLastIndex(2, -4, t => t.Age == 19)).toThrow(
+	expect(() => mylist4.FindLastIndex(2, -4, (t) => t.Age == 19)).toThrow(
 		"Not a valid range"
 	);
-	expect(() => mylist4.FindLastIndex(-4, t => t.Age == 19)).toThrow(
+	expect(() => mylist4.FindLastIndex(-4, (t) => t.Age == 19)).toThrow(
 		"Not a valid range"
 	);
-	expect(() => mylist4.FindLastIndex(2, 100, t => t.Age == 19)).toThrow(
+	expect(() => mylist4.FindLastIndex(2, 100, (t) => t.Age == 19)).toThrow(
 		"Not a valid range"
 	);
 
@@ -251,11 +256,11 @@ test("List", () => {
 		{ Age: 23, Name: "Joe" },
 		{ Age: 50, Name: "Andy" },
 		{ Age: 60, Name: "Peter" },
-		{ Age: 100, Name: "Andy20" }
+		{ Age: 100, Name: "Andy20" },
 	]);
 	expect(mylist4.GetRange(4, 2).ToArray()).toEqual([
 		{ Age: 22, Name: "Joe" },
-		{ Age: 23, Name: "Joe" }
+		{ Age: 23, Name: "Joe" },
 	]);
 
 	expect(mylist4.IndexOf({ Age: 23 })).toBe(5);
@@ -290,7 +295,7 @@ test("List", () => {
 		"Not a valid range"
 	);
 
-	expect(mylist4.Select(t => t.Age).ToArray()).toEqual([
+	expect(mylist4.Select((t) => t.Age).ToArray()).toEqual([
 		15,
 		17,
 		18,
@@ -302,7 +307,7 @@ test("List", () => {
 		50,
 		60,
 		100,
-		150
+		150,
 	]);
 
 	expect(() => mylist3.InsertRange(-1, [1, 5, 4])).toThrow("Not a valid range");
@@ -341,7 +346,7 @@ test("List", () => {
 	expect(mylist4.Remove({ Age: 24 })).toBeFalsy();
 	expect(mylist4.Remove({ Age: 23 })).toBeTruthy();
 
-	expect(mylist4.Select(t => t.Age).ToArray()).toEqual([
+	expect(mylist4.Select((t) => t.Age).ToArray()).toEqual([
 		15,
 		17,
 		18,
@@ -353,12 +358,12 @@ test("List", () => {
 		60,
 		100,
 		150,
-		60
+		60,
 	]);
 
-	expect(mylist4.RemoveAll(t => t.Age > 200)).toBe(0);
-	expect(mylist4.RemoveAll(t => t.Age > 50 && t.Age < 150)).toBe(3);
-	expect(mylist4.Select(t => t.Age).ToArray()).toEqual([
+	expect(mylist4.RemoveAll((t) => t.Age > 200)).toBe(0);
+	expect(mylist4.RemoveAll((t) => t.Age > 50 && t.Age < 150)).toBe(3);
+	expect(mylist4.Select((t) => t.Age).ToArray()).toEqual([
 		15,
 		17,
 		18,
@@ -367,7 +372,7 @@ test("List", () => {
 		20,
 		22,
 		50,
-		150
+		150,
 	]);
 
 	expect(() => mylist4.RemoveAt(-1)).toThrow("Not a valid range");
@@ -378,13 +383,13 @@ test("List", () => {
 	expect(() => mylist4.RemoveAt(7)).not.toThrow();
 	expect(() => mylist4.RemoveAt(0)).not.toThrow();
 
-	expect(mylist4.Select(t => t.Age).ToArray()).toEqual([
+	expect(mylist4.Select((t) => t.Age).ToArray()).toEqual([
 		17,
 		18,
 		19,
 		20,
 		22,
-		50
+		50,
 	]);
 
 	expect(() => mylist4.RemoveRange(-1, 5)).toThrow("Not a valid range");
@@ -396,7 +401,7 @@ test("List", () => {
 	expect(() => mylist4.RemoveRange(2, 1)).not.toThrow();
 	expect(() => mylist4.RemoveRange(2, 1)).toThrow("Not a valid range");
 
-	expect(mylist4.Select(t => t.Age).ToArray()).toEqual([18, 19]);
+	expect(mylist4.Select((t) => t.Age).ToArray()).toEqual([18, 19]);
 
 	mylist4.AddRange([
 		{ Age: 20, Name: "Andy20" },
@@ -404,7 +409,7 @@ test("List", () => {
 		{ Age: 50, Name: "Andy" },
 		{ Age: 23, Name: "Joe" },
 		{ Age: 22, Name: "Joe" },
-		{ Age: 60, Name: "Peter" }
+		{ Age: 60, Name: "Peter" },
 	]);
 
 	expect(() => mylist4.ReverseNative()).not.toThrow();
@@ -416,7 +421,7 @@ test("List", () => {
 	expect(() => mylist4.ReverseNative(6, 2)).not.toThrow();
 	expect(() => mylist4.ReverseNative(3, 3)).not.toThrow();
 
-	expect(mylist4.Select(t => t.Age).ToArray()).toEqual([
+	expect(mylist4.Select((t) => t.Age).ToArray()).toEqual([
 		22,
 		60,
 		23,
@@ -424,7 +429,7 @@ test("List", () => {
 		19,
 		50,
 		18,
-		19
+		19,
 	]);
 
 	// without, sort cmp name, left 3, right 3, middle, wrong args, wrong range
@@ -437,7 +442,7 @@ test("List", () => {
 	let mylist45 = mylist4.ToList(mylist4.Comparer);
 
 	mylist41.Sort();
-	expect(mylist41.Select(t => t.Age).ToArray()).toEqual([
+	expect(mylist41.Select((t) => t.Age).ToArray()).toEqual([
 		18,
 		19,
 		19,
@@ -445,11 +450,11 @@ test("List", () => {
 		22,
 		23,
 		50,
-		60
+		60,
 	]);
 
 	mylist412.Sort(0, 8, null);
-	expect(mylist412.Select(t => t.Age).ToArray()).toEqual([
+	expect(mylist412.Select((t) => t.Age).ToArray()).toEqual([
 		18,
 		19,
 		19,
@@ -457,12 +462,12 @@ test("List", () => {
 		22,
 		23,
 		50,
-		60
+		60,
 	]);
 
 	mylist42.Sort((a, b) => (a.Name > b.Name ? 1 : a.Name < b.Name ? -1 : 0));
 
-	expect(mylist42.Select(t => t).ToArray()).toEqual([
+	expect(mylist42.Select((t) => t).ToArray()).toEqual([
 		{ Age: 50, Name: "Andy" },
 		{ Age: 20, Name: "Andy20" },
 		{ Age: 18, Name: "Jack" },
@@ -470,14 +475,14 @@ test("List", () => {
 		{ Age: 19, Name: "Jane" },
 		{ Age: 22, Name: "Joe" },
 		{ Age: 23, Name: "Joe" },
-		{ Age: 60, Name: "Peter" }
+		{ Age: 60, Name: "Peter" },
 	]);
 
 	mylist43.Sort(0, 3, (a, b) =>
 		a.Name > b.Name ? 1 : a.Name < b.Name ? -1 : 0
 	);
 
-	expect(mylist43.Select(t => t).ToArray()).toEqual([
+	expect(mylist43.Select((t) => t).ToArray()).toEqual([
 		{ Age: 22, Name: "Joe" },
 		{ Age: 23, Name: "Joe" },
 		{ Age: 60, Name: "Peter" },
@@ -485,7 +490,7 @@ test("List", () => {
 		{ Age: 19, Name: "Jane" },
 		{ Age: 50, Name: "Andy" },
 		{ Age: 18, Name: "Jack" },
-		{ Age: 19, Name: "Jane" }
+		{ Age: 19, Name: "Jane" },
 	]);
 
 	// descending sort!!
@@ -493,7 +498,7 @@ test("List", () => {
 		a.Name > b.Name ? -1 : a.Name < b.Name ? 1 : 0
 	);
 
-	expect(mylist44.Select(t => t).ToArray()).toEqual([
+	expect(mylist44.Select((t) => t).ToArray()).toEqual([
 		{ Age: 22, Name: "Joe" },
 		{ Age: 60, Name: "Peter" },
 		{ Age: 23, Name: "Joe" },
@@ -501,14 +506,14 @@ test("List", () => {
 		{ Age: 19, Name: "Jane" },
 		{ Age: 19, Name: "Jane" },
 		{ Age: 18, Name: "Jack" },
-		{ Age: 50, Name: "Andy" }
+		{ Age: 50, Name: "Andy" },
 	]);
 
 	mylist45.Sort(3, 4, (a, b) =>
 		a.Name > b.Name ? 1 : a.Name < b.Name ? -1 : 0
 	);
 
-	expect(mylist45.Select(t => t).ToArray()).toEqual([
+	expect(mylist45.Select((t) => t).ToArray()).toEqual([
 		{ Age: 22, Name: "Joe" },
 		{ Age: 60, Name: "Peter" },
 		{ Age: 23, Name: "Joe" },
@@ -516,7 +521,7 @@ test("List", () => {
 		{ Age: 20, Name: "Andy20" },
 		{ Age: 18, Name: "Jack" },
 		{ Age: 19, Name: "Jane" },
-		{ Age: 19, Name: "Jane" }
+		{ Age: 19, Name: "Jane" },
 	]);
 
 	expect(() =>
@@ -544,6 +549,6 @@ test("List", () => {
 		)
 	).toThrow("Not a valid range");
 
-	expect(mylist4.TrueForAll(t => t.Age < 500)).toBeTruthy();
-	expect(mylist4.TrueForAll(t => t.Age < 50)).toBeFalsy();
+	expect(mylist4.TrueForAll((t) => t.Age < 500)).toBeTruthy();
+	expect(mylist4.TrueForAll((t) => t.Age < 50)).toBeFalsy();
 });

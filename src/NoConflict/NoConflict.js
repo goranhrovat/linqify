@@ -2,10 +2,10 @@ const {
 	globalVars,
 	nativeExstensions,
 	nativeExstensionsNames,
-	noConflictMode
+	noConflictMode,
 } = require("./AddConflict");
 
-const noConflict = function() {
+const noConflict = function () {
 	if (noConflictMode.value)
 		throw new Error("You can call noConflict only once!");
 
