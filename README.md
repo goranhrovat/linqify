@@ -23,7 +23,7 @@ Provides List, Dictionary, HashSet, and Lookup with comparer for complex types.
 Features:
   - lazy evaluation with generator functions,
   - extends native javascript Array, Set, Map, and String,
-  - C# LINQ naming convention, which does not collide with native methods (e.g. concat and join),
+  - [C#](https://www.tutlane.com/tutorial/csharp) [LINQ](https://www.tutlane.com/tutorial/linq) naming convention, which does not collide with native methods (e.g. concat and join),
   - includes typescript support in code editors.
 
 ## Usage
